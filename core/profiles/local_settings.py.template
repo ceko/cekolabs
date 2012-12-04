@@ -1,0 +1,39 @@
+from base_settings import *
+from secret_settings import DATABASE_SETTINGS
+
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+PIPELINE = False
+#may not be necessary
+#PIPELINE_LESS_BINARY = '/path/to/lessc'
+#PIPELINE_COFFEE_BINARY = '/path/to/coffee'
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', 
+        'NAME': 'dave_lafferty_com',
+        'USER': DATABASE_SETTINGS['dave_lafferty_com']['user'], 
+        'PASSWORD': DATABASE_SETTINGS['dave_lafferty_com']['password'],
+        'HOST': DATABASE_SETTINGS['dave_lafferty_com']['host'],
+        'PORT': DATABASE_SETTINGS['dave_lafferty_com']['port'],
+    }
+}
+
+TEMPLATE_LOADERS = ( 
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',    
+)
+
+STATICFILES_FINDERS += ('django.contrib.staticfiles.finders.DefaultStorageFinder',)
+
+MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
+
+INSTALLED_APPS += ('debug_toolbar',)
+
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False,
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+INTERNAL_IPS = ('x.x.x.x',)

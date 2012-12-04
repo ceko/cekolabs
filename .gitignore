@@ -1,0 +1,7 @@
+*.pyc
+secret_settings.py
+local_settings.py
+uploads/*
+!uploads/.gitignore
+static/*
+!static/.gitignore

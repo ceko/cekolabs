@@ -1,0 +1,53 @@
+{% load compressed %}
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>dave-lafferty.com</title>
+		{% compressed_css 'core' %}
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+		{% compressed_js 'core' %}
+	</head>
+	<body>
+		<div id='main-wrap'>
+			<div id='top-bar'></div>
+			<div id='promo-wrap'>
+				<div id='promo-inner'>
+					<div class='science-bot'></div>
+					<div id='promo-slideshow'>
+						<div id='promo-frame'>
+							<div id='promo-line'>
+								<div class='promo'>
+									<div class='promo-inner'>
+										COMING
+									</div>
+								</div>
+								<div class='promo'>
+									<div class='promo-inner'>
+										SOON
+									</div>
+								</div>
+								<div class='promo'>
+									<div class='promo-inner'>
+										WOOOO!
+									</div>
+								</div>
+							</div>
+						</div>
+						<div id='promo-controls'>
+							<ul>
+								<li class='selected'></li>
+								<li></li>
+								<li></li>
+							</ul>
+						</div>
+					</div>
+					<div style='clear:both;'></div>
+				</div>
+			</div>
+			{% block main_content %}
+			{% endblock %}
+		</div>
+	</body>
+</html>
