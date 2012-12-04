@@ -98,7 +98,7 @@ INSTALLED_APPS = (
     'south',    
     'django.contrib.admin',
     'pipeline',    
-    'core',
+    'cekolabs.core',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 ) 
