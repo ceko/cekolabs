@@ -1,0 +1,13 @@
+<div class='input{% if hide_label %} no-label{%endif%} {{ extra_clases }}'>
+	{% if not hide_label %}
+		<div class='labelwrap'>
+			<label for='{{ input.auto_id }}'>
+				{{ input.label|lower }}
+			</label>
+		</div>
+	{% endif %}	
+	<div class='inputwrap {{ input.name }}'>
+		{{ input }}
+		{{ input.errors }}
+	</div>
+</div>

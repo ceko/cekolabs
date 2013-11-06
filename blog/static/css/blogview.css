@@ -1,0 +1,1053 @@
+.Post .post {
+  padding: 20px 0px 20px 0px;
+}
+.Post .post,
+.Post .teaser {
+  padding: 20px 0px 20px 0px;
+  font-size: 16px;
+  /* desert scheme ported from vim to google prettify */
+
+}
+.Post .post p,
+.Post .teaser p {
+  margin-bottom: 20px;
+  line-height: 20px;
+}
+.Post .post h1,
+.Post .teaser h1 {
+  font-size: 22px;
+  margin: 40px 0px 10px 0px;
+}
+.Post .post h1:first-child,
+.Post .teaser h1:first-child {
+  margin-top: 0px;
+}
+.Post .post ul,
+.Post .teaser ul {
+  padding-left: 5px;
+  list-style-type: none;
+}
+.Post .post ul li,
+.Post .teaser ul li {
+  padding-left: 20px;
+  margin-bottom: 15px;
+}
+.Post .post ul li:before,
+.Post .teaser ul li:before {
+  content: '\f054';
+  font-family: FontAwesome;
+  margin-left: 0px;
+  margin-right: 15px;
+  position: relative;
+  top: -1px;
+  display: inline-block;
+  font-size: 10px;
+}
+.Post .post code.prettyprint,
+.Post .teaser code.prettyprint {
+  margin-bottom: 15px;
+  display: block;
+  background-color: #333;
+  padding: 10px;
+  border-radius: 5px;
+  /* string  - pink */
+
+  /* comment - skyblue */
+
+  /* type    - lightgreen */
+
+  /* literal - darkred */
+
+  /* punctuation */
+
+  /* plaintext */
+
+  /* html/xml tag    - lightyellow */
+
+  /* attribute name  - khaki */
+
+  /* attribute value - pink */
+
+  /* decimal         - lightgreen */
+
+  /* Specify class=linenums on a pre to get line numbering */
+
+  /* IE indents via margin-left */
+
+  /* Alternate shading for lines */
+
+}
+.Post .post code.prettyprint .nocode,
+.Post .teaser code.prettyprint .nocode {
+  background-color: none;
+  color: #000000;
+}
+.Post .post code.prettyprint .str,
+.Post .teaser code.prettyprint .str {
+  color: #ffa0a0;
+}
+.Post .post code.prettyprint .kwd,
+.Post .teaser code.prettyprint .kwd {
+  color: #f0e68c;
+  font-weight: bold;
+}
+.Post .post code.prettyprint .com,
+.Post .teaser code.prettyprint .com {
+  color: #87ceeb;
+}
+.Post .post code.prettyprint .typ,
+.Post .teaser code.prettyprint .typ {
+  color: #98fb98;
+}
+.Post .post code.prettyprint .lit,
+.Post .teaser code.prettyprint .lit {
+  color: #cd5c5c;
+}
+.Post .post code.prettyprint .pun,
+.Post .teaser code.prettyprint .pun {
+  color: #ffffff;
+}
+.Post .post code.prettyprint .pln,
+.Post .teaser code.prettyprint .pln {
+  color: #ffffff;
+}
+.Post .post code.prettyprint .tag,
+.Post .teaser code.prettyprint .tag {
+  color: #f0e68c;
+  font-weight: bold;
+}
+.Post .post code.prettyprint .atn,
+.Post .teaser code.prettyprint .atn {
+  color: #bdb76b;
+  font-weight: bold;
+}
+.Post .post code.prettyprint .atv,
+.Post .teaser code.prettyprint .atv {
+  color: #ffa0a0;
+}
+.Post .post code.prettyprint .dec,
+.Post .teaser code.prettyprint .dec {
+  color: #98fb98;
+}
+.Post .post code.prettyprint ol.linenums,
+.Post .teaser code.prettyprint ol.linenums {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 40px;
+  color: #aeaeae;
+}
+.Post .post code.prettyprint li.L4,
+.Post .teaser code.prettyprint li.L4 {
+  list-style-type: decimal;
+}
+.Post .post code.prettyprint li.L1,
+.Post .teaser code.prettyprint li.L1,
+.Post .post code.prettyprint li.L3,
+.Post .teaser code.prettyprint li.L3,
+.Post .post code.prettyprint li.L5,
+.Post .teaser code.prettyprint li.L5,
+.Post .post code.prettyprint li.L7,
+.Post .teaser code.prettyprint li.L7,
+.Post .post code.prettyprint li.L9,
+.Post .teaser code.prettyprint li.L9 {
+  background: #333333;
+}
+@media print {
+  .Post .post code.prettyprint prettyprint,
+  .Post .teaser code.prettyprint prettyprint {
+    background-color: none;
+  }
+  .Post .post code.prettyprint .str,
+  .Post .teaser code.prettyprint .str,
+  .Post .post code.prettyprint code .str,
+  .Post .teaser code.prettyprint code .str {
+    color: #006600;
+  }
+  .Post .post code.prettyprint .kwd,
+  .Post .teaser code.prettyprint .kwd,
+  .Post .post code.prettyprint code .kwd,
+  .Post .teaser code.prettyprint code .kwd {
+    color: #006;
+    font-weight: bold;
+  }
+  .Post .post code.prettyprint .com,
+  .Post .teaser code.prettyprint .com,
+  .Post .post code.prettyprint code .com,
+  .Post .teaser code.prettyprint code .com {
+    color: #600;
+    font-style: italic;
+  }
+  .Post .post code.prettyprint .typ,
+  .Post .teaser code.prettyprint .typ,
+  .Post .post code.prettyprint code .typ,
+  .Post .teaser code.prettyprint code .typ {
+    color: #404;
+    font-weight: bold;
+  }
+  .Post .post code.prettyprint .lit,
+  .Post .teaser code.prettyprint .lit,
+  .Post .post code.prettyprint code .lit,
+  .Post .teaser code.prettyprint code .lit {
+    color: #004444;
+  }
+  .Post .post code.prettyprint .pun,
+  .Post .teaser code.prettyprint .pun,
+  .Post .post code.prettyprint code .pun,
+  .Post .teaser code.prettyprint code .pun {
+    color: #444400;
+  }
+  .Post .post code.prettyprint .pln,
+  .Post .teaser code.prettyprint .pln,
+  .Post .post code.prettyprint code .pln,
+  .Post .teaser code.prettyprint code .pln {
+    color: #000000;
+  }
+  .Post .post code.prettyprint .tag,
+  .Post .teaser code.prettyprint .tag,
+  .Post .post code.prettyprint code .tag,
+  .Post .teaser code.prettyprint code .tag {
+    color: #006;
+    font-weight: bold;
+  }
+  .Post .post code.prettyprint .atn,
+  .Post .teaser code.prettyprint .atn,
+  .Post .post code.prettyprint code .atn,
+  .Post .teaser code.prettyprint code .atn {
+    color: #440044;
+  }
+  .Post .post code.prettyprint .atv,
+  .Post .teaser code.prettyprint .atv,
+  .Post .post code.prettyprint code .atv,
+  .Post .teaser code.prettyprint code .atv {
+    color: #006600;
+  }
+}
+.TopSubinfo .post-subinfo {
+  font-size: 12px;
+  clear: left;
+  border-bottom: 1px solid #E1E1E1;
+  border-top: 1px solid #E1E1E1;
+  margin-top: 20px;
+  padding: 1px 0px 3px 0px;
+}
+.TopSubinfo .publish-date {
+  float: left;
+  margin: 5px 0px 8px 0px;
+}
+.TopSubinfo .tags {
+  border-left: 1px solid #E1E1E1;
+  float: left;
+  margin: 5px 0px 0px 20px;
+  padding-left: 40px;
+  background: url('../images/icons/tag_blue.png') 20px center no-repeat;
+  height: 18px;
+}
+.TopSubinfo .tags ul {
+  list-style-type: none;
+  margin-left: 0px;
+}
+.TopSubinfo .tags li {
+  display: inline-block;
+}
+#main-wrap #main-content #markdown_preview .post {
+  padding: 20px 0px 20px 0px;
+}
+#main-wrap #main-content #markdown_preview .post,
+#main-wrap #main-content #markdown_preview .teaser {
+  padding: 20px 0px 20px 0px;
+  font-size: 16px;
+  /* desert scheme ported from vim to google prettify */
+
+}
+#main-wrap #main-content #markdown_preview .post p,
+#main-wrap #main-content #markdown_preview .teaser p {
+  margin-bottom: 20px;
+  line-height: 20px;
+}
+#main-wrap #main-content #markdown_preview .post h1,
+#main-wrap #main-content #markdown_preview .teaser h1 {
+  font-size: 22px;
+  margin: 40px 0px 10px 0px;
+}
+#main-wrap #main-content #markdown_preview .post h1:first-child,
+#main-wrap #main-content #markdown_preview .teaser h1:first-child {
+  margin-top: 0px;
+}
+#main-wrap #main-content #markdown_preview .post ul,
+#main-wrap #main-content #markdown_preview .teaser ul {
+  padding-left: 5px;
+  list-style-type: none;
+}
+#main-wrap #main-content #markdown_preview .post ul li,
+#main-wrap #main-content #markdown_preview .teaser ul li {
+  padding-left: 20px;
+  margin-bottom: 15px;
+}
+#main-wrap #main-content #markdown_preview .post ul li:before,
+#main-wrap #main-content #markdown_preview .teaser ul li:before {
+  content: '\f054';
+  font-family: FontAwesome;
+  margin-left: 0px;
+  margin-right: 15px;
+  position: relative;
+  top: -1px;
+  display: inline-block;
+  font-size: 10px;
+}
+#main-wrap #main-content #markdown_preview .post code.prettyprint,
+#main-wrap #main-content #markdown_preview .teaser code.prettyprint {
+  margin-bottom: 15px;
+  display: block;
+  background-color: #333;
+  padding: 10px;
+  border-radius: 5px;
+  /* string  - pink */
+
+  /* comment - skyblue */
+
+  /* type    - lightgreen */
+
+  /* literal - darkred */
+
+  /* punctuation */
+
+  /* plaintext */
+
+  /* html/xml tag    - lightyellow */
+
+  /* attribute name  - khaki */
+
+  /* attribute value - pink */
+
+  /* decimal         - lightgreen */
+
+  /* Specify class=linenums on a pre to get line numbering */
+
+  /* IE indents via margin-left */
+
+  /* Alternate shading for lines */
+
+}
+#main-wrap #main-content #markdown_preview .post code.prettyprint .nocode,
+#main-wrap #main-content #markdown_preview .teaser code.prettyprint .nocode {
+  background-color: none;
+  color: #000000;
+}
+#main-wrap #main-content #markdown_preview .post code.prettyprint .str,
+#main-wrap #main-content #markdown_preview .teaser code.prettyprint .str {
+  color: #ffa0a0;
+}
+#main-wrap #main-content #markdown_preview .post code.prettyprint .kwd,
+#main-wrap #main-content #markdown_preview .teaser code.prettyprint .kwd {
+  color: #f0e68c;
+  font-weight: bold;
+}
+#main-wrap #main-content #markdown_preview .post code.prettyprint .com,
+#main-wrap #main-content #markdown_preview .teaser code.prettyprint .com {
+  color: #87ceeb;
+}
+#main-wrap #main-content #markdown_preview .post code.prettyprint .typ,
+#main-wrap #main-content #markdown_preview .teaser code.prettyprint .typ {
+  color: #98fb98;
+}
+#main-wrap #main-content #markdown_preview .post code.prettyprint .lit,
+#main-wrap #main-content #markdown_preview .teaser code.prettyprint .lit {
+  color: #cd5c5c;
+}
+#main-wrap #main-content #markdown_preview .post code.prettyprint .pun,
+#main-wrap #main-content #markdown_preview .teaser code.prettyprint .pun {
+  color: #ffffff;
+}
+#main-wrap #main-content #markdown_preview .post code.prettyprint .pln,
+#main-wrap #main-content #markdown_preview .teaser code.prettyprint .pln {
+  color: #ffffff;
+}
+#main-wrap #main-content #markdown_preview .post code.prettyprint .tag,
+#main-wrap #main-content #markdown_preview .teaser code.prettyprint .tag {
+  color: #f0e68c;
+  font-weight: bold;
+}
+#main-wrap #main-content #markdown_preview .post code.prettyprint .atn,
+#main-wrap #main-content #markdown_preview .teaser code.prettyprint .atn {
+  color: #bdb76b;
+  font-weight: bold;
+}
+#main-wrap #main-content #markdown_preview .post code.prettyprint .atv,
+#main-wrap #main-content #markdown_preview .teaser code.prettyprint .atv {
+  color: #ffa0a0;
+}
+#main-wrap #main-content #markdown_preview .post code.prettyprint .dec,
+#main-wrap #main-content #markdown_preview .teaser code.prettyprint .dec {
+  color: #98fb98;
+}
+#main-wrap #main-content #markdown_preview .post code.prettyprint ol.linenums,
+#main-wrap #main-content #markdown_preview .teaser code.prettyprint ol.linenums {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 40px;
+  color: #aeaeae;
+}
+#main-wrap #main-content #markdown_preview .post code.prettyprint li.L4,
+#main-wrap #main-content #markdown_preview .teaser code.prettyprint li.L4 {
+  list-style-type: decimal;
+}
+#main-wrap #main-content #markdown_preview .post code.prettyprint li.L1,
+#main-wrap #main-content #markdown_preview .teaser code.prettyprint li.L1,
+#main-wrap #main-content #markdown_preview .post code.prettyprint li.L3,
+#main-wrap #main-content #markdown_preview .teaser code.prettyprint li.L3,
+#main-wrap #main-content #markdown_preview .post code.prettyprint li.L5,
+#main-wrap #main-content #markdown_preview .teaser code.prettyprint li.L5,
+#main-wrap #main-content #markdown_preview .post code.prettyprint li.L7,
+#main-wrap #main-content #markdown_preview .teaser code.prettyprint li.L7,
+#main-wrap #main-content #markdown_preview .post code.prettyprint li.L9,
+#main-wrap #main-content #markdown_preview .teaser code.prettyprint li.L9 {
+  background: #333333;
+}
+@media print {
+  #main-wrap #main-content #markdown_preview .post code.prettyprint prettyprint,
+  #main-wrap #main-content #markdown_preview .teaser code.prettyprint prettyprint {
+    background-color: none;
+  }
+  #main-wrap #main-content #markdown_preview .post code.prettyprint .str,
+  #main-wrap #main-content #markdown_preview .teaser code.prettyprint .str,
+  #main-wrap #main-content #markdown_preview .post code.prettyprint code .str,
+  #main-wrap #main-content #markdown_preview .teaser code.prettyprint code .str {
+    color: #006600;
+  }
+  #main-wrap #main-content #markdown_preview .post code.prettyprint .kwd,
+  #main-wrap #main-content #markdown_preview .teaser code.prettyprint .kwd,
+  #main-wrap #main-content #markdown_preview .post code.prettyprint code .kwd,
+  #main-wrap #main-content #markdown_preview .teaser code.prettyprint code .kwd {
+    color: #006;
+    font-weight: bold;
+  }
+  #main-wrap #main-content #markdown_preview .post code.prettyprint .com,
+  #main-wrap #main-content #markdown_preview .teaser code.prettyprint .com,
+  #main-wrap #main-content #markdown_preview .post code.prettyprint code .com,
+  #main-wrap #main-content #markdown_preview .teaser code.prettyprint code .com {
+    color: #600;
+    font-style: italic;
+  }
+  #main-wrap #main-content #markdown_preview .post code.prettyprint .typ,
+  #main-wrap #main-content #markdown_preview .teaser code.prettyprint .typ,
+  #main-wrap #main-content #markdown_preview .post code.prettyprint code .typ,
+  #main-wrap #main-content #markdown_preview .teaser code.prettyprint code .typ {
+    color: #404;
+    font-weight: bold;
+  }
+  #main-wrap #main-content #markdown_preview .post code.prettyprint .lit,
+  #main-wrap #main-content #markdown_preview .teaser code.prettyprint .lit,
+  #main-wrap #main-content #markdown_preview .post code.prettyprint code .lit,
+  #main-wrap #main-content #markdown_preview .teaser code.prettyprint code .lit {
+    color: #004444;
+  }
+  #main-wrap #main-content #markdown_preview .post code.prettyprint .pun,
+  #main-wrap #main-content #markdown_preview .teaser code.prettyprint .pun,
+  #main-wrap #main-content #markdown_preview .post code.prettyprint code .pun,
+  #main-wrap #main-content #markdown_preview .teaser code.prettyprint code .pun {
+    color: #444400;
+  }
+  #main-wrap #main-content #markdown_preview .post code.prettyprint .pln,
+  #main-wrap #main-content #markdown_preview .teaser code.prettyprint .pln,
+  #main-wrap #main-content #markdown_preview .post code.prettyprint code .pln,
+  #main-wrap #main-content #markdown_preview .teaser code.prettyprint code .pln {
+    color: #000000;
+  }
+  #main-wrap #main-content #markdown_preview .post code.prettyprint .tag,
+  #main-wrap #main-content #markdown_preview .teaser code.prettyprint .tag,
+  #main-wrap #main-content #markdown_preview .post code.prettyprint code .tag,
+  #main-wrap #main-content #markdown_preview .teaser code.prettyprint code .tag {
+    color: #006;
+    font-weight: bold;
+  }
+  #main-wrap #main-content #markdown_preview .post code.prettyprint .atn,
+  #main-wrap #main-content #markdown_preview .teaser code.prettyprint .atn,
+  #main-wrap #main-content #markdown_preview .post code.prettyprint code .atn,
+  #main-wrap #main-content #markdown_preview .teaser code.prettyprint code .atn {
+    color: #440044;
+  }
+  #main-wrap #main-content #markdown_preview .post code.prettyprint .atv,
+  #main-wrap #main-content #markdown_preview .teaser code.prettyprint .atv,
+  #main-wrap #main-content #markdown_preview .post code.prettyprint code .atv,
+  #main-wrap #main-content #markdown_preview .teaser code.prettyprint code .atv {
+    color: #006600;
+  }
+}
+#main-wrap #main-content #post-teasers .post {
+  padding: 20px 0px 20px 0px;
+}
+#main-wrap #main-content #post-teasers .post,
+#main-wrap #main-content #post-teasers .teaser {
+  padding: 20px 0px 20px 0px;
+  font-size: 16px;
+  /* desert scheme ported from vim to google prettify */
+
+}
+#main-wrap #main-content #post-teasers .post p,
+#main-wrap #main-content #post-teasers .teaser p {
+  margin-bottom: 20px;
+  line-height: 20px;
+}
+#main-wrap #main-content #post-teasers .post h1,
+#main-wrap #main-content #post-teasers .teaser h1 {
+  font-size: 22px;
+  margin: 40px 0px 10px 0px;
+}
+#main-wrap #main-content #post-teasers .post h1:first-child,
+#main-wrap #main-content #post-teasers .teaser h1:first-child {
+  margin-top: 0px;
+}
+#main-wrap #main-content #post-teasers .post ul,
+#main-wrap #main-content #post-teasers .teaser ul {
+  padding-left: 5px;
+  list-style-type: none;
+}
+#main-wrap #main-content #post-teasers .post ul li,
+#main-wrap #main-content #post-teasers .teaser ul li {
+  padding-left: 20px;
+  margin-bottom: 15px;
+}
+#main-wrap #main-content #post-teasers .post ul li:before,
+#main-wrap #main-content #post-teasers .teaser ul li:before {
+  content: '\f054';
+  font-family: FontAwesome;
+  margin-left: 0px;
+  margin-right: 15px;
+  position: relative;
+  top: -1px;
+  display: inline-block;
+  font-size: 10px;
+}
+#main-wrap #main-content #post-teasers .post code.prettyprint,
+#main-wrap #main-content #post-teasers .teaser code.prettyprint {
+  margin-bottom: 15px;
+  display: block;
+  background-color: #333;
+  padding: 10px;
+  border-radius: 5px;
+  /* string  - pink */
+
+  /* comment - skyblue */
+
+  /* type    - lightgreen */
+
+  /* literal - darkred */
+
+  /* punctuation */
+
+  /* plaintext */
+
+  /* html/xml tag    - lightyellow */
+
+  /* attribute name  - khaki */
+
+  /* attribute value - pink */
+
+  /* decimal         - lightgreen */
+
+  /* Specify class=linenums on a pre to get line numbering */
+
+  /* IE indents via margin-left */
+
+  /* Alternate shading for lines */
+
+}
+#main-wrap #main-content #post-teasers .post code.prettyprint .nocode,
+#main-wrap #main-content #post-teasers .teaser code.prettyprint .nocode {
+  background-color: none;
+  color: #000000;
+}
+#main-wrap #main-content #post-teasers .post code.prettyprint .str,
+#main-wrap #main-content #post-teasers .teaser code.prettyprint .str {
+  color: #ffa0a0;
+}
+#main-wrap #main-content #post-teasers .post code.prettyprint .kwd,
+#main-wrap #main-content #post-teasers .teaser code.prettyprint .kwd {
+  color: #f0e68c;
+  font-weight: bold;
+}
+#main-wrap #main-content #post-teasers .post code.prettyprint .com,
+#main-wrap #main-content #post-teasers .teaser code.prettyprint .com {
+  color: #87ceeb;
+}
+#main-wrap #main-content #post-teasers .post code.prettyprint .typ,
+#main-wrap #main-content #post-teasers .teaser code.prettyprint .typ {
+  color: #98fb98;
+}
+#main-wrap #main-content #post-teasers .post code.prettyprint .lit,
+#main-wrap #main-content #post-teasers .teaser code.prettyprint .lit {
+  color: #cd5c5c;
+}
+#main-wrap #main-content #post-teasers .post code.prettyprint .pun,
+#main-wrap #main-content #post-teasers .teaser code.prettyprint .pun {
+  color: #ffffff;
+}
+#main-wrap #main-content #post-teasers .post code.prettyprint .pln,
+#main-wrap #main-content #post-teasers .teaser code.prettyprint .pln {
+  color: #ffffff;
+}
+#main-wrap #main-content #post-teasers .post code.prettyprint .tag,
+#main-wrap #main-content #post-teasers .teaser code.prettyprint .tag {
+  color: #f0e68c;
+  font-weight: bold;
+}
+#main-wrap #main-content #post-teasers .post code.prettyprint .atn,
+#main-wrap #main-content #post-teasers .teaser code.prettyprint .atn {
+  color: #bdb76b;
+  font-weight: bold;
+}
+#main-wrap #main-content #post-teasers .post code.prettyprint .atv,
+#main-wrap #main-content #post-teasers .teaser code.prettyprint .atv {
+  color: #ffa0a0;
+}
+#main-wrap #main-content #post-teasers .post code.prettyprint .dec,
+#main-wrap #main-content #post-teasers .teaser code.prettyprint .dec {
+  color: #98fb98;
+}
+#main-wrap #main-content #post-teasers .post code.prettyprint ol.linenums,
+#main-wrap #main-content #post-teasers .teaser code.prettyprint ol.linenums {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 40px;
+  color: #aeaeae;
+}
+#main-wrap #main-content #post-teasers .post code.prettyprint li.L4,
+#main-wrap #main-content #post-teasers .teaser code.prettyprint li.L4 {
+  list-style-type: decimal;
+}
+#main-wrap #main-content #post-teasers .post code.prettyprint li.L1,
+#main-wrap #main-content #post-teasers .teaser code.prettyprint li.L1,
+#main-wrap #main-content #post-teasers .post code.prettyprint li.L3,
+#main-wrap #main-content #post-teasers .teaser code.prettyprint li.L3,
+#main-wrap #main-content #post-teasers .post code.prettyprint li.L5,
+#main-wrap #main-content #post-teasers .teaser code.prettyprint li.L5,
+#main-wrap #main-content #post-teasers .post code.prettyprint li.L7,
+#main-wrap #main-content #post-teasers .teaser code.prettyprint li.L7,
+#main-wrap #main-content #post-teasers .post code.prettyprint li.L9,
+#main-wrap #main-content #post-teasers .teaser code.prettyprint li.L9 {
+  background: #333333;
+}
+@media print {
+  #main-wrap #main-content #post-teasers .post code.prettyprint prettyprint,
+  #main-wrap #main-content #post-teasers .teaser code.prettyprint prettyprint {
+    background-color: none;
+  }
+  #main-wrap #main-content #post-teasers .post code.prettyprint .str,
+  #main-wrap #main-content #post-teasers .teaser code.prettyprint .str,
+  #main-wrap #main-content #post-teasers .post code.prettyprint code .str,
+  #main-wrap #main-content #post-teasers .teaser code.prettyprint code .str {
+    color: #006600;
+  }
+  #main-wrap #main-content #post-teasers .post code.prettyprint .kwd,
+  #main-wrap #main-content #post-teasers .teaser code.prettyprint .kwd,
+  #main-wrap #main-content #post-teasers .post code.prettyprint code .kwd,
+  #main-wrap #main-content #post-teasers .teaser code.prettyprint code .kwd {
+    color: #006;
+    font-weight: bold;
+  }
+  #main-wrap #main-content #post-teasers .post code.prettyprint .com,
+  #main-wrap #main-content #post-teasers .teaser code.prettyprint .com,
+  #main-wrap #main-content #post-teasers .post code.prettyprint code .com,
+  #main-wrap #main-content #post-teasers .teaser code.prettyprint code .com {
+    color: #600;
+    font-style: italic;
+  }
+  #main-wrap #main-content #post-teasers .post code.prettyprint .typ,
+  #main-wrap #main-content #post-teasers .teaser code.prettyprint .typ,
+  #main-wrap #main-content #post-teasers .post code.prettyprint code .typ,
+  #main-wrap #main-content #post-teasers .teaser code.prettyprint code .typ {
+    color: #404;
+    font-weight: bold;
+  }
+  #main-wrap #main-content #post-teasers .post code.prettyprint .lit,
+  #main-wrap #main-content #post-teasers .teaser code.prettyprint .lit,
+  #main-wrap #main-content #post-teasers .post code.prettyprint code .lit,
+  #main-wrap #main-content #post-teasers .teaser code.prettyprint code .lit {
+    color: #004444;
+  }
+  #main-wrap #main-content #post-teasers .post code.prettyprint .pun,
+  #main-wrap #main-content #post-teasers .teaser code.prettyprint .pun,
+  #main-wrap #main-content #post-teasers .post code.prettyprint code .pun,
+  #main-wrap #main-content #post-teasers .teaser code.prettyprint code .pun {
+    color: #444400;
+  }
+  #main-wrap #main-content #post-teasers .post code.prettyprint .pln,
+  #main-wrap #main-content #post-teasers .teaser code.prettyprint .pln,
+  #main-wrap #main-content #post-teasers .post code.prettyprint code .pln,
+  #main-wrap #main-content #post-teasers .teaser code.prettyprint code .pln {
+    color: #000000;
+  }
+  #main-wrap #main-content #post-teasers .post code.prettyprint .tag,
+  #main-wrap #main-content #post-teasers .teaser code.prettyprint .tag,
+  #main-wrap #main-content #post-teasers .post code.prettyprint code .tag,
+  #main-wrap #main-content #post-teasers .teaser code.prettyprint code .tag {
+    color: #006;
+    font-weight: bold;
+  }
+  #main-wrap #main-content #post-teasers .post code.prettyprint .atn,
+  #main-wrap #main-content #post-teasers .teaser code.prettyprint .atn,
+  #main-wrap #main-content #post-teasers .post code.prettyprint code .atn,
+  #main-wrap #main-content #post-teasers .teaser code.prettyprint code .atn {
+    color: #440044;
+  }
+  #main-wrap #main-content #post-teasers .post code.prettyprint .atv,
+  #main-wrap #main-content #post-teasers .teaser code.prettyprint .atv,
+  #main-wrap #main-content #post-teasers .post code.prettyprint code .atv,
+  #main-wrap #main-content #post-teasers .teaser code.prettyprint code .atv {
+    color: #006600;
+  }
+}
+#main-wrap #main-content #post-teasers .post-subinfo {
+  font-size: 12px;
+  clear: left;
+  border-bottom: 1px solid #E1E1E1;
+  border-top: 1px solid #E1E1E1;
+  margin-top: 20px;
+  padding: 1px 0px 3px 0px;
+}
+#main-wrap #main-content #post-teasers .publish-date {
+  float: left;
+  margin: 5px 0px 8px 0px;
+}
+#main-wrap #main-content #post-teasers .tags {
+  border-left: 1px solid #E1E1E1;
+  float: left;
+  margin: 5px 0px 0px 20px;
+  padding-left: 40px;
+  background: url('../images/icons/tag_blue.png') 20px center no-repeat;
+  height: 18px;
+}
+#main-wrap #main-content #post-teasers .tags ul {
+  list-style-type: none;
+  margin-left: 0px;
+}
+#main-wrap #main-content #post-teasers .tags li {
+  display: inline-block;
+}
+#main-wrap #main-content #post-teasers .post-teaser {
+  margin-top: 30px;
+}
+#main-wrap #main-content #post-teasers .post-teaser:first-child {
+  margin-top: 10px;
+}
+#main-wrap #main-content #post-teasers .post-teaser h2.title {
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+#main-wrap #main-content #post-teasers .post-teaser .teaser-image {
+  display: inline-block;
+  width: 20%;
+  vertical-align: top;
+  margin-top: 25px;
+  margin-right: 2%;
+}
+#main-wrap #main-content #post-teasers .post-teaser .teaser-image img {
+  width: 100%;
+}
+#main-wrap #main-content #post-teasers .post-teaser .teaser.has-image {
+  display: inline-block;
+  width: 77%;
+}
+#main-wrap #main-content #post-teasers .post-teaser:first-child {
+  padding-top: 0px;
+}
+#main-wrap #main-content .blog-body-wrapper .rightcol-background {
+  clear: left;
+  width: 100%;
+  float: left;
+  overflow: hidden;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-background {
+  float: left;
+  width: 100%;
+  position: relative;
+  right: 250px;
+  background: #F7F7F7;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content {
+  position: relative;
+  left: 250px;
+  margin-right: 270px;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .blog-top .post-subinfo {
+  font-size: 12px;
+  clear: left;
+  border-bottom: 1px solid #E1E1E1;
+  border-top: 1px solid #E1E1E1;
+  margin-top: 20px;
+  padding: 1px 0px 3px 0px;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .blog-top .publish-date {
+  float: left;
+  margin: 5px 0px 8px 0px;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .blog-top .tags {
+  border-left: 1px solid #E1E1E1;
+  float: left;
+  margin: 5px 0px 0px 20px;
+  padding-left: 40px;
+  background: url('../images/icons/tag_blue.png') 20px center no-repeat;
+  height: 18px;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .blog-top .tags ul {
+  list-style-type: none;
+  margin-left: 0px;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .blog-top .tags li {
+  display: inline-block;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post {
+  padding: 20px 0px 20px 0px;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser {
+  padding: 20px 0px 20px 0px;
+  font-size: 16px;
+  /* desert scheme ported from vim to google prettify */
+
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post p,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser p {
+  margin-bottom: 20px;
+  line-height: 20px;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post h1,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser h1 {
+  font-size: 22px;
+  margin: 40px 0px 10px 0px;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post h1:first-child,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser h1:first-child {
+  margin-top: 0px;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post ul,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser ul {
+  padding-left: 5px;
+  list-style-type: none;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post ul li,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser ul li {
+  padding-left: 20px;
+  margin-bottom: 15px;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post ul li:before,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser ul li:before {
+  content: '\f054';
+  font-family: FontAwesome;
+  margin-left: 0px;
+  margin-right: 15px;
+  position: relative;
+  top: -1px;
+  display: inline-block;
+  font-size: 10px;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint {
+  margin-bottom: 15px;
+  display: block;
+  background-color: #333;
+  padding: 10px;
+  border-radius: 5px;
+  /* string  - pink */
+
+  /* comment - skyblue */
+
+  /* type    - lightgreen */
+
+  /* literal - darkred */
+
+  /* punctuation */
+
+  /* plaintext */
+
+  /* html/xml tag    - lightyellow */
+
+  /* attribute name  - khaki */
+
+  /* attribute value - pink */
+
+  /* decimal         - lightgreen */
+
+  /* Specify class=linenums on a pre to get line numbering */
+
+  /* IE indents via margin-left */
+
+  /* Alternate shading for lines */
+
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .nocode,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .nocode {
+  background-color: none;
+  color: #000000;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .str,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .str {
+  color: #ffa0a0;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .kwd,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .kwd {
+  color: #f0e68c;
+  font-weight: bold;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .com,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .com {
+  color: #87ceeb;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .typ,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .typ {
+  color: #98fb98;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .lit,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .lit {
+  color: #cd5c5c;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .pun,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .pun {
+  color: #ffffff;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .pln,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .pln {
+  color: #ffffff;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .tag,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .tag {
+  color: #f0e68c;
+  font-weight: bold;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .atn,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .atn {
+  color: #bdb76b;
+  font-weight: bold;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .atv,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .atv {
+  color: #ffa0a0;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .dec,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .dec {
+  color: #98fb98;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint ol.linenums,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint ol.linenums {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 40px;
+  color: #aeaeae;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint li.L4,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint li.L4 {
+  list-style-type: decimal;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint li.L1,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint li.L1,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint li.L3,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint li.L3,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint li.L5,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint li.L5,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint li.L7,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint li.L7,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint li.L9,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint li.L9 {
+  background: #333333;
+}
+@media print {
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint prettyprint,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint prettyprint {
+    background-color: none;
+  }
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .str,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .str,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint code .str,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint code .str {
+    color: #006600;
+  }
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .kwd,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .kwd,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint code .kwd,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint code .kwd {
+    color: #006;
+    font-weight: bold;
+  }
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .com,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .com,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint code .com,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint code .com {
+    color: #600;
+    font-style: italic;
+  }
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .typ,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .typ,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint code .typ,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint code .typ {
+    color: #404;
+    font-weight: bold;
+  }
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .lit,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .lit,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint code .lit,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint code .lit {
+    color: #004444;
+  }
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .pun,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .pun,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint code .pun,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint code .pun {
+    color: #444400;
+  }
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .pln,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .pln,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint code .pln,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint code .pln {
+    color: #000000;
+  }
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .tag,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .tag,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint code .tag,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint code .tag {
+    color: #006;
+    font-weight: bold;
+  }
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .atn,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .atn,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint code .atn,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint code .atn {
+    color: #440044;
+  }
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .atv,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .atv,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint code .atv,
+  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint code .atv {
+    color: #006600;
+  }
+}
+#main-wrap #main-content .blog-body-wrapper .rightcol-content {
+  float: right;
+  width: 250px;
+  position: relative;
+  left: 250px;
+}
+#main-wrap #main-content .blog-body-wrapper .rightcol-content .groupwrapper {
+  background-color: #FFF;
+  margin: 0px 2px 20px 0px;
+  box-shadow: 0px 1px 1px 1px #CCC;
+  border-radius: 1px;
+  border-top: 1px solid #EEE;
+  padding: 20px;
+}
+#main-wrap #main-content .blog-body-wrapper .rightcol-content .groupwrapper .groupheader {
+  text-align: center;
+  background: url('../images/line-bg.gif') repeat-x center;
+}
+#main-wrap #main-content .blog-body-wrapper .rightcol-content .groupwrapper .groupheader h3 {
+  display: inline-block;
+  background: #FFF;
+  padding: 0px 10px;
+}
+#main-wrap #main-content .blog-body-wrapper .rightcol-content .groupwrapper .recent-post {
+  margin-top: 20px;
+}
+#main-wrap #main-content .blog-body-wrapper .rightcol-content .groupwrapper .recent-post .creation-date {
+  margin-top: 7px;
+  font-size: 12px;
+  color: #666;
+}

@@ -1,11 +1,13 @@
 Django==1.4.2
+Markdown==2.2.1
 South==0.7.6
+-e git+https://github.com/ceko/cekolabs_django_widgets.git#egg=cekolabs_django_widgets
 cssmin==0.1.4
 django-annoying==0.7.6
 django-debug-toolbar==0.9.4
 django-pipeline==1.2.21
 odict==1.5.1
 ply==3.4
-psycopg2==2.4.5 
+psycopg2==2.4.5
 slimit==0.7.4
 wsgiref==0.1.2

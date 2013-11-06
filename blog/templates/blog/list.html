@@ -1,0 +1,23 @@
+{% extends 'masters/main.html' %}
+
+{% block main_content %}
+	<h1>Blog Posts</h1><br />
+	{% if messages %}
+		<ul class='messages'>
+			{% for message in messages %}
+			    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+	
+	<ul class='posts'>
+		{% for post in posts %}
+			<li class='post'>
+				<a href='/blog/{{post.slug}}/{{post.id}}/edit'>{{ post.slug }}</a>
+			</li>
+		{% endfor %}
+	</ul>
+	
+	<a href='/blog/new/'>Add New</a>
+	
+{% endblock %}

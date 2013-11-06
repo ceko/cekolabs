@@ -1,0 +1,44 @@
+{% extends 'masters/main.html' %}
+
+{% block pre_main_content %}
+	<div id='promo-wrap'>
+		<div id='promo-inner'>
+			<div class='science-bot'></div>
+			<div id='promo-slideshow'>
+				<div id='promo-frame'>
+					<div id='promo-line'>
+						<div class='promo'>
+							<a href='/django-form-architect'>
+								<div class='promo-inner image-promo'>
+									<img src='{{STATIC_URL}}images/promos/promo-django-form-architect.png' />
+									<div class='overlay'>
+										<h2>Django Form Architect</h2>
+										<span>Create reusable forms for your website using a fun, responsive interface.</span>
+									</div>
+								</div>
+							</a>
+						</div>
+						<div class='promo'>							
+							<a href='/ksp-mods'>
+								<div class='promo-inner image-promo'>
+									<img src='{{STATIC_URL}}images/promos/promo-ksp-modding.png' />
+									<div class='overlay'>
+										<h2>KSP Mod: Dynamic Warp</h2>
+										<span>Go over the basics of setting up a KSP mod with a very simple and useful example.</span>
+									</div>
+								</div>
+							</a>							
+						</div>						
+					</div>
+				</div>
+				<div id='promo-controls'>
+					<ul>
+						<li class='selected'></li>
+						<li></li>						
+					</ul>
+				</div>
+			</div>
+			<div style='clear:both;'></div>
+		</div>
+	</div>
+{% endblock %}
