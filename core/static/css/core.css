@@ -1,10 +1,116 @@
+body {
+  background: #F7F7F7 !important;
+  color: #333 !important;
+  font-family: "Lucida Sans Unicode" !important;
+  font-size: 14px !important;
+}
+a {
+  color: #205A85;
+  text-decoration: none;
+}
+a:visited {
+  color: #205A85;
+}
 #main-wrap #top-bar {
   height: 50px;
   background-color: #333;
   border-bottom: 1px solid #000;
   box-shadow: 0px 3px 3px rgba(3, 3, 3, 0.3);
   position: relative;
-  z-index: 498;
+  text-align: center;
+}
+#main-wrap #top-bar .top-bar-inner {
+  text-align: left;
+  max-width: 1200px;
+  margin: auto;
+  color: #FFF;
+  font-size: 20px;
+  position: relative;
+  padding: 0px 20px;
+}
+#main-wrap #top-bar .top-bar-inner .site-name {
+  float: left;
+  padding-top: 14px;
+}
+#main-wrap #top-bar .top-bar-inner .site-name a {
+  color: #FFF;
+}
+#main-wrap #top-bar .top-bar-inner .top-bar-links {
+  float: right;
+  height: 40px;
+  font-size: 16px;
+}
+#main-wrap #top-bar .top-bar-inner .top-bar-links .ui-menu {
+  position: absolute;
+  z-index: 900;
+}
+#main-wrap #top-bar .top-bar-inner .top-bar-links .ui-menu .projects > a {
+  padding-left: 10px;
+  margin-left: -10px;
+  margin-bottom: 20px;
+  display: block;
+  font-size: 12px;
+  color: #333;
+  border-left: 1px solid #FFF;
+}
+#main-wrap #top-bar .top-bar-inner .top-bar-links .ui-menu .projects > a:hover {
+  border-left: 1px solid #EEE;
+}
+#main-wrap #top-bar .top-bar-inner .top-bar-links .ui-menu .projects > a .project-header {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+#main-wrap #top-bar .top-bar-inner .top-bar-links .ui-menu-item .ui-menu {
+  padding: 20px;
+  padding-bottom: 0px;
+  background: #FFF;
+  border: 1px solid #CCC;
+  border-top: none;
+  color: #333;
+  box-shadow: 0px 3px 3px rgba(3, 3, 3, 0.3);
+}
+#main-wrap #top-bar .top-bar-inner .top-bar-links .ui-menu-item a i {
+  line-height: 10px;
+  font-size: 12px;
+}
+#main-wrap #top-bar .top-bar-inner .top-bar-links > li {
+  border: 1px solid #333;
+  border-left: 1px solid #000;
+  border-right: 1px solid #666;
+  display: inline-block;
+  background: #333;
+  cursor: pointer;
+  margin-left: -9px;
+}
+#main-wrap #top-bar .top-bar-inner .top-bar-links > li > a.ui-state-focus,
+#main-wrap #top-bar .top-bar-inner .top-bar-links > li a.ui-state-active {
+  background: #FFF;
+  color: #444;
+  border-bottom: #FFF;
+  border-left: 1px solid #DDD;
+  border-right: 1px solid #DDD;
+}
+#main-wrap #top-bar .top-bar-inner .top-bar-links > li li {
+  display: inline-block;
+}
+#main-wrap #top-bar .top-bar-inner .top-bar-links > li > a {
+  display: inline-block;
+  padding: 16px 20px 17px 20px;
+  color: #FFF;
+  text-decoration: none;
+  border-left: 1px solid #666;
+  border-right: 1px solid #000;
+}
+#main-wrap #main-content {
+  margin: auto;
+  max-width: 1200px;
+  padding: 20px 20px 0px 20px;
+}
+#main-wrap #main-content h1 {
+  font-size: 26px;
+}
+#main-wrap #main-content .subheader {
+  margin-top: -10px;
 }
 #main-wrap #promo-wrap {
   background: url('../images/backgrounds/bluediag.png');
@@ -18,19 +124,19 @@
 #main-wrap #promo-wrap .science-bot {
   background: url('../images/promos/sciencebot.png') no-repeat;
   height: 430px;
-  width: 560px;
+  width: 500px;
   margin-top: -30px;
-  margin-left: -80px;
+  margin-left: -130px;
   position: absolute;
   z-index: 499;
 }
 #main-wrap #promo-wrap #promo-slideshow {
-  width: 700px;
+  width: 730px;
   height: 370px;
   margin-top: 30px;
   background-color: #153A55;
   float: left;
-  margin-left: 300px;
+  margin-left: 250px;
   position: relative;
   z-index: 500;
   border-top-left-radius: 5px;
@@ -52,7 +158,7 @@
 }
 #main-wrap #promo-wrap #promo-slideshow #promo-frame #promo-line .promo {
   border-radius: 2px;
-  width: 680px;
+  width: 710px;
   float: left;
   height: 315px;
   background-color: #FFF;
@@ -60,11 +166,34 @@
 #main-wrap #promo-wrap #promo-slideshow #promo-frame #promo-line .promo .promo-inner {
   margin: 10px;
   height: 295px;
-  font-size: 50px;
   color: #666;
   text-align: center;
   position: relative;
-  top: 110px;
+  height: 100%;
+}
+#main-wrap #promo-wrap #promo-slideshow #promo-frame #promo-line .promo .promo-inner .overlay {
+  color: #FFF;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  text-align: left;
+  background-color: rgba(1, 1, 1, 0.5);
+  padding: 10px;
+}
+#main-wrap #promo-wrap #promo-slideshow #promo-frame #promo-line .promo .promo-inner .overlay:hover {
+  text-decoration: underline;
+}
+#main-wrap #promo-wrap #promo-slideshow #promo-frame #promo-line .promo .promo-inner .overlay h2 {
+  font-size: 22px;
+  margin-bottom: 5px;
+}
+#main-wrap #promo-wrap #promo-slideshow #promo-frame #promo-line .promo .promo-inner.image-promo {
+  margin: 0px;
+}
+#main-wrap #promo-wrap #promo-slideshow #promo-frame #promo-line .promo .promo-inner img {
+  width: 100%;
+  height: 100%;
 }
 #main-wrap #promo-wrap #promo-slideshow #promo-controls {
   text-align: center;
