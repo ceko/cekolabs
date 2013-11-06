@@ -137,7 +137,7 @@ PIPELINE_CSS = {
             'css/blogview.less',
         ),
         'output_filename': 'css/blog.min.css',
-    },
+    },    
     'file_manager': {
         'source_filenames': (
           'css/reset.css',
@@ -153,7 +153,8 @@ PIPELINE_JS = {
         'source_filenames': (          
           'js/core.coffee',  
           'js/promo.coffee',
-          'js/jquery.colorbox.js',       
+          'js/jquery.colorbox.js',
+          'js/jquery.isotope.min.js'       
         ),
         'output_filename': 'js/core.min.js',
     },    
