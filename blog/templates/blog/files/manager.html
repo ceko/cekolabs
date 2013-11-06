@@ -1,0 +1,72 @@
+{% extends 'masters/popupmain.html' %}
+{% load compressed %}
+
+{% block header %}
+	{% compressed_css 'file_manager' %}
+	{% if "ajax" not in request.GET %}
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	{% endif %}
+	{% compressed_js 'file_manager' %}
+	<script>
+		jQuery(function() {
+			jQuery('#file-drop').multiupload();
+			var $file_list = jQuery('#file-list').fileview();			
+		})
+	</script>
+{% endblock %}
+
+{% block main_content %}
+	<div id='file-list'>			
+		<div id='expand-toggle'> &raquo;</div>	
+		<div class='input searchbox'>
+			<div class='labelwrap'>
+				<label for='search'>
+					search
+				</label>
+			</div>
+			<div class='inputwrap'>
+				<input type='text' name='search' id='search' />
+			</div>
+		</div>	
+		<div id='listwrap'>
+			<div class='show-tags'>
+				<input type='checkbox'>Show Tags</input>
+			</div>	
+			<div id='actions'>
+				<b>with selected:</b>
+				<ul>
+					<li>delete</li>
+					<li>add tag</li>
+					<li>remove tag</li>
+				</ul>
+			</div>
+			<table id='header-table'>
+				<thead>
+					<tr class='table-headers'>
+						<th class='checkbox'>
+							<input type='checkbox' id='check_all' />
+						</th>
+						<th class='file-name'>
+							Name
+						</th>					
+						<th class='upload-date'>
+							Uploaded
+						</th>
+						<th class='file-size'>
+							Size
+						</th>
+					</tr>
+				</thead>				
+			</table>	
+			<div id='table-row-wrap'>
+				<table id='content-table'>
+					<tbody class='table-rows'>
+					</tbody>
+				</table>
+			</div>			
+		</div>
+	</div>	
+	<div id='file-drop'>					
+	</div>	
+	<div style='clear:both;'></div>
+{% endblock %}

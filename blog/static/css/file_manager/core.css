@@ -1,0 +1,143 @@
+#main-popup-wrap {
+  background: #F4F2EC;
+  color: #333;
+  font-family: "Lucida Sans Unicode";
+  font-size: 14px;
+}
+#main-popup-wrap #main-content #file-list {
+  width: 500px;
+  float: left;
+  height: 300px;
+  position: absolute;
+  background: #F4F2EC;
+}
+#main-popup-wrap #main-content #file-list .searchbox {
+  margin: 10px 0px 0px 10px;
+}
+#main-popup-wrap #main-content #file-list .searchbox .labelwrap {
+  width: 475px;
+}
+#main-popup-wrap #main-content #file-list .searchbox .inputwrap {
+  margin-left: -410px;
+}
+#main-popup-wrap #main-content #file-list .searchbox .inputwrap input {
+  width: 390px;
+}
+#main-popup-wrap #main-content #file-list #listwrap {
+  font-size: 11px;
+}
+#main-popup-wrap #main-content #file-list #actions {
+  margin: 10px 0px 0px 10px;
+}
+#main-popup-wrap #main-content #file-list #actions ul {
+  display: inline-block;
+  padding-left: 10px;
+}
+#main-popup-wrap #main-content #file-list #actions ul li {
+  display: inline-block;
+  border-right: 1px solid #D2D2D2;
+  padding: 0px 5px;
+}
+#main-popup-wrap #main-content #file-list #actions ul li:last-child {
+  border-right: none;
+}
+#main-popup-wrap #main-content #file-list .show-tags {
+  float: right;
+  margin-right: 15px;
+}
+#main-popup-wrap #main-content #file-list #header-table {
+  margin-top: 10px;
+}
+#main-popup-wrap #main-content #file-list table {
+  width: 100%;
+}
+#main-popup-wrap #main-content #file-list table thead {
+  height: 22px;
+  background-image: url('../../images/gray-toolbar-background.png');
+  margin-top: 10px;
+  border-top: 1px solid #CCC;
+  border-bottom: 1px solid #CCC;
+  padding-left: 10px;
+}
+#main-popup-wrap #main-content #file-list table thead .file-size {
+  padding-right: 18px;
+  /* to account for the scrollbar beneath */
+}
+#main-popup-wrap #main-content #file-list table th,
+#main-popup-wrap #main-content #file-list table td {
+  text-align: left;
+  padding-left: 10px;
+}
+#main-popup-wrap #main-content #file-list table .checkbox {
+  width: 20px;
+}
+#main-popup-wrap #main-content #file-list table .file-size {
+  width: 80px;
+}
+#main-popup-wrap #main-content #file-list table .upload-date {
+  width: 125px;
+}
+#main-popup-wrap #main-content #file-list #table-row-wrap {
+  height: 200px;
+  overflow: scroll;
+  overflow-x: hidden;
+  display: block;
+}
+#main-popup-wrap #main-content #file-list .table-row {
+  border-top: 1px solid #CCC;
+  clear: both;
+}
+#main-popup-wrap #main-content #file-list .table-row td {
+  padding: 3px 0px 3px 10px;
+}
+#main-popup-wrap #main-content #expand-toggle {
+  cursor: pointer;
+  position: relative;
+  z-index: 999;
+  float: right;
+  left: 21px;
+  width: 20px;
+  height: 20px;
+  background: #F4F2EC;
+  border: 1px solid #666;
+  border-left: none;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  top: 16px;
+  text-align: center;
+  margin-bottom: -20px;
+}
+#main-popup-wrap #main-content #expand-toggle.expanded {
+  left: 0px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  border-left: 1px solid #666;
+  border-right: none;
+}
+#main-popup-wrap #main-content #file-drop {
+  width: 250px;
+  float: right;
+  height: 300px;
+  background: #999999 url('../../images/file_manager/drop-file-background.png') no-repeat center center;
+  box-shadow: inset 3px 3px 5px #333;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+#main-popup-wrap #main-content #file-drop .upload {
+  padding: 5px 5px 5px 30px;
+  background-color: rgba(255, 255, 255, 0.75);
+  background-repeat: no-repeat;
+  background-position: 5px center;
+  margin: 0px 1px 1px 1px;
+}
+#main-popup-wrap #main-content #file-drop .upload.pending {
+  background-image: url('../../images/icons/ajax-loader.gif');
+}
+#main-popup-wrap #main-content #file-drop .upload.success {
+  background-image: url('../../images/icons/accept.png');
+}
+#main-popup-wrap #main-content #file-drop .upload.error {
+  background-image: url('../../images/icons/cancel.png');
+}

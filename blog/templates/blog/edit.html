@@ -1,0 +1,70 @@
+{% extends 'masters/main.html' %}
+{% load compressed %}
+
+{% block header %}
+	{{ block.super }}
+	{% compressed_css 'blog' %}	
+{% endblock %}
+
+{% block footer %}
+	{{ block.super }}
+	<script src="//cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.min.js"></script>
+{% endblock %}
+
+{% block main_content %}
+	<h1>
+		{% if post_form.instance.id %}
+			Edit Your Post
+		{% else %}
+			Add a New Post
+		{% endif %}
+	</h1>
+	<br />
+	<div class='subheader'>Posts will become available immediately if published is checked.</div>
+	<form method='post' enctype='multipart/form-data' action='.'>
+		{% csrf_token %}
+						
+		<div class='inputs'>						
+			{% include 'blog/fields/default_input.html' with input=post_form.slug only %}
+			{% include 'blog/fields/default_input.html' with input=post_form.title only %}
+			{% include 'blog/fields/default_input.html' with input=post_form.tags only %}
+			<h2>Teaser</h2>
+			<div class='teaser input'>
+				<div class='teaser-image'>					
+					{% if post and post.teaser_image.url %}					
+						<img src='{{ post.teaser_image.url }}' />
+					{% else %}
+						<div class='no-image'></div>
+					{% endif %}
+					
+					<span>
+						{{ post_form.teaser_image }}
+					</span>
+				</div>
+				<div class='teaser-text'>
+					{% include 'blog/fields/default_input.html' with input=post_form.teaser hide_label="yes" extra_clases="teaser" only %}
+				</div>				
+			</div>
+			
+			<h2>Body</h2>
+			{% include 'blog/fields/default_input.html' with input=post_form.markdown extra_clases="last" hide_label="yes" only %}
+			
+			<div id='markdown_preview'>
+				<div class='innercontent empty post'></div>
+			</div>
+			<script>jQuery(function() { jQuery('#markdown_preview').cekolabs_markdownpreview(); })</script>
+			
+			<div class='toolbar'>
+				<div class='toolbar-inner'>
+					{% include 'blog/fields/inline_input.html' with input=post_form.published only %}
+					{% include 'blog/fields/inline_input.html' with input=post_form.featured extra_clases="last" only %}
+				</div>
+			</div>			
+		</div>
+		
+		<br />
+		<input type='submit' />
+	</form>
+	
+	{{ post_form.media }}
+{% endblock %}

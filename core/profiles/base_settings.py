@@ -1,5 +1,6 @@
 import os.path
 import secret_settings
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 
 
 PROJECT_ROOT = "/".join(os.path.realpath(__file__).split('/')[:-3]) + "/"
@@ -99,10 +100,15 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'pipeline',    
     'cekolabs.core',
+    'cekolabs.blog',
+    'cekolabs_django_widgets',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 ) 
 
+TEMPLATE_CONTEXT_PROCESSORS = TCP + (
+    'django.core.context_processors.request',
+)
 
 PIPELINE = True
 STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
@@ -119,9 +125,26 @@ PIPELINE_CSS = {
     'core': {
         'source_filenames': (
           'css/reset.css',
-          'css/core.less',          
+          'css/core.less', 
+          'css/forms.less',
+          'css/colorbox.css',
+          'css/font-awesome.css'
         ),
         'output_filename': 'css/core.min.css',
+    },
+    'blog': {
+        'source_filenames': (
+            'css/blogview.less',
+        ),
+        'output_filename': 'css/blog.min.css',
+    },
+    'file_manager': {
+        'source_filenames': (
+          'css/reset.css',
+          'css/forms.less',          
+          'css/file_manager/core.less',
+        ),
+        'output_filename': 'css/file_manager/core.filemanager.min.css',
     },
 }
 
@@ -129,9 +152,16 @@ PIPELINE_JS = {
     'core': {
         'source_filenames': (          
           'js/core.coffee',  
-          'js/promo.coffee',        
+          'js/promo.coffee',
+          'js/jquery.colorbox.js',       
         ),
         'output_filename': 'js/core.min.js',
+    },    
+    'file_manager': {
+        'source_filenames': (
+          'js/file_manager/jquery.multiuploader.coffee',
+        ),
+        'output_filename': 'js/file_manager/core.filemanager.min.js',
     }
 }
 

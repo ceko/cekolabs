@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		{% load compressed %}
+		<title>dave-lafferty.com</title>
+		{% compressed_css 'iframe' %}
+		{% block header %}{% endblock %}
+	</head>
+	<body>
+		<div id='main-popup-wrap'>
+			<div id='main-content'>						
+				{% block main_content %}
+				{% endblock %}
+			</div>
+		</div>
+	</body>
+</html>

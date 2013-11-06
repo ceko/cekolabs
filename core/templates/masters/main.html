@@ -1,53 +1,56 @@
-{% load compressed %}
-
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>dave-lafferty.com</title>
-		{% compressed_css 'core' %}
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
-		{% compressed_js 'core' %}
+		{% block header %}		
+			{% load compressed %}
+			<title>dave-lafferty.com</title>
+			<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+			<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+			{% compressed_css 'core' %}			
+		{% endblock %}		
 	</head>
 	<body>
 		<div id='main-wrap'>
-			<div id='top-bar'></div>
-			<div id='promo-wrap'>
-				<div id='promo-inner'>
-					<div class='science-bot'></div>
-					<div id='promo-slideshow'>
-						<div id='promo-frame'>
-							<div id='promo-line'>
-								<div class='promo'>
-									<div class='promo-inner'>
-										COMING
-									</div>
-								</div>
-								<div class='promo'>
-									<div class='promo-inner'>
-										SOON
-									</div>
-								</div>
-								<div class='promo'>
-									<div class='promo-inner'>
-										WOOOO!
-									</div>
-								</div>
-							</div>
-						</div>
-						<div id='promo-controls'>
+			<div id='top-bar'>
+				<div class='top-bar-inner'>
+					<div class='site-name'><a href='/'>cekolabs@dave-lafferty.com</a></div>
+					<ul class='top-bar-links'>
+						<li>							
+							<a href='#'>								
+								projects
+								<i class='icon-chevron-down'></i>
+							</a><br />
 							<ul>
-								<li class='selected'></li>
-								<li></li>
-								<li></li>
+								<li class='projects'>
+									<a href='/django-form-architect'>										
+										<div class='project-header'>Django Form Architect</div>
+										<div>A highly dynamic form builder for that's easy and fun to use.</div>
+									</a>									
+									<a href='#'>
+										<div class='project-header'>Javascript Weekly</div>
+										<div>Javascript tips and tricks to make your apps better.  Mostly jQuery based.</div>
+									</a>
+									<a href='/ksp-mods'>
+										<div class='project-header'>KSP Mods</div>
+										<div>Mods I've made for Kerbal Space Program, the indie space simulator.</div>
+									</a>																		
+								</li>
 							</ul>
-						</div>
-					</div>
-					<div style='clear:both;'></div>
+						</li>
+						<li><a href='/blog'>blog</a></li>
+						<li><a href='/resume'>resume</a></li>
+					</ul>
 				</div>
 			</div>
-			{% block main_content %}
+			{% block pre_main_content %}
 			{% endblock %}
+			<div id='main-content'>						
+				{% block main_content %}
+				{% endblock %}
+			</div>
 		</div>
+		{% block footer %}			
+			{% compressed_js 'core' %}
+		{% endblock %}
 	</body>
 </html>
