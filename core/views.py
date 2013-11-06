@@ -9,6 +9,7 @@ def home(request):
     latest_posts = blog_models.Post.objects.filter(published=True).order_by('-last_modified').all()[:5]
     return locals()
 
+
 @render_to('django-form-architect/index.html')
 def django_form_architect(request):
     return {}

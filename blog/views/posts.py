@@ -74,7 +74,8 @@ def list(request):
 def parse_markdown(request):
     raw_markdown = request.POST.get('text', '')
     pretty_print_ext = markdown_extensions.PrettyPrintExtension()
-    html = markdown.markdown(raw_markdown, extensions=[pretty_print_ext])
+    attribute_stack_ext = markdown_extensions.AttributeStackExtension()
+    html = markdown.markdown(raw_markdown, extensions=['tables', pretty_print_ext, attribute_stack_ext])
     
     response = {
         'status' : 'success',

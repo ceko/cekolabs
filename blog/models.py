@@ -20,11 +20,13 @@ class Post(models.Model):
 
     def parsed_markdown(self):
         pretty_print_ext = markdown_extensions.PrettyPrintExtension()
-        return markdown.markdown(self.markdown, extensions=[pretty_print_ext])
+        attribute_stack_ext = markdown_extensions.AttributeStackExtension()
+        return markdown.markdown(self.markdown, extensions=['tables', pretty_print_ext, attribute_stack_ext])
 
     def parsed_teaser(self):
         pretty_print_ext = markdown_extensions.PrettyPrintExtension()
-        return markdown.markdown(self.teaser, extensions=[pretty_print_ext])
+        attribute_stack_ext = markdown_extensions.AttributeStackExtension()
+        return markdown.markdown(self.teaser, extensions=['tables', pretty_print_ext, attribute_stack_ext])
 
 class BlogFile(models.Model):
     file = models.FileField(upload_to='file_manager/')    

@@ -3,24 +3,45 @@
 }
 .Post .post,
 .Post .teaser {
-  padding: 20px 0px 20px 0px;
-  font-size: 16px;
+  padding: 20px;
+  font-size: 18px;
   /* desert scheme ported from vim to google prettify */
-
 }
 .Post .post p,
 .Post .teaser p {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   line-height: 20px;
 }
 .Post .post h1,
 .Post .teaser h1 {
   font-size: 22px;
-  margin: 40px 0px 10px 0px;
+  margin: 40px 0px 20px 0px;
 }
 .Post .post h1:first-child,
 .Post .teaser h1:first-child {
   margin-top: 0px;
+}
+.Post .post .photo-list,
+.Post .teaser .photo-list {
+  text-align: center;
+}
+.Post .post .photo-list ul,
+.Post .teaser .photo-list ul {
+  margin: 50px 0px 50px 0px;
+  display: inline-block;
+}
+.Post .post .photo-list li,
+.Post .teaser .photo-list li {
+  display: inline-block;
+  width: 30%;
+}
+.Post .post .photo-list li:before,
+.Post .teaser .photo-list li:before {
+  display: none !important;
+}
+.Post .post .photo-list li img,
+.Post .teaser .photo-list li img {
+  width: 100%;
 }
 .Post .post ul,
 .Post .teaser ul {
@@ -43,39 +64,32 @@
   display: inline-block;
   font-size: 10px;
 }
+.Post .post > pre,
+.Post .teaser > pre {
+  margin-bottom: 30px;
+}
 .Post .post code.prettyprint,
 .Post .teaser code.prettyprint {
-  margin-bottom: 15px;
+  font-family: monaco;
+  font-size: .8em;
   display: block;
-  background-color: #333;
+  background-color: #444;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 2px;
+  box-shadow: 0px 1px 1px 1px #CCC;
   /* string  - pink */
-
   /* comment - skyblue */
-
   /* type    - lightgreen */
-
   /* literal - darkred */
-
   /* punctuation */
-
   /* plaintext */
-
   /* html/xml tag    - lightyellow */
-
   /* attribute name  - khaki */
-
   /* attribute value - pink */
-
   /* decimal         - lightgreen */
-
   /* Specify class=linenums on a pre to get line numbering */
-
   /* IE indents via margin-left */
-
   /* Alternate shading for lines */
-
 }
 .Post .post code.prettyprint .nocode,
 .Post .teaser code.prettyprint .nocode {
@@ -134,10 +148,14 @@
   margin-top: 0;
   margin-bottom: 0;
   margin-left: 40px;
-  color: #aeaeae;
+  color: #AEAEAE;
 }
-.Post .post code.prettyprint li.L4,
-.Post .teaser code.prettyprint li.L4 {
+.Post .post code.prettyprint ol.linenums li,
+.Post .teaser code.prettyprint ol.linenums li {
+  margin-bottom: 3px;
+}
+.Post .post code.prettyprint li,
+.Post .teaser code.prettyprint li {
   list-style-type: decimal;
 }
 .Post .post code.prettyprint li.L1,
@@ -150,7 +168,7 @@
 .Post .teaser code.prettyprint li.L7,
 .Post .post code.prettyprint li.L9,
 .Post .teaser code.prettyprint li.L9 {
-  background: #333333;
+  background: #444444;
 }
 @media print {
   .Post .post code.prettyprint prettyprint,
@@ -222,56 +240,50 @@
     color: #006600;
   }
 }
-.TopSubinfo .post-subinfo {
-  font-size: 12px;
-  clear: left;
-  border-bottom: 1px solid #E1E1E1;
-  border-top: 1px solid #E1E1E1;
-  margin-top: 20px;
-  padding: 1px 0px 3px 0px;
-}
-.TopSubinfo .publish-date {
-  float: left;
-  margin: 5px 0px 8px 0px;
-}
-.TopSubinfo .tags {
-  border-left: 1px solid #E1E1E1;
-  float: left;
-  margin: 5px 0px 0px 20px;
-  padding-left: 40px;
-  background: url('../images/icons/tag_blue.png') 20px center no-repeat;
-  height: 18px;
-}
-.TopSubinfo .tags ul {
-  list-style-type: none;
-  margin-left: 0px;
-}
-.TopSubinfo .tags li {
-  display: inline-block;
-}
 #main-wrap #main-content #markdown_preview .post {
   padding: 20px 0px 20px 0px;
 }
 #main-wrap #main-content #markdown_preview .post,
 #main-wrap #main-content #markdown_preview .teaser {
-  padding: 20px 0px 20px 0px;
-  font-size: 16px;
+  padding: 20px;
+  font-size: 18px;
   /* desert scheme ported from vim to google prettify */
-
 }
 #main-wrap #main-content #markdown_preview .post p,
 #main-wrap #main-content #markdown_preview .teaser p {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   line-height: 20px;
 }
 #main-wrap #main-content #markdown_preview .post h1,
 #main-wrap #main-content #markdown_preview .teaser h1 {
   font-size: 22px;
-  margin: 40px 0px 10px 0px;
+  margin: 40px 0px 20px 0px;
 }
 #main-wrap #main-content #markdown_preview .post h1:first-child,
 #main-wrap #main-content #markdown_preview .teaser h1:first-child {
   margin-top: 0px;
+}
+#main-wrap #main-content #markdown_preview .post .photo-list,
+#main-wrap #main-content #markdown_preview .teaser .photo-list {
+  text-align: center;
+}
+#main-wrap #main-content #markdown_preview .post .photo-list ul,
+#main-wrap #main-content #markdown_preview .teaser .photo-list ul {
+  margin: 50px 0px 50px 0px;
+  display: inline-block;
+}
+#main-wrap #main-content #markdown_preview .post .photo-list li,
+#main-wrap #main-content #markdown_preview .teaser .photo-list li {
+  display: inline-block;
+  width: 30%;
+}
+#main-wrap #main-content #markdown_preview .post .photo-list li:before,
+#main-wrap #main-content #markdown_preview .teaser .photo-list li:before {
+  display: none !important;
+}
+#main-wrap #main-content #markdown_preview .post .photo-list li img,
+#main-wrap #main-content #markdown_preview .teaser .photo-list li img {
+  width: 100%;
 }
 #main-wrap #main-content #markdown_preview .post ul,
 #main-wrap #main-content #markdown_preview .teaser ul {
@@ -294,39 +306,32 @@
   display: inline-block;
   font-size: 10px;
 }
+#main-wrap #main-content #markdown_preview .post > pre,
+#main-wrap #main-content #markdown_preview .teaser > pre {
+  margin-bottom: 30px;
+}
 #main-wrap #main-content #markdown_preview .post code.prettyprint,
 #main-wrap #main-content #markdown_preview .teaser code.prettyprint {
-  margin-bottom: 15px;
+  font-family: monaco;
+  font-size: .8em;
   display: block;
-  background-color: #333;
+  background-color: #444;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 2px;
+  box-shadow: 0px 1px 1px 1px #CCC;
   /* string  - pink */
-
   /* comment - skyblue */
-
   /* type    - lightgreen */
-
   /* literal - darkred */
-
   /* punctuation */
-
   /* plaintext */
-
   /* html/xml tag    - lightyellow */
-
   /* attribute name  - khaki */
-
   /* attribute value - pink */
-
   /* decimal         - lightgreen */
-
   /* Specify class=linenums on a pre to get line numbering */
-
   /* IE indents via margin-left */
-
   /* Alternate shading for lines */
-
 }
 #main-wrap #main-content #markdown_preview .post code.prettyprint .nocode,
 #main-wrap #main-content #markdown_preview .teaser code.prettyprint .nocode {
@@ -385,10 +390,14 @@
   margin-top: 0;
   margin-bottom: 0;
   margin-left: 40px;
-  color: #aeaeae;
+  color: #AEAEAE;
 }
-#main-wrap #main-content #markdown_preview .post code.prettyprint li.L4,
-#main-wrap #main-content #markdown_preview .teaser code.prettyprint li.L4 {
+#main-wrap #main-content #markdown_preview .post code.prettyprint ol.linenums li,
+#main-wrap #main-content #markdown_preview .teaser code.prettyprint ol.linenums li {
+  margin-bottom: 3px;
+}
+#main-wrap #main-content #markdown_preview .post code.prettyprint li,
+#main-wrap #main-content #markdown_preview .teaser code.prettyprint li {
   list-style-type: decimal;
 }
 #main-wrap #main-content #markdown_preview .post code.prettyprint li.L1,
@@ -401,7 +410,7 @@
 #main-wrap #main-content #markdown_preview .teaser code.prettyprint li.L7,
 #main-wrap #main-content #markdown_preview .post code.prettyprint li.L9,
 #main-wrap #main-content #markdown_preview .teaser code.prettyprint li.L9 {
-  background: #333333;
+  background: #444444;
 }
 @media print {
   #main-wrap #main-content #markdown_preview .post code.prettyprint prettyprint,
@@ -473,29 +482,55 @@
     color: #006600;
   }
 }
+#main-wrap #main-content #post-teasers {
+  /*.post-teaser:first-child {
+			padding-top:0px;			
+		}*/
+}
 #main-wrap #main-content #post-teasers .post {
   padding: 20px 0px 20px 0px;
 }
 #main-wrap #main-content #post-teasers .post,
 #main-wrap #main-content #post-teasers .teaser {
-  padding: 20px 0px 20px 0px;
-  font-size: 16px;
+  padding: 20px;
+  font-size: 18px;
   /* desert scheme ported from vim to google prettify */
-
 }
 #main-wrap #main-content #post-teasers .post p,
 #main-wrap #main-content #post-teasers .teaser p {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   line-height: 20px;
 }
 #main-wrap #main-content #post-teasers .post h1,
 #main-wrap #main-content #post-teasers .teaser h1 {
   font-size: 22px;
-  margin: 40px 0px 10px 0px;
+  margin: 40px 0px 20px 0px;
 }
 #main-wrap #main-content #post-teasers .post h1:first-child,
 #main-wrap #main-content #post-teasers .teaser h1:first-child {
   margin-top: 0px;
+}
+#main-wrap #main-content #post-teasers .post .photo-list,
+#main-wrap #main-content #post-teasers .teaser .photo-list {
+  text-align: center;
+}
+#main-wrap #main-content #post-teasers .post .photo-list ul,
+#main-wrap #main-content #post-teasers .teaser .photo-list ul {
+  margin: 50px 0px 50px 0px;
+  display: inline-block;
+}
+#main-wrap #main-content #post-teasers .post .photo-list li,
+#main-wrap #main-content #post-teasers .teaser .photo-list li {
+  display: inline-block;
+  width: 30%;
+}
+#main-wrap #main-content #post-teasers .post .photo-list li:before,
+#main-wrap #main-content #post-teasers .teaser .photo-list li:before {
+  display: none !important;
+}
+#main-wrap #main-content #post-teasers .post .photo-list li img,
+#main-wrap #main-content #post-teasers .teaser .photo-list li img {
+  width: 100%;
 }
 #main-wrap #main-content #post-teasers .post ul,
 #main-wrap #main-content #post-teasers .teaser ul {
@@ -518,39 +553,32 @@
   display: inline-block;
   font-size: 10px;
 }
+#main-wrap #main-content #post-teasers .post > pre,
+#main-wrap #main-content #post-teasers .teaser > pre {
+  margin-bottom: 30px;
+}
 #main-wrap #main-content #post-teasers .post code.prettyprint,
 #main-wrap #main-content #post-teasers .teaser code.prettyprint {
-  margin-bottom: 15px;
+  font-family: monaco;
+  font-size: .8em;
   display: block;
-  background-color: #333;
+  background-color: #444;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 2px;
+  box-shadow: 0px 1px 1px 1px #CCC;
   /* string  - pink */
-
   /* comment - skyblue */
-
   /* type    - lightgreen */
-
   /* literal - darkred */
-
   /* punctuation */
-
   /* plaintext */
-
   /* html/xml tag    - lightyellow */
-
   /* attribute name  - khaki */
-
   /* attribute value - pink */
-
   /* decimal         - lightgreen */
-
   /* Specify class=linenums on a pre to get line numbering */
-
   /* IE indents via margin-left */
-
   /* Alternate shading for lines */
-
 }
 #main-wrap #main-content #post-teasers .post code.prettyprint .nocode,
 #main-wrap #main-content #post-teasers .teaser code.prettyprint .nocode {
@@ -609,10 +637,14 @@
   margin-top: 0;
   margin-bottom: 0;
   margin-left: 40px;
-  color: #aeaeae;
+  color: #AEAEAE;
 }
-#main-wrap #main-content #post-teasers .post code.prettyprint li.L4,
-#main-wrap #main-content #post-teasers .teaser code.prettyprint li.L4 {
+#main-wrap #main-content #post-teasers .post code.prettyprint ol.linenums li,
+#main-wrap #main-content #post-teasers .teaser code.prettyprint ol.linenums li {
+  margin-bottom: 3px;
+}
+#main-wrap #main-content #post-teasers .post code.prettyprint li,
+#main-wrap #main-content #post-teasers .teaser code.prettyprint li {
   list-style-type: decimal;
 }
 #main-wrap #main-content #post-teasers .post code.prettyprint li.L1,
@@ -625,7 +657,7 @@
 #main-wrap #main-content #post-teasers .teaser code.prettyprint li.L7,
 #main-wrap #main-content #post-teasers .post code.prettyprint li.L9,
 #main-wrap #main-content #post-teasers .teaser code.prettyprint li.L9 {
-  background: #333333;
+  background: #444444;
 }
 @media print {
   #main-wrap #main-content #post-teasers .post code.prettyprint prettyprint,
@@ -697,42 +729,65 @@
     color: #006600;
   }
 }
-#main-wrap #main-content #post-teasers .post-subinfo {
-  font-size: 12px;
-  clear: left;
-  border-bottom: 1px solid #E1E1E1;
-  border-top: 1px solid #E1E1E1;
-  margin-top: 20px;
-  padding: 1px 0px 3px 0px;
-}
-#main-wrap #main-content #post-teasers .publish-date {
-  float: left;
-  margin: 5px 0px 8px 0px;
-}
-#main-wrap #main-content #post-teasers .tags {
-  border-left: 1px solid #E1E1E1;
-  float: left;
-  margin: 5px 0px 0px 20px;
-  padding-left: 40px;
-  background: url('../images/icons/tag_blue.png') 20px center no-repeat;
-  height: 18px;
-}
-#main-wrap #main-content #post-teasers .tags ul {
-  list-style-type: none;
-  margin-left: 0px;
-}
-#main-wrap #main-content #post-teasers .tags li {
-  display: inline-block;
-}
 #main-wrap #main-content #post-teasers .post-teaser {
   margin-top: 30px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 2px;
+  border: 1px solid #DAE9FA;
+  box-shadow: 0px 1px 1px 1px #DAE9FA;
 }
 #main-wrap #main-content #post-teasers .post-teaser:first-child {
   margin-top: 10px;
 }
-#main-wrap #main-content #post-teasers .post-teaser h2.title {
-  font-size: 22px;
-  margin-bottom: 20px;
+#main-wrap #main-content #post-teasers .post-teaser .teaser > :last-child {
+  margin-bottom: 0px;
+}
+#main-wrap #main-content #post-teasers .post-teaser .header {
+  background: #447194;
+  border-bottom: 1px solid #133651;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+}
+#main-wrap #main-content #post-teasers .post-teaser .header > * {
+  padding: 15px 20px;
+}
+#main-wrap #main-content #post-teasers .post-teaser .header h2.title {
+  display: inline-block;
+  font-size: 1.2em;
+  font-weight: normal;
+}
+#main-wrap #main-content #post-teasers .post-teaser .header h2.title a {
+  color: #FFF;
+}
+#main-wrap #main-content #post-teasers .post-teaser .header h2.title a:hover {
+  text-decoration: underline;
+}
+#main-wrap #main-content #post-teasers .post-teaser .header .publish-date {
+  margin-top: 1px;
+  float: right;
+  color: #EDF4FC;
+  font-size: 1.1em;
+  border-right: 1px solid #133651;
+}
+#main-wrap #main-content #post-teasers .post-teaser .header .tags {
+  margin-top: 1px;
+  float: right;
+  font-size: 1.1em;
+  color: #EDF4FC;
+  padding-left: 40px;
+  background: url('../images/icons/tag_blue.png') 20px center no-repeat;
+  border-left: 1px solid #7BA7C9;
+}
+#main-wrap #main-content #post-teasers .post-teaser .header .tags a,
+#main-wrap #main-content #post-teasers .post-teaser .header .tags .tag {
+  color: #EDF4FC;
+}
+#main-wrap #main-content #post-teasers .post-teaser .header .tags ul {
+  list-style-type: none;
+  margin-left: 0px;
+}
+#main-wrap #main-content #post-teasers .post-teaser .header .tags li {
+  display: inline-block;
 }
 #main-wrap #main-content #post-teasers .post-teaser .teaser-image {
   display: inline-block;
@@ -748,9 +803,6 @@
   display: inline-block;
   width: 77%;
 }
-#main-wrap #main-content #post-teasers .post-teaser:first-child {
-  padding-top: 0px;
-}
 #main-wrap #main-content .blog-body-wrapper .rightcol-background {
   clear: left;
   width: 100%;
@@ -762,63 +814,61 @@
   width: 100%;
   position: relative;
   right: 250px;
-  background: #F7F7F7;
 }
 #main-wrap #main-content .blog-body-wrapper .leftcol-content {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 2px;
+  border: 1px solid #DAE9FA;
+  box-shadow: 0px 0px 1px 1px #DAE9FA;
+  padding: 20px;
   position: relative;
-  left: 250px;
+  left: 252px;
   margin-right: 270px;
-}
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .blog-top .post-subinfo {
-  font-size: 12px;
-  clear: left;
-  border-bottom: 1px solid #E1E1E1;
-  border-top: 1px solid #E1E1E1;
-  margin-top: 20px;
-  padding: 1px 0px 3px 0px;
-}
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .blog-top .publish-date {
-  float: left;
-  margin: 5px 0px 8px 0px;
-}
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .blog-top .tags {
-  border-left: 1px solid #E1E1E1;
-  float: left;
-  margin: 5px 0px 0px 20px;
-  padding-left: 40px;
-  background: url('../images/icons/tag_blue.png') 20px center no-repeat;
-  height: 18px;
-}
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .blog-top .tags ul {
-  list-style-type: none;
-  margin-left: 0px;
-}
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .blog-top .tags li {
-  display: inline-block;
 }
 #main-wrap #main-content .blog-body-wrapper .leftcol-content .post {
   padding: 20px 0px 20px 0px;
 }
 #main-wrap #main-content .blog-body-wrapper .leftcol-content .post,
 #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser {
-  padding: 20px 0px 20px 0px;
-  font-size: 16px;
+  padding: 20px;
+  font-size: 18px;
   /* desert scheme ported from vim to google prettify */
-
 }
 #main-wrap #main-content .blog-body-wrapper .leftcol-content .post p,
 #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser p {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   line-height: 20px;
 }
 #main-wrap #main-content .blog-body-wrapper .leftcol-content .post h1,
 #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser h1 {
   font-size: 22px;
-  margin: 40px 0px 10px 0px;
+  margin: 40px 0px 20px 0px;
 }
 #main-wrap #main-content .blog-body-wrapper .leftcol-content .post h1:first-child,
 #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser h1:first-child {
   margin-top: 0px;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post .photo-list,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser .photo-list {
+  text-align: center;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post .photo-list ul,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser .photo-list ul {
+  margin: 50px 0px 50px 0px;
+  display: inline-block;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post .photo-list li,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser .photo-list li {
+  display: inline-block;
+  width: 30%;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post .photo-list li:before,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser .photo-list li:before {
+  display: none !important;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post .photo-list li img,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser .photo-list li img {
+  width: 100%;
 }
 #main-wrap #main-content .blog-body-wrapper .leftcol-content .post ul,
 #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser ul {
@@ -841,39 +891,32 @@
   display: inline-block;
   font-size: 10px;
 }
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post > pre,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser > pre {
+  margin-bottom: 30px;
+}
 #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint,
 #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint {
-  margin-bottom: 15px;
+  font-family: monaco;
+  font-size: .8em;
   display: block;
-  background-color: #333;
+  background-color: #444;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 2px;
+  box-shadow: 0px 1px 1px 1px #CCC;
   /* string  - pink */
-
   /* comment - skyblue */
-
   /* type    - lightgreen */
-
   /* literal - darkred */
-
   /* punctuation */
-
   /* plaintext */
-
   /* html/xml tag    - lightyellow */
-
   /* attribute name  - khaki */
-
   /* attribute value - pink */
-
   /* decimal         - lightgreen */
-
   /* Specify class=linenums on a pre to get line numbering */
-
   /* IE indents via margin-left */
-
   /* Alternate shading for lines */
-
 }
 #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .nocode,
 #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .nocode {
@@ -932,10 +975,14 @@
   margin-top: 0;
   margin-bottom: 0;
   margin-left: 40px;
-  color: #aeaeae;
+  color: #AEAEAE;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint li.L4,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint li.L4 {
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint ol.linenums li,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint ol.linenums li {
+  margin-bottom: 3px;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint li,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint li {
   list-style-type: decimal;
 }
 #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint li.L1,
@@ -948,7 +995,7 @@
 #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint li.L7,
 #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint li.L9,
 #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint li.L9 {
-  background: #333333;
+  background: #444444;
 }
 @media print {
   #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint prettyprint,
@@ -1027,9 +1074,9 @@
   left: 250px;
 }
 #main-wrap #main-content .blog-body-wrapper .rightcol-content .groupwrapper {
-  background-color: #FFF;
+  background: rgba(255, 255, 255, 0.9);
   margin: 0px 2px 20px 0px;
-  box-shadow: 0px 1px 1px 1px #CCC;
+  box-shadow: 0px 1px 1px 1px #DAE9FA;
   border-radius: 1px;
   border-top: 1px solid #EEE;
   padding: 20px;

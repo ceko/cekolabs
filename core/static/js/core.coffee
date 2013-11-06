@@ -10,3 +10,4 @@ $ ->
 			#	$(this).removeClass('ui-focus')
 			#$('#top-bar .top-bar-links').menu( "collapseAll", null, true )
 	)
+	$('#top-bar .projects').show()
