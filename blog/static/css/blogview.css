@@ -1,3 +1,16 @@
+.HeaderBarGradient {
+  background: #447194;
+  background: -moz-linear-gradient(top, #5f9ece 0%, #447194 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #5f9ece), color-stop(100%, #447194));
+  background: -webkit-linear-gradient(top, #5f9ece 0%, #447194 100%);
+  background: -o-linear-gradient(top, #5f9ece 0%, #447194 100%);
+  background: -ms-linear-gradient(top, #5f9ece 0%, #447194 100%);
+  background: linear-gradient(to bottom, #5f9ece 0%, #447194 100%);
+  border: 1px solid #447194;
+  border-bottom: 1px solid #133651;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+}
 .Post .post {
   padding: 1% 0% 1% 1%;
 }
@@ -737,11 +750,24 @@
   border: 1px solid #DAE9FA;
   box-shadow: 0px 1px 1px 1px #DAE9FA;
 }
+@media (max-width: 825px) {
+  #main-wrap #main-content #post-teasers .post-teaser {
+    width: 100%;
+    margin: 0px 0px 20px 0px;
+  }
+}
 #main-wrap #main-content #post-teasers .post-teaser .teaser > :last-child {
   margin-bottom: 0px;
 }
 #main-wrap #main-content #post-teasers .post-teaser .header {
   background: #447194;
+  background: -moz-linear-gradient(top, #5f9ece 0%, #447194 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #5f9ece), color-stop(100%, #447194));
+  background: -webkit-linear-gradient(top, #5f9ece 0%, #447194 100%);
+  background: -o-linear-gradient(top, #5f9ece 0%, #447194 100%);
+  background: -ms-linear-gradient(top, #5f9ece 0%, #447194 100%);
+  background: linear-gradient(to bottom, #5f9ece 0%, #447194 100%);
+  border: 1px solid #447194;
   border-bottom: 1px solid #133651;
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
@@ -771,12 +797,14 @@
   font-size: 1.1em;
 }
 #main-wrap #main-content #post-teasers .post-teaser .footer .tags {
+  border-right: 1px solid #EEE;
+}
+#main-wrap #main-content #post-teasers .post-teaser .footer .tags {
   margin-top: 1px;
   float: right;
   font-size: 1.1em;
   padding-left: 40px;
   background: url('../images/icons/tag_blue.png') 20px center no-repeat;
-  border-right: 1px solid #EEE;
 }
 #main-wrap #main-content #post-teasers .post-teaser .footer .tags ul {
   list-style-type: none;
@@ -816,10 +844,30 @@
   border-radius: 2px;
   border: 1px solid #DAE9FA;
   box-shadow: 0px 0px 1px 1px #DAE9FA;
-  padding: 20px;
   position: relative;
   left: 252px;
   margin-right: 270px;
+  /*
+			.footer {
+				border-top:1px solid #EEE;				
+			}
+			*/
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .blog-top h1 {
+  background: #447194;
+  background: -moz-linear-gradient(top, #5f9ece 0%, #447194 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #5f9ece), color-stop(100%, #447194));
+  background: -webkit-linear-gradient(top, #5f9ece 0%, #447194 100%);
+  background: -o-linear-gradient(top, #5f9ece 0%, #447194 100%);
+  background: -ms-linear-gradient(top, #5f9ece 0%, #447194 100%);
+  background: linear-gradient(to bottom, #5f9ece 0%, #447194 100%);
+  border: 1px solid #447194;
+  border-bottom: 1px solid #133651;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  color: #FFF;
+  padding: 15px 20px;
+  font-weight: normal;
 }
 #main-wrap #main-content .blog-body-wrapper .leftcol-content .post {
   padding: 1% 0% 1% 1%;
@@ -1062,6 +1110,31 @@
   #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint code .atv {
     color: #006600;
   }
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post-subinfo {
+  border-bottom: 1px solid #DDD;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post-subinfo .publish-date,
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post-subinfo .tags {
+  float: left;
+  padding: 10px 20px;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post-subinfo .tags {
+  border-right: 1px solid #EEE;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post-subinfo .tags {
+  margin-top: 1px;
+  float: left;
+  font-size: 1.1em;
+  padding-left: 40px;
+  background: url('../images/icons/tag_blue.png') 20px center no-repeat;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post-subinfo .tags ul {
+  list-style-type: none;
+  margin-left: 0px;
+}
+#main-wrap #main-content .blog-body-wrapper .leftcol-content .post-subinfo .tags li {
+  display: inline-block;
 }
 #main-wrap #main-content .blog-body-wrapper .rightcol-content {
   float: right;

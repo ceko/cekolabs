@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta name="viewport" content="width=device-width" />
+		<meta content="True" name="HandheldFriendly">
+		<meta content="320" name="MobileOptimized">
 		{% block header %}		
 			{% load compressed %}
 			<title>dave-lafferty.com</title>
@@ -22,18 +25,12 @@
 							</a><br />
 							<ul>
 								<li class='projects' style='display:none;'>
-									<a href='/django-form-architect'>										
-										<div class='project-header'>Django Form Architect</div>
-										<div>A highly dynamic form builder for that's easy and fun to use.</div>
-									</a>									
-									<a href='#'>
-										<div class='project-header'>Javascript Weekly</div>
-										<div>Javascript tips and tricks to make your apps better.  Mostly jQuery based.</div>
-									</a>
-									<a href='/ksp-mods'>
-										<div class='project-header'>KSP Mods</div>
-										<div>Mods I've made for Kerbal Space Program, the indie space simulator.</div>
-									</a>																		
+									{% for project in projects %}
+										<a href='{{ project.link }}'>										
+											<div class='project-header'>{{ project.name }}</div>
+											<div>{{ project.description }}</div>
+										</a>
+									{% endfor %}																											
 								</li>
 							</ul>
 						</li>
@@ -41,6 +38,7 @@
 						<li><a href='/resume'>resume</a></li>
 					</ul>
 				</div>
+				<div style='clear:both;'></div>
 			</div>
 			{% block pre_main_content %}
 			{% endblock %}

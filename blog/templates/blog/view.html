@@ -53,9 +53,6 @@
 						<div class='blog-top'>
 							<h1>{{ post.title }}</h1>
 							<div class='post-subinfo'>
-								<div class='publish-date'>
-									originally published {{ post.created|date:"F d, Y" }}				
-								</div>
 								<ul class="tags">
 									{% for tag in post.tags.all %}
 										<li class='tag'>
@@ -63,12 +60,15 @@
 										</li>
 									{% endfor %}
 								</ul>
+								<div class='publish-date'>
+									originally published {{ post.created|date:"F d, Y" }}				
+								</div>					
 								<div style='clear:left;'></div>
 							</div>							
 						</div>
 						<div class='post'>
 							{{ parsed_markdown|safe }}
-						</div>
+						</div>						
 					</div>					
 					<div class='clear:both;'></div>
 				</div>

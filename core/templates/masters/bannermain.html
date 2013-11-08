@@ -5,36 +5,29 @@
 		<div id='promo-inner'>
 			<div class='science-bot'></div>
 			<div id='promo-slideshow'>
-				<div id='promo-frame'>
+				<div class='progress-indicator'><div class='fill'></div></div>
+				<div id='promo-frame'>					
 					<div id='promo-line'>
-						<div class='promo'>
-							<a href='/django-form-architect'>
-								<div class='promo-inner image-promo'>
-									<img src='{{STATIC_URL}}images/promos/promo-django-form-architect.png' />
-									<div class='overlay'>
-										<h2>Django Form Architect</h2>
-										<span>Create reusable forms for your website using a fun, responsive interface.</span>
+						{% for feature in features %}
+							<div class='promo'>
+								<a href='{{ feature.link }}'>
+									<div class='promo-inner image-promo'>
+										<img src='{{ feature.image.url }}' />
+										<div class='overlay'>
+											<h2>{{ feature.name }}</h2>
+											<span>{{ feature.description }}</span>
+										</div>
 									</div>
-								</div>
-							</a>
-						</div>
-						<div class='promo'>							
-							<a href='/ksp-mods'>
-								<div class='promo-inner image-promo'>
-									<img src='{{STATIC_URL}}images/promos/promo-ksp-modding.png' />
-									<div class='overlay'>
-										<h2>KSP Mod: Dynamic Warp</h2>
-										<span>Go over the basics of setting up a KSP mod with a very simple and useful example.</span>
-									</div>
-								</div>
-							</a>							
-						</div>						
+								</a>
+							</div>
+						{% endfor %}									
 					</div>
 				</div>
 				<div id='promo-controls'>
 					<ul>
-						<li class='selected'></li>
-						<li></li>						
+						{% for feature in features %}
+							<li></li>
+						{% endfor %}	
 					</ul>
 				</div>
 			</div>

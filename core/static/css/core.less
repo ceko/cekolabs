@@ -3,7 +3,7 @@
 body {
 	background: #EDF4FC !important;
 	color:#333 !important;
-	font-family:"Lucida Sans Unicode" !important;
+	font-family:"Helvetica" !important;
 	font-size:14px !important;
 }
 
@@ -19,7 +19,6 @@ a:visited {
 #main-wrap {
 	
 	#top-bar {
-		height:50px;
 		background-color:#333;
 		border-bottom:1px solid #000;
 		box-shadow: 0px 3px 3px rgba(3,3,3,0.3);
@@ -33,11 +32,12 @@ a:visited {
 			color: #FFF;
 			font-size:20px;			
 			position:relative;
-			padding:0px 20px;
+			padding:0px;
 			
 			.site-name {
-				float:left;
 				padding-top:14px;
+				padding-left:20px;				
+				display:inline-block;
 				
 				a {
 					color:#FFF;				
@@ -45,8 +45,21 @@ a:visited {
 			}
 						
 			.top-bar-links {
+				@media(max-width:600px) {
+					display:block;
+					float:left;		
+					clear:both;
+					margin-top:10px;	
+					margin-right:0px;					
+					border-top: 1px solid #666;
+					height:auto;	
+					width:100%;	
+				}
+				
+				margin-right:20px;
+				display:inline-block;
 				float:right;				
-				height:40px;
+				height:50px;
 				font-size:16px;
 											
 				.ui-menu {
@@ -55,7 +68,7 @@ a:visited {
 					
 					.projects {
 												
-						> a {
+						> a {							
 							padding-left:10px;
 							margin-left:-10px;
 							margin-bottom:20px;
@@ -95,7 +108,16 @@ a:visited {
 					}
 				}
 								
-				> li {					
+				> li {			
+					@media(max-width:600px) {
+						&:first-child, &:first-child a {
+							border-left:none;
+						}
+						
+						&:last-child, &:last-child a {
+							border-right:none;
+						}		
+					}		
 					border:1px solid #333;
 					border-left:1px solid #000;
 					border-right:1px solid #666;				
@@ -117,6 +139,10 @@ a:visited {
 					}
 					
 					> a {
+						@media(max-width:600px) {
+							padding-top:10px;
+							padding-bottom:10px;
+						}
 						display:inline-block;
 						padding:16px 20px 17px 20px;
 						color:#FFF;
@@ -147,15 +173,17 @@ a:visited {
 	
 	#promo-wrap {
 		background:url('../images/backgrounds/bluediag.png');
-		height:400px;
 		border-bottom:1px solid #133651;
-		
+						
 		#promo-inner {
-			width:1000px;
+			max-width:1000px;
 			margin:auto;			
 		}
 		
 		.science-bot {
+			@media(max-width:1000px) {
+				display:none;
+			}
 			background:url('../images/promos/sciencebot.png') no-repeat;
 			height:430px;
 			width:500px;			
@@ -165,7 +193,14 @@ a:visited {
 			z-index:499;
 		}
 		
-		#promo-slideshow {			
+		#promo-slideshow {		
+			@media(max-width:1000px) {
+				padding-bottom:15px;
+				margin-top:0px;
+				margin-left:0px;
+				width:100%;
+				height:auto;
+			}	
 			width:730px;
 			height:370px;
 			margin-top:30px;
@@ -179,23 +214,50 @@ a:visited {
 			border:1px solid #0C2232;
 			border-bottom:none;
 			
+			.progress-indicator {
+				height: 3px;
+				background: rgba(125, 149, 168, 0.9);
+				border-top: 1px solid #000;
+				border-bottom: 1px solid #92A9C2;
+				position: absolute;
+				z-index: 50;
+				bottom: 35px;
+				@media(max-width:1000px) {
+					bottom:39px;
+				}
+				left: 10px;
+				right: 10px;
+				
+				.fill {
+					background-color:#92A9C2;
+					height:100%;
+					width:0%;
+				}				
+			}
+			
 			#promo-frame {
+				@media(max-width:1000px) {
+					height:auto;
+					margin-left:0px;
+					margin-right:0px;
+					margin-top:0px;
+				}
 				border-radius: 2px;				
-				background-color:#FFF;
+				background-color: #333;
+				box-shadow: inset 1px 1px 14px 1px #000;
 				height:315px;
 				margin:10px;
 				overflow:hidden;
 				
 				#promo-line {
-					height:315px;
+					height:100%;
 					width:5000px;					
 					position:relative;
 					
 					.promo {
 						border-radius:2px;
-						width:710px;
 						float:left;
-						height:315px;
+						height:100%;
 						background-color:#FFF;
 						
 						.promo-inner {
@@ -221,24 +283,25 @@ a:visited {
 								}
 								
 								h2 {
+									@media(max-width:600px) {
+										font-size:18px;
+									}
 									font-size:22px;
 									margin-bottom:5px;
 									font-weight:normal;
 								}
 								
 								span {
+									@media(max-width:600px) {
+										font-size:1em;
+									}
 									font-size:1.2em;
 								}
 							}
 							
 							&.image-promo {
 								margin:0px;
-							}
-							
-							img {
-								width:100%;
-								height:100%;
-							}							
+							}																				
 						}						
 					}
 				}
@@ -250,16 +313,19 @@ a:visited {
 				ul {				
 					list-style:none;
 					display:inline-block;
+					position:relative;
+					top:2px;
 				}
 				
 				li {
-					display:inline-block;
-					width:15px;
-					height:15px;
-					background:#FFF;
-					margin:5px;
-					border-radius:50%;
-					cursor:pointer;
+					display: inline-block;
+					width: 15px;
+					height: 15px;
+					background: #FFF;
+					margin: 5px;
+					border-radius: 50%;
+					cursor: pointer;
+					box-shadow: inset 1px 1px 1px #000;
 					
 					&.selected {
 						background-color:#85AFCF;
