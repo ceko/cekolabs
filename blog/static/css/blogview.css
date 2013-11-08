@@ -83,6 +83,7 @@
 }
 .Post .post code.prettyprint,
 .Post .teaser code.prettyprint {
+  overflow-x: scroll;
   font-family: monaco;
   font-size: .8em;
   display: block;
@@ -325,6 +326,7 @@
 }
 #main-wrap #main-content #markdown_preview .post code.prettyprint,
 #main-wrap #main-content #markdown_preview .teaser code.prettyprint {
+  overflow-x: scroll;
   font-family: monaco;
   font-size: .8em;
   display: block;
@@ -572,6 +574,7 @@
 }
 #main-wrap #main-content #post-teasers .post code.prettyprint,
 #main-wrap #main-content #post-teasers .teaser code.prettyprint {
+  overflow-x: scroll;
   font-family: monaco;
   font-size: .8em;
   display: block;
@@ -941,6 +944,7 @@
 }
 #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint,
 #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint {
+  overflow-x: scroll;
   font-family: monaco;
   font-size: .8em;
   display: block;
