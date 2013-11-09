@@ -28,6 +28,12 @@ class Post(models.Model):
         attribute_stack_ext = markdown_extensions.AttributeStackExtension()
         return markdown.markdown(self.teaser, extensions=['tables', pretty_print_ext, attribute_stack_ext])
 
+    def __unicode__(self):
+        return "({0}) \"{1}\" @ /{2}".format(self.created, self.title, self.slug)
+
+    class Meta:
+        ordering = ['-created']
+
 class BlogFile(models.Model):
     file = models.FileField(upload_to='file_manager/')    
     upload_date = models.DateTimeField(auto_now_add=True)

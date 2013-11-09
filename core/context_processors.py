@@ -4,7 +4,7 @@ from cekolabs.core.models import Feature, Project
 
 
 def features(request):
-    return {'features': Feature.objects.all().filter(is_active = True).order_by('-created')}
+    return {'features': Feature.objects.all().filter(is_active = True).order_by('-created').select_related()}
 
 def projects(request):
     return {'projects': Project.objects.all().filter(is_active = True)}

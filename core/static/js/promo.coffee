@@ -2,7 +2,7 @@ $ = jQuery
 
 $ ->	
 	advance_interval = null
-	ticks_before_slide = 5
+	ticks_before_slide = 10
 	tick_counter = 0
 	
 	$('#promo-controls li:first').addClass('selected')
@@ -27,9 +27,7 @@ $ ->
 		}, 1000, 'easeOutBack')
 		
 	advance_callback = ->
-		tick_counter++
-						
-		if ticks_before_slide < tick_counter		
+		if ticks_before_slide == tick_counter		
 			$selected = $('#promo-controls li').filter -> 
 				return $(this).hasClass('selected') 
 			if($selected.next().length)
@@ -37,31 +35,39 @@ $ ->
 			else
 				advance_slideshow(0)
 			$('#promo-slideshow .progress-indicator .fill').stop().css({width:'0%'})
-			tick_counter = 1
+			tick_counter = 0
 		
-		animation_timer = 3000		
-		$('#promo-slideshow .progress-indicator .fill').animate({
+		animation_timer = 1000
+		$('#promo-slideshow .progress-indicator .fill-fadein').hide().fadeIn();
+		$('#promo-slideshow .progress-indicator .fill').css({
 			width: "#{tick_counter/ticks_before_slide*100}%"
-		}, animation_timer, 'linear')
+		});		
+		tick_counter++
 			
 	advance_callback()
-	advance_interval = setInterval advance_callback, 3000
+	advance_interval = setInterval advance_callback, 2000
 	
-	promo_callback = ->
+	promo_callback = (reposition)->
 		image_ratio = 315/710 #size of a feature image
 		body_width = $('body').width()
-		if(body_width <= 1000)
-			$('#promo-wrap .image-promo').css({'height' : (body_width * image_ratio) + 'px', 'width' : body_width})
-			$('#promo-wrap .image-promo img').css({'height' : '100%'})
-		else 
-			$('#promo-wrap .image-promo').css({'height' : 'inherit', 'width' :'inherit'})
-			$('#promo-wrap .image-promo img').css({'height' : ''})
 		
 		#reposition the slide, it may have drifted
+		if(reposition)			
+			if(body_width <= 1000)
+				$('#promo-wrap .image-promo').css({'height' : (body_width * image_ratio) + 'px', 'width' : body_width})
+				$('#promo-wrap .image-promo img').css({'height' : '100%'})
+			else 
+				$('#promo-wrap .image-promo').css({'height' : 'inherit', 'width' :'inherit'})
+				$('#promo-wrap .image-promo img').css({'height' : ''})
+				
 		$selected = $('#promo-controls li').filter -> 
 			return $(this).hasClass('selected') 
 		advance_slideshow($selected.index())
 		
-	$(window).resize -> promo_callback()
+	if(typeof window.onorientationchange != 'undefined')
+		$(window).bind 'orientationchange', -> promo_callback(true)
+	else			
+		$(window).resize -> promo_callback(true)
+	
 	if($('body').innerWidth() <= 1000)
-		promo_callback()
+		promo_callback(true)

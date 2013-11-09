@@ -16,6 +16,9 @@
 	
 	.post {
 		padding:1% 0% 1% 1%;
+		>:last-child {
+			margin-bottom:0px;
+		}
 	}
 	
 	.post, .teaser {
@@ -25,6 +28,7 @@
 		p {
 			margin-bottom:30px;
 			line-height:20px;
+			word-wrap: break-word;
 		}
 		
 		h1 {
@@ -89,7 +93,7 @@
 		
 		/* desert scheme ported from vim to google prettify */
 		code.prettyprint {
-			overflow-x:scroll;
+			overflow-x:auto;
 			font-family:monaco;
 			font-size:.8em;			
 			display: block; background-color: #444; padding:10px; border-radius:2px;
@@ -255,32 +259,21 @@
 		
 	}
 
-	.blog-body-wrapper {
+	#blogpost {
 		
-		.rightcol-background {
-			
-			clear:left;
-			width:100%;
-			float:left;					
-			overflow:hidden; 
-		}
-		
-		.leftcol-background {			
-			float:left;
-			width:100%;
-			position:relative;
-			right:250px;
-		}
+		position:relative;
 		
 		.leftcol-content {			
 			background:rgba(255, 255, 255, .9);
 			border-radius: 2px;
 			border: 1px solid #DAE9FA;
 			box-shadow: 0px 0px 1px 1px #DAE9FA;					
-			position:relative;
-			left: 252px;
-			margin-right:270px;	
-			
+			float:left;
+			@media(max-width: 825px) {
+				width:100%;
+			}
+			width:75%;
+												
 			.blog-top {
 								
 				h1 {					
@@ -299,9 +292,11 @@
 					float:left;
 					padding:10px 20px;
 				}
-				.Tags(@float:left);				
+				.Tags(left);				
 			}	
-				
+			
+			margin-bottom:1%;
+			
 			/*
 			.footer {
 				border-top:1px solid #EEE;				
@@ -312,18 +307,41 @@
 		.rightcol-content {
 					
 			float:right;
-			width:250px;
-			position:relative;
-			left:250px;		
+			@media(max-width: 825px) {
+				width:100%;								
+			}
+			width:24%;							
 			
 			.groupwrapper{
 			
 				background:rgba(255, 255, 255, .9);
-				margin: 0px 2px 20px 0px;
+				margin: 0px 1% 1% 1%;
 				box-shadow: 0px 1px 1px 1px #DAE9FA;
 				border-radius: 1px;			
 				border-top:1px solid #EEE;
-				padding:20px;
+										
+				@media(max-width: 825px) {					
+					width:49%;
+					display:block;
+					float:left;
+					margin:1%;
+					&:nth-child(odd) {
+						margin-left:0%;	
+					}
+					&:nth-child(even) {
+						margin-right:0%;	
+					}										
+				}
+				
+				@media(max-width:420px) {
+					width:100%;					
+					margin-left:0%;										
+				}
+				
+				.group {
+					margin:6% 6% 3% 6%;
+					padding-bottom:20px;					
+				}
 							
 				.groupheader {
 					text-align:center;

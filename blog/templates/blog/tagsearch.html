@@ -1,0 +1,17 @@
+{% extends 'masters/main.html' %}
+{% load compressed %}
+
+{% block header %}
+	{{ block.super }}		
+{% endblock %}
+
+{% block footer %}
+	{{ block.super }}
+	<script src="//google-code-prettify.googlecode.com/svn/loader/run_prettify.js?autoload=true"></script>
+{% endblock %}
+
+{% block main_content %}
+
+	<h1>There's only like 3 posts, you don't need a tag search yet.</h1>
+
+{% endblock %}

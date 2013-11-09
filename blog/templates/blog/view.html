@@ -14,66 +14,64 @@
 {% block main_content %}
 
 	<div id='blogpost'>		
-		<div class='blog-body-wrapper'>
-			<div class='rightcol-background'>
-				<div class='leftcol-background'>
-					<div class='rightcol-content'>
-						<div class='groupwrapper'>							
-							<div class='groupheader'>
-								<h3>Other Posts</h3>
-							</div>							
-							{% for recent_post in recent_posts %}
-								<div class='recent-post'>
-									<div class='title'>
-										<a href='{% url view recent_post.slug, recent_post.id %}'>{{ recent_post.title }}</a>
-									</div>
-									<div class='creation-date'>
-										{{ recent_post.created|date:"F d, Y" }}
-									</div>
-								</div>
-							{% endfor %}
-						</div>
-						<div class='groupwrapper'>
-							<div class='groupheader'>
-								<h3>Feature Projects</h3>
-							</div>
-							{% for recent_post in recent_posts %}
-								<div class='recent-post'>
-									<div class='title'>
-										<a href='blog:view'>{{ recent_post.title }}</a>
-									</div>
-									<div class='creation-date'>
-										{{ recent_post.created|date:"F d, Y" }}
-									</div>
-								</div>
-							{% endfor %}
-						</div>
-					</div>
-					<div class='leftcol-content'>
-						<div class='blog-top'>
-							<h1>{{ post.title }}</h1>
-							<div class='post-subinfo'>
-								<ul class="tags">
-									{% for tag in post.tags.all %}
-										<li class='tag'>
-											<a href='{% url tagsearch tag.name %}'>{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
-										</li>
-									{% endfor %}
-								</ul>
-								<div class='publish-date'>
-									originally published {{ post.created|date:"F d, Y" }}				
-								</div>					
-								<div style='clear:left;'></div>
-							</div>							
-						</div>
-						<div class='post'>
-							{{ parsed_markdown|safe }}
-						</div>						
+		<div class='leftcol-content'>
+			<div class='blog-top'>
+				<h1>{{ post.title }}</h1>
+				<div class='post-subinfo'>
+					<ul class="tags">
+						{% for tag in post.tags.all %}
+							<li class='tag'>
+								<a href='{% url tagsearch tag.name %}'>{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
+							</li>
+						{% endfor %}
+					</ul>
+					<div class='publish-date'>
+						originally published {{ post.created|date:"F d, Y" }}				
 					</div>					
-					<div class='clear:both;'></div>
-				</div>
-			</div>			
+					<div style='clear:left;'></div>
+				</div>							
 		</div>
-	</div>
+			<div class='post'>
+				{{ parsed_markdown|safe }}
+			</div>						
+		</div>	
+		<div class='rightcol-content'>
+			<div class='groupwrapper'>		
+				<div class='group'>					
+					<div class='groupheader'>
+						<h3>Other Posts</h3>
+					</div>							
+					{% for recent_post in recent_posts %}
+						<div class='recent-post'>
+							<div class='title'>
+								<a href='{% url blog_view recent_post.slug, recent_post.id %}'>{{ recent_post.title }}</a>
+							</div>
+							<div class='creation-date'>
+								{{ recent_post.created|date:"F d, Y" }}
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+			<div class='groupwrapper'>
+				<div class='group'>
+					<div class='groupheader'>
+						<h3>Featured Posts</h3>
+					</div>
+					{% for feature in features %}
+						<div class='recent-post'>
+							<div class='title'>
+								<a href='{% url blog_view feature.post.slug, feature.post.id %}'>{{ feature.post.title }}</a>
+							</div>
+							<div class='creation-date'>
+								{{ feature.post.created|date:"F d, Y" }}
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>				
+		<div class='clear:both;'></div>							
+	</div>	
 
 {% endblock %}

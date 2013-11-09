@@ -14,16 +14,21 @@
 .Post .post {
   padding: 1% 0% 1% 1%;
 }
+.Post .post > :last-child {
+  margin-bottom: 0px;
+}
 .Post .post,
 .Post .teaser {
   padding: 20px;
   font-size: 18px;
   /* desert scheme ported from vim to google prettify */
+
 }
 .Post .post p,
 .Post .teaser p {
   margin-bottom: 30px;
   line-height: 20px;
+  word-wrap: break-word;
 }
 .Post .post h1,
 .Post .teaser h1 {
@@ -83,7 +88,7 @@
 }
 .Post .post code.prettyprint,
 .Post .teaser code.prettyprint {
-  overflow-x: scroll;
+  overflow-x: auto;
   font-family: monaco;
   font-size: .8em;
   display: block;
@@ -92,18 +97,31 @@
   border-radius: 2px;
   box-shadow: 0px 1px 1px 1px #CCC;
   /* string  - pink */
+
   /* comment - skyblue */
+
   /* type    - lightgreen */
+
   /* literal - darkred */
+
   /* punctuation */
+
   /* plaintext */
+
   /* html/xml tag    - lightyellow */
+
   /* attribute name  - khaki */
+
   /* attribute value - pink */
+
   /* decimal         - lightgreen */
+
   /* Specify class=linenums on a pre to get line numbering */
+
   /* IE indents via margin-left */
+
   /* Alternate shading for lines */
+
 }
 .Post .post code.prettyprint .nocode,
 .Post .teaser code.prettyprint .nocode {
@@ -257,16 +275,21 @@
 #main-wrap #main-content #markdown_preview .post {
   padding: 1% 0% 1% 1%;
 }
+#main-wrap #main-content #markdown_preview .post > :last-child {
+  margin-bottom: 0px;
+}
 #main-wrap #main-content #markdown_preview .post,
 #main-wrap #main-content #markdown_preview .teaser {
   padding: 20px;
   font-size: 18px;
   /* desert scheme ported from vim to google prettify */
+
 }
 #main-wrap #main-content #markdown_preview .post p,
 #main-wrap #main-content #markdown_preview .teaser p {
   margin-bottom: 30px;
   line-height: 20px;
+  word-wrap: break-word;
 }
 #main-wrap #main-content #markdown_preview .post h1,
 #main-wrap #main-content #markdown_preview .teaser h1 {
@@ -326,7 +349,7 @@
 }
 #main-wrap #main-content #markdown_preview .post code.prettyprint,
 #main-wrap #main-content #markdown_preview .teaser code.prettyprint {
-  overflow-x: scroll;
+  overflow-x: auto;
   font-family: monaco;
   font-size: .8em;
   display: block;
@@ -335,18 +358,31 @@
   border-radius: 2px;
   box-shadow: 0px 1px 1px 1px #CCC;
   /* string  - pink */
+
   /* comment - skyblue */
+
   /* type    - lightgreen */
+
   /* literal - darkred */
+
   /* punctuation */
+
   /* plaintext */
+
   /* html/xml tag    - lightyellow */
+
   /* attribute name  - khaki */
+
   /* attribute value - pink */
+
   /* decimal         - lightgreen */
+
   /* Specify class=linenums on a pre to get line numbering */
+
   /* IE indents via margin-left */
+
   /* Alternate shading for lines */
+
 }
 #main-wrap #main-content #markdown_preview .post code.prettyprint .nocode,
 #main-wrap #main-content #markdown_preview .teaser code.prettyprint .nocode {
@@ -501,20 +537,26 @@
   /*.post-teaser:first-child {
 			padding-top:0px;			
 		}*/
+
 }
 #main-wrap #main-content #post-teasers .post {
   padding: 1% 0% 1% 1%;
+}
+#main-wrap #main-content #post-teasers .post > :last-child {
+  margin-bottom: 0px;
 }
 #main-wrap #main-content #post-teasers .post,
 #main-wrap #main-content #post-teasers .teaser {
   padding: 20px;
   font-size: 18px;
   /* desert scheme ported from vim to google prettify */
+
 }
 #main-wrap #main-content #post-teasers .post p,
 #main-wrap #main-content #post-teasers .teaser p {
   margin-bottom: 30px;
   line-height: 20px;
+  word-wrap: break-word;
 }
 #main-wrap #main-content #post-teasers .post h1,
 #main-wrap #main-content #post-teasers .teaser h1 {
@@ -574,7 +616,7 @@
 }
 #main-wrap #main-content #post-teasers .post code.prettyprint,
 #main-wrap #main-content #post-teasers .teaser code.prettyprint {
-  overflow-x: scroll;
+  overflow-x: auto;
   font-family: monaco;
   font-size: .8em;
   display: block;
@@ -583,18 +625,31 @@
   border-radius: 2px;
   box-shadow: 0px 1px 1px 1px #CCC;
   /* string  - pink */
+
   /* comment - skyblue */
+
   /* type    - lightgreen */
+
   /* literal - darkred */
+
   /* punctuation */
+
   /* plaintext */
+
   /* html/xml tag    - lightyellow */
+
   /* attribute name  - khaki */
+
   /* attribute value - pink */
+
   /* decimal         - lightgreen */
+
   /* Specify class=linenums on a pre to get line numbering */
+
   /* IE indents via margin-left */
+
   /* Alternate shading for lines */
+
 }
 #main-wrap #main-content #post-teasers .post code.prettyprint .nocode,
 #main-wrap #main-content #post-teasers .teaser code.prettyprint .nocode {
@@ -830,33 +885,30 @@
   display: inline-block;
   width: 77%;
 }
-#main-wrap #main-content .blog-body-wrapper .rightcol-background {
-  clear: left;
-  width: 100%;
-  float: left;
-  overflow: hidden;
-}
-#main-wrap #main-content .blog-body-wrapper .leftcol-background {
-  float: left;
-  width: 100%;
+#main-wrap #main-content #blogpost {
   position: relative;
-  right: 250px;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content {
+#main-wrap #main-content #blogpost .leftcol-content {
   background: rgba(255, 255, 255, 0.9);
   border-radius: 2px;
   border: 1px solid #DAE9FA;
   box-shadow: 0px 0px 1px 1px #DAE9FA;
-  position: relative;
-  left: 252px;
-  margin-right: 270px;
+  float: left;
+  width: 75%;
+  margin-bottom: 1%;
   /*
 			.footer {
 				border-top:1px solid #EEE;				
 			}
 			*/
+
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .blog-top h1 {
+@media (max-width: 825px) {
+  #main-wrap #main-content #blogpost .leftcol-content {
+    width: 100%;
+  }
+}
+#main-wrap #main-content #blogpost .leftcol-content .blog-top h1 {
   background: #447194;
   background: -moz-linear-gradient(top, #5f9ece 0%, #447194 100%);
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #5f9ece), color-stop(100%, #447194));
@@ -872,63 +924,68 @@
   padding: 15px 20px;
   font-weight: normal;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post {
+#main-wrap #main-content #blogpost .leftcol-content .post {
   padding: 1% 0% 1% 1%;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser {
+#main-wrap #main-content #blogpost .leftcol-content .post > :last-child {
+  margin-bottom: 0px;
+}
+#main-wrap #main-content #blogpost .leftcol-content .post,
+#main-wrap #main-content #blogpost .leftcol-content .teaser {
   padding: 20px;
   font-size: 18px;
   /* desert scheme ported from vim to google prettify */
+
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post p,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser p {
+#main-wrap #main-content #blogpost .leftcol-content .post p,
+#main-wrap #main-content #blogpost .leftcol-content .teaser p {
   margin-bottom: 30px;
   line-height: 20px;
+  word-wrap: break-word;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post h1,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser h1 {
+#main-wrap #main-content #blogpost .leftcol-content .post h1,
+#main-wrap #main-content #blogpost .leftcol-content .teaser h1 {
   font-size: 22px;
   margin: 40px 0px 20px 0px;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post h1:first-child,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser h1:first-child {
+#main-wrap #main-content #blogpost .leftcol-content .post h1:first-child,
+#main-wrap #main-content #blogpost .leftcol-content .teaser h1:first-child {
   margin-top: 0px;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post .photo-list,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser .photo-list {
+#main-wrap #main-content #blogpost .leftcol-content .post .photo-list,
+#main-wrap #main-content #blogpost .leftcol-content .teaser .photo-list {
   text-align: center;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post .photo-list ul,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser .photo-list ul {
+#main-wrap #main-content #blogpost .leftcol-content .post .photo-list ul,
+#main-wrap #main-content #blogpost .leftcol-content .teaser .photo-list ul {
   margin: 50px 0px 50px 0px;
   display: inline-block;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post .photo-list li,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser .photo-list li {
+#main-wrap #main-content #blogpost .leftcol-content .post .photo-list li,
+#main-wrap #main-content #blogpost .leftcol-content .teaser .photo-list li {
   display: inline-block;
   width: 30%;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post .photo-list li:before,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser .photo-list li:before {
+#main-wrap #main-content #blogpost .leftcol-content .post .photo-list li:before,
+#main-wrap #main-content #blogpost .leftcol-content .teaser .photo-list li:before {
   display: none !important;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post .photo-list li img,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser .photo-list li img {
+#main-wrap #main-content #blogpost .leftcol-content .post .photo-list li img,
+#main-wrap #main-content #blogpost .leftcol-content .teaser .photo-list li img {
   width: 100%;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post ul,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser ul {
+#main-wrap #main-content #blogpost .leftcol-content .post ul,
+#main-wrap #main-content #blogpost .leftcol-content .teaser ul {
   padding-left: 5px;
   list-style-type: none;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post ul li,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser ul li {
+#main-wrap #main-content #blogpost .leftcol-content .post ul li,
+#main-wrap #main-content #blogpost .leftcol-content .teaser ul li {
   padding-left: 20px;
   margin-bottom: 15px;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post ul li:before,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser ul li:before {
+#main-wrap #main-content #blogpost .leftcol-content .post ul li:before,
+#main-wrap #main-content #blogpost .leftcol-content .teaser ul li:before {
   content: '\f054';
   font-family: FontAwesome;
   margin-left: 0px;
@@ -938,13 +995,13 @@
   display: inline-block;
   font-size: 10px;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post > pre,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser > pre {
+#main-wrap #main-content #blogpost .leftcol-content .post > pre,
+#main-wrap #main-content #blogpost .leftcol-content .teaser > pre {
   margin-bottom: 30px;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint {
-  overflow-x: scroll;
+#main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint,
+#main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint {
+  overflow-x: auto;
   font-family: monaco;
   font-size: .8em;
   display: block;
@@ -953,220 +1010,259 @@
   border-radius: 2px;
   box-shadow: 0px 1px 1px 1px #CCC;
   /* string  - pink */
+
   /* comment - skyblue */
+
   /* type    - lightgreen */
+
   /* literal - darkred */
+
   /* punctuation */
+
   /* plaintext */
+
   /* html/xml tag    - lightyellow */
+
   /* attribute name  - khaki */
+
   /* attribute value - pink */
+
   /* decimal         - lightgreen */
+
   /* Specify class=linenums on a pre to get line numbering */
+
   /* IE indents via margin-left */
+
   /* Alternate shading for lines */
+
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .nocode,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .nocode {
+#main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint .nocode,
+#main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint .nocode {
   background-color: none;
   color: #000000;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .str,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .str {
+#main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint .str,
+#main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint .str {
   color: #ffa0a0;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .kwd,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .kwd {
+#main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint .kwd,
+#main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint .kwd {
   color: #f0e68c;
   font-weight: bold;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .com,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .com {
+#main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint .com,
+#main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint .com {
   color: #87ceeb;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .typ,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .typ {
+#main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint .typ,
+#main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint .typ {
   color: #98fb98;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .lit,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .lit {
+#main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint .lit,
+#main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint .lit {
   color: #cd5c5c;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .pun,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .pun {
+#main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint .pun,
+#main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint .pun {
   color: #ffffff;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .pln,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .pln {
+#main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint .pln,
+#main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint .pln {
   color: #ffffff;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .tag,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .tag {
+#main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint .tag,
+#main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint .tag {
   color: #f0e68c;
   font-weight: bold;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .atn,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .atn {
+#main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint .atn,
+#main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint .atn {
   color: #bdb76b;
   font-weight: bold;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .atv,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .atv {
+#main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint .atv,
+#main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint .atv {
   color: #ffa0a0;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .dec,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .dec {
+#main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint .dec,
+#main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint .dec {
   color: #98fb98;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint ol.linenums,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint ol.linenums {
+#main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint ol.linenums,
+#main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint ol.linenums {
   margin-top: 0;
   margin-bottom: 0;
   margin-left: 40px;
   color: #AEAEAE;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint ol.linenums li,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint ol.linenums li {
+#main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint ol.linenums li,
+#main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint ol.linenums li {
   margin-bottom: 3px;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint li,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint li {
+#main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint li,
+#main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint li {
   list-style-type: decimal;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint li.L1,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint li.L1,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint li.L3,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint li.L3,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint li.L5,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint li.L5,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint li.L7,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint li.L7,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint li.L9,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint li.L9 {
+#main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint li.L1,
+#main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint li.L1,
+#main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint li.L3,
+#main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint li.L3,
+#main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint li.L5,
+#main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint li.L5,
+#main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint li.L7,
+#main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint li.L7,
+#main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint li.L9,
+#main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint li.L9 {
   background: #444444;
 }
 @media print {
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint prettyprint,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint prettyprint {
+  #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint prettyprint,
+  #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint prettyprint {
     background-color: none;
   }
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .str,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .str,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint code .str,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint code .str {
+  #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint .str,
+  #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint .str,
+  #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint code .str,
+  #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint code .str {
     color: #006600;
   }
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .kwd,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .kwd,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint code .kwd,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint code .kwd {
+  #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint .kwd,
+  #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint .kwd,
+  #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint code .kwd,
+  #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint code .kwd {
     color: #006;
     font-weight: bold;
   }
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .com,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .com,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint code .com,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint code .com {
+  #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint .com,
+  #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint .com,
+  #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint code .com,
+  #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint code .com {
     color: #600;
     font-style: italic;
   }
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .typ,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .typ,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint code .typ,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint code .typ {
+  #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint .typ,
+  #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint .typ,
+  #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint code .typ,
+  #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint code .typ {
     color: #404;
     font-weight: bold;
   }
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .lit,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .lit,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint code .lit,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint code .lit {
+  #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint .lit,
+  #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint .lit,
+  #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint code .lit,
+  #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint code .lit {
     color: #004444;
   }
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .pun,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .pun,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint code .pun,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint code .pun {
+  #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint .pun,
+  #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint .pun,
+  #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint code .pun,
+  #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint code .pun {
     color: #444400;
   }
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .pln,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .pln,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint code .pln,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint code .pln {
+  #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint .pln,
+  #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint .pln,
+  #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint code .pln,
+  #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint code .pln {
     color: #000000;
   }
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .tag,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .tag,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint code .tag,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint code .tag {
+  #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint .tag,
+  #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint .tag,
+  #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint code .tag,
+  #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint code .tag {
     color: #006;
     font-weight: bold;
   }
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .atn,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .atn,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint code .atn,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint code .atn {
+  #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint .atn,
+  #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint .atn,
+  #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint code .atn,
+  #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint code .atn {
     color: #440044;
   }
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint .atv,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint .atv,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .post code.prettyprint code .atv,
-  #main-wrap #main-content .blog-body-wrapper .leftcol-content .teaser code.prettyprint code .atv {
+  #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint .atv,
+  #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint .atv,
+  #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint code .atv,
+  #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint code .atv {
     color: #006600;
   }
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post-subinfo {
+#main-wrap #main-content #blogpost .leftcol-content .post-subinfo {
   border-bottom: 1px solid #DDD;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post-subinfo .publish-date,
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post-subinfo .tags {
+#main-wrap #main-content #blogpost .leftcol-content .post-subinfo .publish-date,
+#main-wrap #main-content #blogpost .leftcol-content .post-subinfo .tags {
   float: left;
   padding: 10px 20px;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post-subinfo .tags {
+#main-wrap #main-content #blogpost .leftcol-content .post-subinfo .tags {
   border-right: 1px solid #EEE;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post-subinfo .tags {
+#main-wrap #main-content #blogpost .leftcol-content .post-subinfo .tags {
   margin-top: 1px;
   float: left;
   font-size: 1.1em;
   padding-left: 40px;
   background: url('../images/icons/tag_blue.png') 20px center no-repeat;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post-subinfo .tags ul {
+#main-wrap #main-content #blogpost .leftcol-content .post-subinfo .tags ul {
   list-style-type: none;
   margin-left: 0px;
 }
-#main-wrap #main-content .blog-body-wrapper .leftcol-content .post-subinfo .tags li {
+#main-wrap #main-content #blogpost .leftcol-content .post-subinfo .tags li {
   display: inline-block;
 }
-#main-wrap #main-content .blog-body-wrapper .rightcol-content {
+#main-wrap #main-content #blogpost .rightcol-content {
   float: right;
-  width: 250px;
-  position: relative;
-  left: 250px;
+  width: 24%;
 }
-#main-wrap #main-content .blog-body-wrapper .rightcol-content .groupwrapper {
+@media (max-width: 825px) {
+  #main-wrap #main-content #blogpost .rightcol-content {
+    width: 100%;
+  }
+}
+#main-wrap #main-content #blogpost .rightcol-content .groupwrapper {
   background: rgba(255, 255, 255, 0.9);
-  margin: 0px 2px 20px 0px;
+  margin: 0px 1% 1% 1%;
   box-shadow: 0px 1px 1px 1px #DAE9FA;
   border-radius: 1px;
   border-top: 1px solid #EEE;
-  padding: 20px;
 }
-#main-wrap #main-content .blog-body-wrapper .rightcol-content .groupwrapper .groupheader {
+@media (max-width: 825px) {
+  #main-wrap #main-content #blogpost .rightcol-content .groupwrapper {
+    width: 49%;
+    display: block;
+    float: left;
+    margin: 1%;
+  }
+  #main-wrap #main-content #blogpost .rightcol-content .groupwrapper:nth-child(odd) {
+    margin-left: 0%;
+  }
+  #main-wrap #main-content #blogpost .rightcol-content .groupwrapper:nth-child(even) {
+    margin-right: 0%;
+  }
+}
+@media (max-width: 420px) {
+  #main-wrap #main-content #blogpost .rightcol-content .groupwrapper {
+    width: 100%;
+    margin-left: 0%;
+  }
+}
+#main-wrap #main-content #blogpost .rightcol-content .groupwrapper .group {
+  margin: 6% 6% 3% 6%;
+  padding-bottom: 20px;
+}
+#main-wrap #main-content #blogpost .rightcol-content .groupwrapper .groupheader {
   text-align: center;
   background: url('../images/line-bg.gif') repeat-x center;
 }
-#main-wrap #main-content .blog-body-wrapper .rightcol-content .groupwrapper .groupheader h3 {
+#main-wrap #main-content #blogpost .rightcol-content .groupwrapper .groupheader h3 {
   display: inline-block;
   background: #FFF;
   padding: 0px 10px;
 }
-#main-wrap #main-content .blog-body-wrapper .rightcol-content .groupwrapper .recent-post {
+#main-wrap #main-content #blogpost .rightcol-content .groupwrapper .recent-post {
   margin-top: 20px;
 }
-#main-wrap #main-content .blog-body-wrapper .rightcol-content .groupwrapper .recent-post .creation-date {
+#main-wrap #main-content #blogpost .rightcol-content .groupwrapper .recent-post .creation-date {
   margin-top: 7px;
   font-size: 12px;
   color: #666;
