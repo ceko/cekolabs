@@ -1,5 +1,5 @@
 body {
-  background: #EDF4FC !important;
+  background: #EEE !important;
   color: #333 !important;
   font-family: "Helvetica" !important;
   font-size: 14px !important;
@@ -14,10 +14,9 @@ a:visited {
 #main-wrap #top-bar {
   background-color: #333;
   border-bottom: 1px solid #000;
-  box-shadow: 0px 3px 3px rgba(3, 3, 3, 0.3);
+  box-shadow: 0px 1px 3px rgba(3, 3, 3, 0.7);
   position: relative;
   text-align: center;
-  padding: 0% 1%;
 }
 #main-wrap #top-bar .top-bar-inner {
   text-align: left;
@@ -31,8 +30,9 @@ a:visited {
 #main-wrap #top-bar .top-bar-inner .site-name {
   padding-top: 14px;
   display: inline-block;
+  float: left;
 }
-@media (max-width: 600px) {
+@media (max-width: 1250px) {
   #main-wrap #top-bar .top-bar-inner .site-name {
     padding-left: 10px;
   }
@@ -43,7 +43,6 @@ a:visited {
 #main-wrap #top-bar .top-bar-inner .top-bar-links {
   display: inline-block;
   float: right;
-  height: 50px;
   font-size: 16px;
 }
 @media (max-width: 600px) {
@@ -66,7 +65,7 @@ a:visited {
   margin-left: -10px;
   margin-bottom: 20px;
   display: block;
-  font-size: 12px;
+  font-size: 14px;
   color: #333;
   border-left: 1px solid #FFF;
 }

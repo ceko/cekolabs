@@ -156,7 +156,7 @@ PIPELINE_JS = {
           'js/core.coffee',  
           'js/promo.coffee',
           'js/jquery.colorbox.js',
-          'js/jquery.isotope.min.js'       
+          'js/packery.min.js'       
         ),
         'output_filename': 'js/core.min.js',
     },    

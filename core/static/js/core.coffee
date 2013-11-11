@@ -7,21 +7,11 @@ $ ->
 	$('#top-bar .projects').show()
 	
 
-isotope_initialized = false
-isotope_callback = ->
-	if($('body').innerWidth() > 800)
-		$('#post-teasers').isotope 	  
-			itemSelector: '.post-teaser',
-		  	layoutMode: 'fitRows'
-		isotope_initialized = true
-	else
-		if isotope_initialized
-	  		$('#post-teasers').isotope('destroy');
-	  		isotope_initialized = false
-	  	
+packery_callback = ->
+	$('#post-teasers').packery
+		itemSelector: '.post-teaser-wrap'		  	
+		  	
 $(window).load ->
 	$('#post-teasers').fadeIn()
-	isotope_callback()
-	
-	  	
-$(window).resize -> isotope_callback()		
+	packery_callback()
+	  
