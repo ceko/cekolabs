@@ -1,7 +1,19 @@
 {% extends 'masters/main.html' %}
 
+{% load compressed %}
+
+{% block header %}
+	{{ block.super }}
+	{% compressed_css 'blog' %}	
+{% endblock %}
+
+{% block footer %}
+	{{ block.super }}
+	<script src="//google-code-prettify.googlecode.com/svn/loader/run_prettify.js?autoload=true"></script>
+{% endblock %}
+
 {% block main_content %}
-	<h1>Blog Posts</h1><br />
+		
 	{% if messages %}
 		<ul class='messages'>
 			{% for message in messages %}
@@ -10,14 +22,46 @@
 		</ul>
 	{% endif %}
 	
-	<ul class='posts'>
-		{% for post in posts %}
-			<li class='post'>
-				<a href='/blog/{{post.slug}}/{{post.id}}/edit'>{{ post.slug }}</a>
-			</li>
-		{% endfor %}
-	</ul>
-	
-	<a href='/blog/new/'>Add New</a>
-	
+	{% for group in grouped_posts %}
+		<h2 class='month-group'>{{ group.date|date:"F" }}</h2>
+		<div class='post-teasers' style='display:none;'>
+			{% for post in group.posts %}		
+				<div class='post-teaser-wrap'>		
+					<div class='post-teaser'>
+						<div class='header'>				
+							<h2 class='title'><a href='{% url blog_view post.slug, post.id %}'>{{ post.title }}</a></h2>										
+						</div>
+						
+						<div class='post-subinfo'>					
+							<div style='clear:left;'></div>
+						</div>
+										
+						{% if post.teaser_image %}
+							<div class='teaser-image'>
+								<img src='{{ post.teaser_image.url}}' />
+							</div>
+						{% endif %}				
+						<div class='teaser {% if post.teaser_image %}has-image{% endif %}'>
+							{{ post.parsed_teaser|safe }}
+						</div>								
+						
+						<div class='footer'>					
+							<div class='publish-date'>
+								{{ post.created|date:"F d, Y" }}				
+							</div>
+							<ul class="tags">
+								{% for tag in post.tags.all %}
+									<li class='tag'>
+										<a href='{% url tagsearch tag.name %}'>{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
+									</li>
+								{% endfor %}
+							</ul>
+							<div style='clear:both;'></div>			
+						</div>
+					</div>	
+				</div>
+			{% endfor %}
+		</div>
+	{% endfor %}
+		
 {% endblock %}

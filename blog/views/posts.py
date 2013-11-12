@@ -8,6 +8,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import markdown
 import json
+import itertools
+import datetime
+
 
 @render_to('blog/view.html')
 def view(request, id):
@@ -49,7 +52,7 @@ def edit(request, id):
             post = post_form.save()
             
             messages.add_message(request, messages.SUCCESS, 'The blog post was successfully updated.')
-            return redirect('list')
+            return redirect('list_entries')
     else:
         post_form = forms.Post(instance=post)
     
@@ -63,13 +66,18 @@ def tagsearch(request, tags):
     return {}
 
 @render_to('blog/list.html')
-def list(request):
-    posts = models.Post.objects.all()
-    
+def list_entries(request):
+    #eventually i'll need to limit this
+    posts = models.Post.objects.all().filter(published = True)
+    #arrange into groups by month
+    posts_by_month = itertools.groupby(posts, lambda p: str(p.created.year) + ' ' + str(p.created.month))
+    posts_by_month_keyed = [{'date' : datetime.date(int(p[0].split(' ')[0]), int(p[0].split(' ')[1]), 1), 'posts': list(p[1])} for p in posts_by_month]
+
     return {
-        'posts' : posts
+        'grouped_posts' : posts_by_month_keyed
     }
-    
+
+@login_required(login_url = '/admin/')    
 @csrf_exempt      
 def parse_markdown(request):
     raw_markdown = request.POST.get('text', '')

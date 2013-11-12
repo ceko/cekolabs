@@ -8,10 +8,10 @@ $ ->
 	
 
 packery_callback = ->
-	$('#post-teasers').packery
+	$('div.post-teasers').packery
 		itemSelector: '.post-teaser-wrap'		  	
 		  	
 $(window).load ->
-	$('#post-teasers').fadeIn()
+	$('div.post-teasers').fadeIn()
 	packery_callback()
 	  

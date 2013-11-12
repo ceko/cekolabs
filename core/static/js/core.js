@@ -13,13 +13,13 @@
   });
 
   packery_callback = function() {
-    return $('#post-teasers').packery({
+    return $('div.post-teasers').packery({
       itemSelector: '.post-teaser-wrap'
     });
   };
 
   $(window).load(function() {
-    $('#post-teasers').fadeIn();
+    $('div.post-teasers').fadeIn();
     return packery_callback();
   });
 
