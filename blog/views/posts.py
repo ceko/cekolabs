@@ -16,7 +16,7 @@ import datetime
 @render_to('blog/view.html')
 def view(request, id):
     post = get_object_or_404(models.Post, id = id)    
-    recent_posts = models.Post.objects.all().order_by('-created')[:5]
+    recent_posts = models.Post.objects.all().filter(published = True).order_by('-created')[:5]
         
     return {
         'post' : post,
