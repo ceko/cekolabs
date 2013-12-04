@@ -13,7 +13,7 @@ class Migration(SchemaMigration):
 
         # Adding field 'Feature.post'
         db.add_column('core_feature', 'post',
-                      self.gf('django.db.models.fields.related.ForeignKey')(default=orm['blog.post'].objects.all()[0].id, to=orm['blog.Post']),
+                      self.gf('django.db.models.fields.related.ForeignKey')(to=orm['blog.Post']),
                       keep_default=False)
         
 
