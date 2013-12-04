@@ -4,6 +4,11 @@ body {
   font-family: "Helvetica" !important;
   font-size: 14px !important;
 }
+body h1,
+body h2,
+body h3 {
+  font-weight: normal;
+}
 a {
   color: #205A85;
   text-decoration: none;
@@ -28,6 +33,7 @@ a:visited {
   padding: 0px;
 }
 #main-wrap #top-bar .top-bar-inner .site-name {
+  font-size: 22px;
   padding-top: 14px;
   display: inline-block;
   float: left;
@@ -39,6 +45,9 @@ a:visited {
 }
 #main-wrap #top-bar .top-bar-inner .site-name a {
   color: #FFF;
+}
+#main-wrap #top-bar .top-bar-inner .site-name .subtle {
+  color: #666;
 }
 #main-wrap #top-bar .top-bar-inner .top-bar-links {
   display: inline-block;
@@ -143,8 +152,14 @@ a:visited {
   max-width: 1200px;
   padding: 1% 1% 0% 1%;
 }
+#main-wrap #main-content .page-title {
+  margin: 5px 5px 10px 5px;
+}
 #main-wrap #main-content h1 {
   font-size: 26px;
+}
+#main-wrap #main-content h2 {
+  font-size: 20px;
 }
 #main-wrap #main-content .subheader {
   margin-top: -10px;
@@ -158,6 +173,7 @@ a:visited {
   margin: auto;
 }
 #main-wrap #promo-wrap .science-bot {
+  pointer-events: none;
   background: url('../images/promos/sciencebot.png') no-repeat;
   height: 430px;
   width: 500px;

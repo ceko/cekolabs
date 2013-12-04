@@ -1,5 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 from django.http import HttpResponse
+from django.db.models import Count
 from annoying.decorators import render_to
 from cekolabs.blog import forms, models, markdown_extensions
 from django.views.decorators.csrf import csrf_exempt
@@ -63,7 +64,16 @@ def edit(request, id):
 
 @render_to('blog/tagsearch.html')
 def tagsearch(request, tags):
-    return {}
+    #only one tag supported now
+    tag = get_object_or_404(models.Tag, name=tags)
+    posts = models.Post.objects.all().filter(tags__in=[tag,])
+    all_tags = models.Tag.objects.annotate(times_used=Count('post')).order_by('-times_used')
+    
+    return {
+        'posts' : posts,
+        'tag' : tag,
+        'all_tags' : all_tags              
+    }
 
 @render_to('blog/list.html')
 def list_entries(request):
