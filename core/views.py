@@ -21,3 +21,6 @@ def resume(request):
 @render_to('ksp-mods.html')
 def ksp_mods(request):
     return {}
+
+def error_500(request):
+    return HttpResponse('error')

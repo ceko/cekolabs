@@ -34,7 +34,7 @@ def new(request):
             post = post_form.save()
             
             messages.add_message(request, messages.SUCCESS, 'The blog post was successfully added.')
-            return redirect('list')
+            return redirect('list_entries')
     else:
         post_form = forms.Post()
     

@@ -19,6 +19,7 @@ urlpatterns = patterns('cekolabs.core.views',
 )
 
 urlpatterns += cekolabs.blog.urls.urlpatterns
+handler500 = 'cekolabs.core.views.error_500'
 
 if settings.DEBUG:
     urlpatterns += patterns('',
