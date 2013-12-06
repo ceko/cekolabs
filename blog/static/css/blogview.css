@@ -20,7 +20,7 @@
 .Post .post,
 .Post .teaser {
   padding: 20px;
-  font-size: 18px;
+  font-size: 16px;
   /* desert scheme ported from vim to google prettify */
 }
 .Post .post p,
@@ -97,7 +97,7 @@
 .Post .post code.prettyprint,
 .Post .teaser code.prettyprint {
   overflow-x: auto;
-  font-family: 'courier new', 'Lucidia Console', 'Monospace';
+  font-family: Menlo, Monaco, "Andale Mono", "lucida console", "Courier New", monospace;
   font-size: .8em;
   display: block;
   background-color: #444;
@@ -280,7 +280,7 @@
 #main-wrap #main-content #markdown_preview .post,
 #main-wrap #main-content #markdown_preview .teaser {
   padding: 20px;
-  font-size: 18px;
+  font-size: 16px;
   /* desert scheme ported from vim to google prettify */
 }
 #main-wrap #main-content #markdown_preview .post p,
@@ -357,7 +357,7 @@
 #main-wrap #main-content #markdown_preview .post code.prettyprint,
 #main-wrap #main-content #markdown_preview .teaser code.prettyprint {
   overflow-x: auto;
-  font-family: 'courier new', 'Lucidia Console', 'Monospace';
+  font-family: Menlo, Monaco, "Andale Mono", "lucida console", "Courier New", monospace;
   font-size: .8em;
   display: block;
   background-color: #444;
@@ -624,7 +624,7 @@
 #main-wrap #main-content .post-teasers .post,
 #main-wrap #main-content .post-teasers .teaser {
   padding: 20px;
-  font-size: 18px;
+  font-size: 16px;
   /* desert scheme ported from vim to google prettify */
 }
 #main-wrap #main-content .post-teasers .post p,
@@ -701,7 +701,7 @@
 #main-wrap #main-content .post-teasers .post code.prettyprint,
 #main-wrap #main-content .post-teasers .teaser code.prettyprint {
   overflow-x: auto;
-  font-family: 'courier new', 'Lucidia Console', 'Monospace';
+  font-family: Menlo, Monaco, "Andale Mono", "lucida console", "Courier New", monospace;
   font-size: .8em;
   display: block;
   background-color: #444;
@@ -989,7 +989,7 @@
 #main-wrap #main-content #blogpost .leftcol-content .post,
 #main-wrap #main-content #blogpost .leftcol-content .teaser {
   padding: 20px;
-  font-size: 18px;
+  font-size: 16px;
   /* desert scheme ported from vim to google prettify */
 }
 #main-wrap #main-content #blogpost .leftcol-content .post p,
@@ -1066,7 +1066,7 @@
 #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint,
 #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint {
   overflow-x: auto;
-  font-family: 'courier new', 'Lucidia Console', 'Monospace';
+  font-family: Menlo, Monaco, "Andale Mono", "lucida console", "Courier New", monospace;
   font-size: .8em;
   display: block;
   background-color: #444;
