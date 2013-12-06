@@ -165,10 +165,8 @@
 }
 
 .Tags(@float: right, @showborder: true) {
-	.tags {
-		margin-top:1px;
-		float:@float;
-		font-size:1.1em;					
+	.tags {		
+		float:@float;							
 		padding-left:40px;
 		background: url('../images/icons/tag_blue.png') 20px center no-repeat;		
 		
@@ -401,8 +399,8 @@
 			
 			.Post;		
 			.post-subinfo {
-				border-bottom:1px solid #EEE;
-				border-top:1px solid #EEE;
+				border-bottom:1px solid #CCC;
+				border-top:1px solid #CCC;
 				.publish-date, .tags {
 					float:left;
 					padding:10px 20px;
@@ -418,6 +416,13 @@
 				border-top:1px solid #EEE;				
 			}
 			*/
+			
+			#disqus_thread {
+				padding: 50px 20px 20px 20px;
+				margin-top: 30px;
+				border-top: 1px solid #CCC;
+				box-shadow: inset 0px 1px #FFF;
+			}
 		}
 		
 		.rightcol-content {
