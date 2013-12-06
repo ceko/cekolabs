@@ -165,7 +165,13 @@ PIPELINE_JS = {
           'js/file_manager/jquery.multiuploader.coffee',
         ),
         'output_filename': 'js/file_manager/core.filemanager.min.js',
-    }
+    },
+    'tags': {
+        'source_filenames': (
+            'js/blog/tags.coffee',
+        ),
+        'output_filename': 'js/tags.min.js',
+    },
 }
 
 # A sample logging configuration. The only tangible logging

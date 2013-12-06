@@ -10,26 +10,29 @@
 {% block footer %}
 	{{ block.super }}
 	<script src="//google-code-prettify.googlecode.com/svn/loader/run_prettify.js?autoload=true"></script>
+	{% compressed_js 'tags' %}
 {% endblock %}
 
 {% block main_content %}
 
 	<div class='page-title'>
-		<h1>Posts tagged with &lt;{{ tag.name }}&gt;</h1>
+		<h1 style='float:left;'>Posts tagged with &lt;{{ tag.name }}&gt;</h1>
+		<div id='tag-list' class='tag-list'>
+			<div class='tag-list-expander'>view other tags <i class="icon-chevron-down"></i></div>
+			<div class='hidden-tags'>
+				{% for tag in all_tags %}
+					{% if tag.times_used > 0 %} 
+						<div class='post-tag'>
+							<span><a href='{% url tagsearch tag.name %}'>{{ tag.name }}</a></span>
+							<span class='times-used'> x {{ tag.times_used }}</span>
+						</div>
+					{% endif %}
+				{% endfor %}
+			</div>
+			<div style='clear:left;'></div>
+		</div>
 	</div>
 	
-	<div class='tag-list'>
-		<h2>other tags</h2>
-		{% for tag in all_tags %}
-			{% if tag.times_used > 0 %} 
-				<div class='tag'>
-					<span>{{ tag.name }}</span>
-					<span class='times-used'>{{ tag.times_used }}</span>
-				</div>
-			{% endif %}
-		{% endfor %}
-	</div>
-
 	<div class='post-teasers' style='display:none;'>
 		{% for post in posts %}		
 			<div class='post-teaser-wrap'>		
