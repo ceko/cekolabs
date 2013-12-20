@@ -142,6 +142,7 @@ views.QueuedElements = Backbone.View.extend({
 
 	tagName: 'div',
 	id: 'element-queue',
+	hide_timeout: null,
 	
 	initialize: function() {	
 		this.model.on("change:queued_elements", this.handle_queued_elements.bind(this));
@@ -199,6 +200,12 @@ views.QueuedElements = Backbone.View.extend({
 				top: $battlefield.outerHeight() / 2 - this.$el.outerHeight() / 2,
 				left: $battlefield.outerWidth() / 2 - this.$el.outerWidth() / 2 - 7 /** 15 pixels padding **/,
 			});
+		}
+		if(!queued_elements.length) {			
+			this.hide_timeout = setTimeout((function() { this.$el.fadeOut(); }).bind(this), 5000 );
+		}else{
+			this.$el.show();
+			clearTimeout(this.hide_timeout);
 		}
 		return this;
 		
