@@ -1,4 +1,4 @@
-Django==1.4.2
+Django==1.5.1
 Markdown==2.2.1
 South==0.7.6
 -e git+https://github.com/ceko/cekolabs_django_widgets.git#egg=cekolabs_django_widgets

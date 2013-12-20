@@ -178,8 +178,8 @@
 .Post .teaser code.prettyprint ol.linenums {
   margin-top: 0;
   margin-bottom: 0;
-  margin-left: 40px;
-  color: #AEAEAE;
+  margin-left: 30px;
+  color: #777;
 }
 .Post .post code.prettyprint ol.linenums li,
 .Post .teaser code.prettyprint ol.linenums li {
@@ -438,8 +438,8 @@
 #main-wrap #main-content #markdown_preview .teaser code.prettyprint ol.linenums {
   margin-top: 0;
   margin-bottom: 0;
-  margin-left: 40px;
-  color: #AEAEAE;
+  margin-left: 30px;
+  color: #777;
 }
 #main-wrap #main-content #markdown_preview .post code.prettyprint ol.linenums li,
 #main-wrap #main-content #markdown_preview .teaser code.prettyprint ol.linenums li {
@@ -782,8 +782,8 @@
 #main-wrap #main-content .post-teasers .teaser code.prettyprint ol.linenums {
   margin-top: 0;
   margin-bottom: 0;
-  margin-left: 40px;
-  color: #AEAEAE;
+  margin-left: 30px;
+  color: #777;
 }
 #main-wrap #main-content .post-teasers .post code.prettyprint ol.linenums li,
 #main-wrap #main-content .post-teasers .teaser code.prettyprint ol.linenums li {
@@ -1147,8 +1147,8 @@
 #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint ol.linenums {
   margin-top: 0;
   margin-bottom: 0;
-  margin-left: 40px;
-  color: #AEAEAE;
+  margin-left: 30px;
+  color: #777;
 }
 #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint ol.linenums li,
 #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint ol.linenums li {

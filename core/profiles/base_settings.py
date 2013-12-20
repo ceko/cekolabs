@@ -148,6 +148,12 @@ PIPELINE_CSS = {
         ),
         'output_filename': 'css/file_manager/core.filemanager.min.css',
     },
+    'finch': {
+        'source_filenames': (
+            'css/finch/core.less',
+        ),
+        'output_filename': 'css/finch/core.css'
+    },
 }
 
 PIPELINE_JS = {
@@ -172,6 +178,13 @@ PIPELINE_JS = {
         ),
         'output_filename': 'js/tags.min.js',
     },
+    'finch': {
+        'source_filenames': (
+            'js/jsrender.min.js',
+            'js/finch/core.js',
+        ),
+        'output_filename': 'js/finch/core.min.js',
+    }
 }
 
 # A sample logging configuration. The only tangible logging
