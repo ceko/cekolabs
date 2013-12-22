@@ -23,7 +23,7 @@
 				{% for tag in all_tags %}
 					{% if tag.times_used > 0 %} 
 						<div class='post-tag'>
-							<span><a href='{% url tagsearch tag.name %}'>{{ tag.name }}</a></span>
+							<span><a href='{% url 'tagsearch' tag.name %}'>{{ tag.name }}</a></span>
 							<span class='times-used'> x {{ tag.times_used }}</span>
 						</div>
 					{% endif %}
@@ -38,7 +38,7 @@
 			<div class='post-teaser-wrap'>		
 				<div class='post-teaser'>
 					<div class='header'>				
-						<h2 class='title'><a href='{% url blog_view post.slug, post.id %}'>{{ post.title }}</a></h2>										
+						<h2 class='title'><a href='{% url 'blog_view' post.slug post.id %}'>{{ post.title }}</a></h2>										
 					</div>
 					
 					<div class='post-subinfo'>					
@@ -61,7 +61,7 @@
 						<ul class="tags">
 							{% for tag in post.tags.all %}
 								<li class='tag'>
-									<a href='{% url tagsearch tag.name %}'>{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
+									<a href='{% url 'tagsearch' tag.name %}'>{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
 								</li>
 							{% endfor %}
 						</ul>

@@ -10,7 +10,7 @@
 					<div id='promo-line'>
 						{% for feature in features %}
 							<div class='promo'>
-								<a href='{% url blog_view feature.post.slug, feature.post.id %}'>
+								<a href='{% url 'blog_view' feature.post.slug feature.post.id %}'>
 									<div class='promo-inner image-promo'>
 										<img src='{{ feature.image.url }}' />
 										<div class='overlay'>
