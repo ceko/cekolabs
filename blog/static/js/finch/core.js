@@ -37,11 +37,27 @@ models.Card = Backbone.Model.extend({
 	initialize: function() {
 		this.set({
 			type: null,
+			sub_type: null,
 			title: null,
 			description: null,
 			attributes: [],
 			requirements: [],
 		});
+	},
+	
+	get_dominant_effect: function() {
+		var requirements = this.get('requirements');
+		switch(this.get('type')) {
+			case 'defensive':
+				if(this.get('sub_type') == 'rock-wall') {					
+					for(i=0;i<requirements.length;i++) {
+						if(requirements[i].type == 'element' && requirements[i].element != 'shield' && requirements[i].element != 'earth') {
+							return requirements[i].element;
+						}
+					}
+				}
+				break;
+		}
 	},
 	
 	requirements_met: function() {
@@ -176,6 +192,7 @@ models.Hand = Backbone.Model.extend({
 		var card_model = new models.Card();
 		var card_definition = finch.card_definitions[Math.floor((Math.random()*finch.card_definitions.length))]; 
 		card_model.set('type', card_definition.type);
+		card_model.set('sub_type', card_definition.sub_type);
 		card_model.set('title', card_definition.title);
 		card_model.set('description', card_definition.description);
 		card_model.set('attributes', card_definition.attributes);
@@ -195,13 +212,16 @@ models.Hand = Backbone.Model.extend({
 
 models.SummonPoint = Backbone.Model.extend({
 	
+	shield_warn_timer: null,
+	shield_timer: null,
+	
 	initialize: function() {
 		this.set({
 			active: true,
 			cards: []
 		});
 	},
-	
+			
 	add_card: function(card_model) {
 		//can accept three types of cards, a wall/shield, a unit, and a ward.
 		//if this is called don't bother checking if it's valid, just add it to the card array.
@@ -209,6 +229,9 @@ models.SummonPoint = Backbone.Model.extend({
 		switch(card_model.get('type')) {
 			case 'defensive':
 				this.set('shield', card_model);
+				//shield exists for 10 seconds.
+				this.shield_warn_timer = setTimeout(this.warn_shield_expiration.bind(this), 7000);
+				this.shield_timer = setTimeout(this.destroy_shield.bind(this), 10000);
 				break;
 		}
 		
@@ -216,6 +239,19 @@ models.SummonPoint = Backbone.Model.extend({
 		cards.push(card_model);
 		this.set('cards', cards);
 		this.trigger('change:cards', this, card_model, 'add');
+	},
+	
+	warn_shield_expiration: function() {
+		clearTimeout(this.shield_warn_timer);
+		this.trigger('shield_almost_expired');
+	},
+	
+	destroy_shield: function() {
+		clearTimeout(this.shield_warn_timer);
+		clearTimeout(this.shield_timer);
+		var shield = this.get('shield');
+		this.set('shield', null);
+		this.trigger('shield_destroyed', shield);		
 	}
 	
 });
@@ -267,13 +303,21 @@ views.Elements = Backbone.View.extend({
 views.Card = Backbone.View.extend({
 	
 	tagName: 'div',
-	className: 'card-wrapper',
+	className: 'card-wrapper summonable',
 	
 	initialize: function() {
 		finch.game.controls.elements.on("change:queued_elements", this.handle_queued_elements.bind(this));
 		this.draggable_initialized = false;
 		this.$el.data('view', this);
 		this.summoned = false;
+	},
+	
+	can_summon_in: function(summon_point_view) {
+		//check if it already has a shield...
+		if(summon_point_view.model.get('shield'))
+			return false;
+		
+		return true;
 	},
 	
 	handle_summoned: function() {
@@ -355,7 +399,10 @@ views.SummonPoint = Backbone.View.extend({
 		this.model.view = this; //should probably make this a standard.
 		var _this = this;
 		this.$el.droppable({
-			accept: ".card-wrapper",
+			accept: function($el) {
+				if($el.hasClass('summonable') && $el.data().view &&  $el.data().view.can_summon_in(_this))
+					return true;
+			},
 			hoverClass: "ui-state-active",
 			drop: function( event, ui ) {
 				_this.model.add_card(ui.draggable.data().view.model);
@@ -364,10 +411,33 @@ views.SummonPoint = Backbone.View.extend({
 			}
 		});
 		this.model.on("change:cards", this.handle_cards_changed.bind(this));
+		this.model.on("shield_almost_expired", this.handle_shield_almost_expired.bind(this));
+		this.model.on("shield_destroyed", this.handle_shield_destroyed.bind(this));
 	},
 	
 	handle_cards_changed: function() {
 		this.render();
+	},
+	
+	handle_shield_almost_expired: function() {
+		this.$el.find('.shield').effect('pulsate', { times: 4, duration:3000});
+	},
+	
+	handle_shield_destroyed: function(shield) {
+		var _this = this;
+		if(shield.get_dominant_effect()) {
+			this.$el.find('.shield').html($('<canvas></canvas>'));
+			var canvas = this.$el.find('canvas').get(0);
+			var context2D = canvas.getContext("2d");
+			var colors = ["#F2DF17", "#F04B00"];
+			if(shield.get_dominant_effect() == 'cold') {
+				colors = ["#CCC", "#FFF"];
+			}
+			var renderer = renderExplosion(canvas, context2D, 130, 75, colors);
+			setTimeout(function() { renderer.stopRendering(); _this.$el.find('.shield').remove()}, 5000);
+		}else{
+			this.$el.find('.shield').remove();
+		}
 	},
 	
 	render: function() {
@@ -375,8 +445,8 @@ views.SummonPoint = Backbone.View.extend({
 		//render shields
 		//render wards
 		
-		var shield = this.model.get('shield');
-		this.$el.html($("#summon-point-template").render({ shield: shield }));
+		var shield = this.model.get('shield');		
+		this.$el.html($("#summon-point-template").render({ shield: shield }));		
 	}
 
 });
@@ -458,10 +528,139 @@ views.QueuedElements = Backbone.View.extend({
 });
 /** end views **/
 
+/** particle effects **/
+/*
+ * A single explosion particle
+ */
+function Particle (context2D)
+{
+	this.scale = 1.0;
+	this.x = 0;
+	this.y = 0;
+	this.radius = 10;
+	this.color = "#000";
+	this.velocityX = 0;
+	this.velocityY = 0;
+	this.scaleSpeed = 0.5;
+
+	this.update = function(ms)
+	{
+		// shrinking
+		this.scale -= this.scaleSpeed * ms / 1000.0;
+
+		if (this.scale <= 0)
+		{
+			this.scale = 0;
+		}
+		// moving away from explosion center
+		this.x += this.velocityX * ms/1000.0;
+		this.y += this.velocityY * ms/1000.0;
+	};
+
+	this.draw = function(context2D)
+	{
+		// translating the 2D context to the particle coordinates
+		context2D.save();
+		context2D.translate(this.x, this.y);
+		context2D.scale(this.scale, this.scale);
+
+		// drawing a filled circle in the particle's local space
+		context2D.beginPath();
+		context2D.arc(0, 0, this.radius, 0, Math.PI*2, true);
+		context2D.closePath();
+
+		context2D.fillStyle = this.color;
+		context2D.fill();
+
+		context2D.restore();
+	};
+}
+
+function renderExplosion(canvas, context2D, x, y, colors) {
+	var explosions = [];
+	for(i=0;i<colors.length;i++) {
+		explosions.push(new createExplosion(canvas, context2D, x, y, colors[i]));
+	}
+	
+	var render_interval = setInterval(function() {
+		canvas.width = canvas.width;
+		for (var i=0; i<explosions.length; i++)
+		{
+			explosions[i].drawParticles();
+		}
+	}, 1000.0/30.0);
+	
+	this.stopRendering = function() {
+		clearInterval(render_interval);		
+	};
+	
+	return this;
+}
+
+/*
+ * Advanced Explosion effect
+ * Each particle has a different size, move speed and scale speed.
+ * 
+ * Parameters:
+ * 	x, y - explosion center
+ * 	color - particles' color
+ */
+function createExplosion(canvas, context2D, x, y, color)
+{
+	var minSize = 5;
+	var maxSize = 25;
+	var count = 20;
+	var minSpeed = 60.0;
+	var maxSpeed = 100.0;
+	var minScaleSpeed = 1.0;
+	var maxScaleSpeed = 7.0;
+	var particles = [];
+	
+	this.drawParticles = function() {
+		for (var i=0; i<particles.length; i++) {
+			var particle = particles[i];
+			
+			particle.update(1000.0/30.0);
+			particle.draw(context2D);
+		}
+	}
+	
+	for (var angle=0; angle<360; angle += Math.round(360/count))
+	{
+		var particle = new Particle(context2D);
+
+		particle.x = x;
+		particle.y = y;
+
+		particle.radius = randomFloat(minSize, maxSize);
+
+		particle.color = color;
+
+		particle.scaleSpeed = randomFloat(minScaleSpeed, maxScaleSpeed);
+
+		var speed = randomFloat(minSpeed, maxSpeed);
+
+		particle.velocityX = speed * Math.cos(angle * Math.PI / 180.0);
+		particle.velocityY = speed * Math.sin(angle * Math.PI / 180.0);
+
+		particles.push(particle);
+	}		
+	
+	return this;
+}
+
+function randomFloat (min, max)
+{
+	return min + Math.random()*(max-min);
+}
+
+/** end particle effects **/
+
 //card definitions, goes last because it's long and i don't want to scroll past it every time i change something
 finch.card_definitions = [
 	{
 		type: 'defensive',
+		sub_type: 'rock-wall',
 		title: 'Fiery Rock Wall',
 		description: 'A powerful rock wall that does AoE damage when destroyed.',
 		attributes: [
@@ -491,6 +690,37 @@ finch.card_definitions = [
 	},
 	{
 		type: 'defensive',
+		sub_type: 'rock-wall',
+		title: 'Cold Rock Wall',
+		description: 'A rock wall that slows enemies when destroyed.',
+		attributes: [
+		   {
+			   type: 'attack',
+			   value: 1			   
+		   },
+		   {
+			   type: 'health',
+			   value: 3
+		   }
+		],
+		requirements: [
+		   {
+			   type: 'element',
+			   element: 'shield'
+		   },
+		   {
+			   type: 'element',
+			   element: 'earth'
+		   },
+		   {
+			   type: 'element',
+			   element: 'cold'
+		   },
+		]
+	},
+	{
+		type: 'defensive',
+		sub_type: 'rock-wall',
 		title: 'Strong Rock Wall',
 		description: 'A purely defensive wall good against physical attacks.',
 		attributes: [
@@ -515,7 +745,8 @@ finch.card_definitions = [
 	  	]
 	},
 	{
-		type: 'lightning-aoe',
+		type: 'persistent-aoe',
+		sub_type: 'lightning',
 		title: 'Arcane Storm',
 		description: 'Does AoE lightning & arcane damage to all enemies on the field.',
 		attributes: [		            

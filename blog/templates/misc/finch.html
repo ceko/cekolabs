@@ -21,9 +21,20 @@
 						<div class='summon-point'></div>
 					</div>
 					<div id='hero-side'>
-						<div class='summon-point'></div>
-						<div class='summon-point'></div>
-						<div class='summon-point'></div>
+						<div class='summon-point'>
+							<!--<div class='rock-shield'>
+								<div class='fire effect'></div>
+								<div class='wall'></div>
+							</div>-->
+						</div>
+						<div class='summon-point'>
+							<!--<div class='rock-shield'>
+								<div class='cold effect'></div>
+								<div class='wall'></div>
+							</div>-->
+						</div>
+						<div class='summon-point'>							
+						</div>
 						<div class='summon-point'></div>
 					</div>
 				</div>
@@ -84,7 +95,7 @@
 			{{/for}}		
 		</script>
 		
-		<script id='card-template' type='text/x-jsrender'>			
+		<script id='card-template' type='text/x-jsrender'>
 			<div class='{{:type}} card'>
 				<div class='border'>
 					<div class='title'>
@@ -109,10 +120,17 @@
 			</div>			
 		</script>
 		
-		<script id='summon-point-template' type='text/x-jsrender'>
-			something has been summoned<br />
+		<script id='summon-point-template' type='text/x-jsrender'>			
 			{{if shield}}
-				shield summoned
+				{{if shield.get('sub_type') == 'rock-wall'}}
+					<div class='rock-shield shield'>	
+						{{if shield.get_dominant_effect()}}
+							<div class='effect {{:shield.get_dominant_effect()}}'></div>
+						{{/if}}							
+						<div class='wall'></div>	
+						<canvas></canvas>					
+					</div>
+				{{/if}}				
 			{{/if}}
 		</script>
 		
