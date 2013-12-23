@@ -71,6 +71,10 @@ html {
 				height:800px;
 				margin:auto;								
 				
+				* {
+					vertical-align:top;
+				}
+				
 				#status-bar {
 					height:43px;
 					background:#000;
@@ -79,6 +83,7 @@ html {
 				}
 				
 				#battlefield {
+					width:990px;
 					position:relative;
 					border:5px solid #111;
 					border-top:none;
@@ -86,13 +91,17 @@ html {
 					height:533px;
 					background:url('../../images/finch/battlefield-background.png');
 					
-					.summon-point {
+					.summon-point {						
 						width:200px;
 						height:200px;
 						display:inline-block;
 						border:5px dashed rgba(255,255,255,.5);
 						margin:10px;
-						margin-left:20px;												
+						margin-left:20px;
+						
+						&.ui-state-active {
+							background:rgba(255,255,255,.3);
+						}												
 					}
 					
 					#enemy-side {
@@ -169,6 +178,7 @@ html {
 					border-top:none;
 					height:232px;
 					background:url('../../images/finch/card-draw-background.png');
+					overflow:hidden;
 										
 					#player-controls {
 						display:inline-block;												
@@ -177,8 +187,7 @@ html {
 						border-right:1px solid #5F5F5F;
 						box-shadow:inset -1px 0px #000;
 						
-						#magicka-bar {
-							width:263px;
+						#magicka-bar {							
 							height:25px;
 							border-bottom:1px solid #FFF;
 							
@@ -196,8 +205,7 @@ html {
 							}
 						}
 						
-						#health-bar {
-							width:263px;
+						#health-bar {							
 							height:25px;
 														
 							span {
@@ -300,149 +308,173 @@ html {
 					position:relative;			
 					height:164px;			
 										
-					.card-wrapper {
-						display:inline-block;
-						width:172px;
-						position:absolute;
-						top:18px;
-						
-						.card {
-							background:#FFF;
-							box-shadow:5px 5px 5px rgba(0,0,0,.7);
-							border-radius:5px;							
-							padding:3px;
-							width:178px;
-							
-							&.defensive {
-								.border {
-									background:#D09C24;
-									border:1px solid #D09C24;
-								}
-								
-								.title {
-									border-bottom:1px solid #7E5E14;
-								}
-							}
-							
-							&.lightning-aoe {
-								.border {
-									background:#C172CB;
-									border:1px solid #C172CB;
-								}
-								
-								.title {
-									border-bottom:1px solid #8E4F96;
-								}
-							}
-							
-							
-							.border {
-								border-radius:5px;								
-								position:relative;					
-																
-								.title {
-									padding:5px 10px;
-									font-size:18px;									
-								}
-								
-								.sunburst {
-									width:100%;
-									height:100%;
-									position:absolute;
-									top:0px;									
-									background: url('../../images/finch/card-sunburst.png') no-repeat;
-									z-index:10;
-									opacity:.3;
-								}
-								
-								.description {
-									position:relative;
-									z-index:20;
-									font-size:14px;
-									background: rgba(255,255,255, .7);
-									padding:10px;	
-									height:50px;								
-								}
-								
-								.attributes {
-									position:relative;
-									z-index:20;
-									background: rgba(255,255,255, .7);
-									padding:5px;
-									
-									> span {
-										display:inline-block;
-										height:25px;
-										padding-left:30px;
-									}
-									
-									.health {	
-										float:left;
-										background:url('../../images/finch/health-icon.png') no-repeat;
-									}
-									
-									.attack {	
-										float:right;
-										background:url('../../images/finch/attack-icon.png') no-repeat;
-									}
-									
-								}
-								
-							}
-							
-						}
-						
-						.requirements {
-							
-							margin: 10px 0px 0px 17px;
-							
-							> div {
-								width:46px;
-								height:46px;
-								display:inline-block;
-								background-size:cover;
-																
-								&.water {										
-									background-image:url('../../images/finch/element-water.png');
-								}
-								
-								&.life {
-									background-image:url('../../images/finch/element-life.png');
-								}
-								
-								&.shield {
-									background-image:url('../../images/finch/element-shield.png');
-								}
-								
-								&.cold {
-									background-image:url('../../images/finch/element-cold.png');
-								}
-								
-								&.lightning {
-									background-image:url('../../images/finch/element-lightning.png');
-								}
-								
-								&.arcane {
-									background-image:url('../../images/finch/element-arcane.png');
-								}
-								
-								&.earth {
-									background-image:url('../../images/finch/element-earth.png');
-								}
-								
-								&.fire {
-									background-image:url('../../images/finch/element-fire.png');
-								}
-								
-							}
-							
-						}
-												
-					}
-					
 				}
 			}
 				
+		}
+	
+		.card-wrapper {
+			display:inline-block;
+			width:172px;
+			position:absolute;
+			top:18px;
+			left:700px;
+			
+			&.ui-draggable-dragging {
+				z-index:30;
+			}
+			
+			.card {
+				opacity:.5;
+				&.requirements-met {
+					opacity:1;
+					cursor:pointer;
+				}
+				background:#FFF;
+				box-shadow:5px 5px 5px rgba(0,0,0,.7);
+				border-radius:5px;							
+				padding:3px;
+				width:178px;
+				
+				&.defensive {
+					.border {
+						background:#D09C24;
+						border:1px solid #D09C24;
+					}
+					
+					.title {
+						border-bottom:1px solid #7E5E14;
+					}
+				}
+				
+				&.lightning-aoe {
+					.border {
+						background:#C172CB;
+						border:1px solid #C172CB;
+					}
+					
+					.title {
+						border-bottom:1px solid #8E4F96;
+					}
+				}
+				
+				
+				.border {
+					border-radius:5px;								
+					position:relative;					
+													
+					.title {
+						padding:5px 10px;
+						font-size:18px;									
+					}
+					
+					.sunburst {
+						width:100%;
+						height:100%;
+						position:absolute;
+						top:0px;									
+						background: url('../../images/finch/card-sunburst.png') no-repeat;
+						z-index:10;
+						opacity:.3;
+					}
+					
+					.description {
+						position:relative;
+						z-index:20;
+						font-size:14px;
+						background: rgba(255,255,255, .7);
+						padding:10px;	
+						height:50px;								
+					}
+					
+					.attributes {
+						position:relative;
+						z-index:20;
+						background: rgba(255,255,255, .7);
+						padding:5px;
+						
+						> span {
+							display:inline-block;
+							height:25px;
+							padding-left:30px;
+						}
+						
+						.health {	
+							float:left;
+							background:url('../../images/finch/health-icon.png') no-repeat;
+						}
+						
+						.attack {	
+							float:right;
+							background:url('../../images/finch/attack-icon.png') no-repeat;
+						}
+						
+					}
+					
+				}
+				
+			}
+			
+			.requirements {
+				
+				margin: 10px 0px 0px 17px;
+				
+				> div {
+					width:46px;
+					height:46px;
+					display:inline-block;
+					background-size:cover;
+						
+					&:before {
+						content:"";
+						position:absolute;
+						background: radial-gradient(ellipse at center, #ffffff 0%, rgba(255, 255, 255, 0) 80%);
+						width: 46px;
+						height: 46px;
+						background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.5) 70%, rgba(0, 0, 0, 0) 75%);									
+					}	
+													
+					&.fulfilled:before {									
+						background: radial-gradient(ellipse at center, rgba(255,255,255,0) 30%, rgba(255,255,255,.5) 65%, rgba(255, 255, 255, 0) 75%);									
+					}
+												
+													
+					&.water {										
+						background-image:url('../../images/finch/element-water.png');
+					}
+					
+					&.life {
+						background-image:url('../../images/finch/element-life.png');
+					}
+					
+					&.shield {
+						background-image:url('../../images/finch/element-shield.png');
+					}
+					
+					&.cold {
+						background-image:url('../../images/finch/element-cold.png');
+					}
+					
+					&.lightning {
+						background-image:url('../../images/finch/element-lightning.png');
+					}
+					
+					&.arcane {
+						background-image:url('../../images/finch/element-arcane.png');
+					}
+					
+					&.earth {
+						background-image:url('../../images/finch/element-earth.png');
+					}
+					
+					&.fire {
+						background-image:url('../../images/finch/element-fire.png');
+					}
+					
+				}
+				
+			}
+									
 		}
 		
 	}

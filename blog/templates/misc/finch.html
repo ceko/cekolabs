@@ -69,54 +69,7 @@
 						</div>
 					</div>
 					<div id='card-draw-area'>
-						<div class='card-wrapper'>
-							<div class='defensive card'>
-								<div class='border'>
-									<div class='title'>
-										Fire Rock Wall
-									</div>
-									<div class='sunburst'></div>
-									<div class='description'>
-										A powerful rock wall that does AoE damage when destroyed.
-									</div>
-									<div class='attributes'>
-										<span class='health'>2</span>
-										<span class='attack'>10</span>
-										<div style='clear:both;'></div>
-									</div>
-								</div>
-							</div>
-							<div class='requirements'>
-								<div class='shield'></div>
-								<div class='earth'></div>
-								<div class='fire'></div>								
-							</div>
-						</div>
-						
-						<div class='card-wrapper' style='left:250px;'>
-							<div class='lightning-aoe card'>
-								<div class='border'>
-									<div class='title'>
-										Fire Rock Wall
-									</div>
-									<div class='sunburst'></div>
-									<div class='description'>
-										A powerful rock wall that does AoE damage when destroyed.
-									</div>
-									<div class='attributes'>
-										<span class='health'>2</span>
-										<span class='attack'>10</span>
-										<div style='clear:both;'></div>
-									</div>
-								</div>
-							</div>
-							<div class='requirements'>
-								<div class='shield'></div>
-								<div class='earth'></div>
-								<div class='fire'></div>								
-							</div>
-						</div>
-						
+												
 					</div>
 				</div>
 			</div>			
@@ -130,9 +83,42 @@
 				</div>
 			{{/for}}		
 		</script>
+		
+		<script id='card-template' type='text/x-jsrender'>			
+			<div class='{{:type}} card'>
+				<div class='border'>
+					<div class='title'>
+						{{:title}}
+					</div>
+					<div class='sunburst'></div>
+					<div class='description'>
+						{{:description}}
+					</div>
+					<div class='attributes'>
+						{{for attributes}}
+							<span class='{{:type}}'>{{:value}}</span>
+						{{/for}}							
+						<div style='clear:both;'></div>
+					</div>
+				</div>
+			</div>
+			<div class='requirements'>
+				{{for requirements}}
+					<div class='{{:element}}'></div>
+				{{/for}}													
+			</div>			
+		</script>
+		
+		<script id='summon-point-template' type='text/x-jsrender'>
+			something has been summoned<br />
+			{{if shield}}
+				shield summoned
+			{{/if}}
+		</script>
+		
 		<!-- end jsrender templates -->
 		{% endverbatim %}
-		
+			
 		{% compressed_js 'finch' %}		
 	</body>
 </html>

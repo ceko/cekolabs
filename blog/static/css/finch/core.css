@@ -56,6 +56,9 @@ html body #main-wrap #playing-field {
   height: 800px;
   margin: auto;
 }
+html body #main-wrap #playing-field * {
+  vertical-align: top;
+}
 html body #main-wrap #playing-field #status-bar {
   height: 43px;
   background: #000;
@@ -63,6 +66,7 @@ html body #main-wrap #playing-field #status-bar {
   border-bottom: 1px solid #666;
 }
 html body #main-wrap #playing-field #battlefield {
+  width: 990px;
   position: relative;
   border: 5px solid #111;
   border-top: none;
@@ -77,6 +81,9 @@ html body #main-wrap #playing-field #battlefield .summon-point {
   border: 5px dashed rgba(255, 255, 255, 0.5);
   margin: 10px;
   margin-left: 20px;
+}
+html body #main-wrap #playing-field #battlefield .summon-point.ui-state-active {
+  background: rgba(255, 255, 255, 0.3);
 }
 html body #main-wrap #playing-field #battlefield #enemy-side {
   position: relative;
@@ -135,6 +142,7 @@ html body #main-wrap #playing-field #player-information {
   border-top: none;
   height: 232px;
   background: url('../../images/finch/card-draw-background.png');
+  overflow: hidden;
 }
 html body #main-wrap #playing-field #player-information #player-controls {
   display: inline-block;
@@ -144,7 +152,6 @@ html body #main-wrap #playing-field #player-information #player-controls {
   box-shadow: inset -1px 0px #000000;
 }
 html body #main-wrap #playing-field #player-information #player-controls #magicka-bar {
-  width: 263px;
   height: 25px;
   border-bottom: 1px solid #FFF;
 }
@@ -160,7 +167,6 @@ html body #main-wrap #playing-field #player-information #player-controls #magick
   background-color: #CE9522;
 }
 html body #main-wrap #playing-field #player-information #player-controls #health-bar {
-  width: 263px;
   height: 25px;
 }
 html body #main-wrap #playing-field #player-information #player-controls #health-bar span {
@@ -236,42 +242,51 @@ html body #main-wrap #playing-field #card-draw-area {
   position: relative;
   height: 164px;
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper {
+html body .card-wrapper {
   display: inline-block;
   width: 172px;
   position: absolute;
   top: 18px;
+  left: 700px;
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .card {
+html body .card-wrapper.ui-draggable-dragging {
+  z-index: 30;
+}
+html body .card-wrapper .card {
+  opacity: .5;
   background: #FFF;
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.7);
   border-radius: 5px;
   padding: 3px;
   width: 178px;
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .card.defensive .border {
+html body .card-wrapper .card.requirements-met {
+  opacity: 1;
+  cursor: pointer;
+}
+html body .card-wrapper .card.defensive .border {
   background: #D09C24;
   border: 1px solid #D09C24;
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .card.defensive .title {
+html body .card-wrapper .card.defensive .title {
   border-bottom: 1px solid #7E5E14;
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .card.lightning-aoe .border {
+html body .card-wrapper .card.lightning-aoe .border {
   background: #C172CB;
   border: 1px solid #C172CB;
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .card.lightning-aoe .title {
+html body .card-wrapper .card.lightning-aoe .title {
   border-bottom: 1px solid #8E4F96;
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .card .border {
+html body .card-wrapper .card .border {
   border-radius: 5px;
   position: relative;
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .card .border .title {
+html body .card-wrapper .card .border .title {
   padding: 5px 10px;
   font-size: 18px;
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .card .border .sunburst {
+html body .card-wrapper .card .border .sunburst {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -280,7 +295,7 @@ html body #main-wrap #playing-field #card-draw-area .card-wrapper .card .border 
   z-index: 10;
   opacity: .3;
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .card .border .description {
+html body .card-wrapper .card .border .description {
   position: relative;
   z-index: 20;
   font-size: 14px;
@@ -288,55 +303,66 @@ html body #main-wrap #playing-field #card-draw-area .card-wrapper .card .border 
   padding: 10px;
   height: 50px;
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .card .border .attributes {
+html body .card-wrapper .card .border .attributes {
   position: relative;
   z-index: 20;
   background: rgba(255, 255, 255, 0.7);
   padding: 5px;
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .card .border .attributes > span {
+html body .card-wrapper .card .border .attributes > span {
   display: inline-block;
   height: 25px;
   padding-left: 30px;
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .card .border .attributes .health {
+html body .card-wrapper .card .border .attributes .health {
   float: left;
   background: url('../../images/finch/health-icon.png') no-repeat;
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .card .border .attributes .attack {
+html body .card-wrapper .card .border .attributes .attack {
   float: right;
   background: url('../../images/finch/attack-icon.png') no-repeat;
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .requirements {
+html body .card-wrapper .requirements {
   margin: 10px 0px 0px 17px;
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .requirements > div {
+html body .card-wrapper .requirements > div {
   width: 46px;
   height: 46px;
   display: inline-block;
   background-size: cover;
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .requirements > div.water {
+html body .card-wrapper .requirements > div:before {
+  content: "";
+  position: absolute;
+  background: radial-gradient(ellipse at center, #ffffff 0%, rgba(255, 255, 255, 0) 80%);
+  width: 46px;
+  height: 46px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.5) 70%, rgba(0, 0, 0, 0) 75%);
+}
+html body .card-wrapper .requirements > div.fulfilled:before {
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.5) 65%, rgba(255, 255, 255, 0) 75%);
+}
+html body .card-wrapper .requirements > div.water {
   background-image: url('../../images/finch/element-water.png');
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .requirements > div.life {
+html body .card-wrapper .requirements > div.life {
   background-image: url('../../images/finch/element-life.png');
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .requirements > div.shield {
+html body .card-wrapper .requirements > div.shield {
   background-image: url('../../images/finch/element-shield.png');
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .requirements > div.cold {
+html body .card-wrapper .requirements > div.cold {
   background-image: url('../../images/finch/element-cold.png');
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .requirements > div.lightning {
+html body .card-wrapper .requirements > div.lightning {
   background-image: url('../../images/finch/element-lightning.png');
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .requirements > div.arcane {
+html body .card-wrapper .requirements > div.arcane {
   background-image: url('../../images/finch/element-arcane.png');
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .requirements > div.earth {
+html body .card-wrapper .requirements > div.earth {
   background-image: url('../../images/finch/element-earth.png');
 }
-html body #main-wrap #playing-field #card-draw-area .card-wrapper .requirements > div.fire {
+html body .card-wrapper .requirements > div.fire {
   background-image: url('../../images/finch/element-fire.png');
 }
