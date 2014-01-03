@@ -21,21 +21,14 @@
 						<div class='summon-point'></div>
 					</div>
 					<div id='hero-side'>
-						<div class='summon-point'>
-							<!--<div class='rock-shield'>
-								<div class='fire effect'></div>
-								<div class='wall'></div>
-							</div>-->
-						</div>
-						<div class='summon-point'>
-							<!--<div class='rock-shield'>
-								<div class='cold effect'></div>
-								<div class='wall'></div>
-							</div>-->
+						<div class='summon-point'>				
 						</div>
 						<div class='summon-point'>							
 						</div>
-						<div class='summon-point'></div>
+						<div class='summon-point'>							
+						</div>
+						<div class='summon-point'>
+						</div>
 					</div>
 				</div>
 				<div id='player-information'>
@@ -96,12 +89,15 @@
 		</script>
 		
 		<script id='card-template' type='text/x-jsrender'>
-			<div class='{{:type}} card'>
+			<div class='{{:type}} {{:sub_type}} card'>
 				<div class='border'>
 					<div class='title'>
 						{{:title}}
 					</div>
 					<div class='sunburst'></div>
+					{{if type == 'unit'}}
+						<div class='unit-overlay'></div>
+					{{/if}}
 					<div class='description'>
 						{{:description}}
 					</div>
@@ -113,14 +109,22 @@
 					</div>
 				</div>
 			</div>
-			<div class='requirements'>
-				{{for requirements}}
-					<div class='{{:element}}'></div>
-				{{/for}}													
-			</div>			
+			{{if requirements}}
+				<div class='requirements'>
+					{{for requirements}}
+						<div class='{{:element}}'></div>
+					{{/for}}													
+				</div>		
+			{{/if}}	
 		</script>
 		
-		<script id='summon-point-template' type='text/x-jsrender'>			
+		<script id='summon-point-template' type='text/x-jsrender'>	
+			<div class='top-slot'></div>
+			<div class='unit-slot'></div>
+			<div class='ward-slot'></div>
+		</script>
+		
+		<script id='summon-point-top-slot-template' type='text/x-jsrender'>
 			{{if shield}}
 				{{if shield.get('sub_type') == 'rock-wall'}}
 					<div class='rock-shield shield'>	
@@ -130,8 +134,41 @@
 						<div class='wall'></div>	
 						<canvas></canvas>					
 					</div>
-				{{/if}}				
+				{{/if}}	
 			{{/if}}
+			{{if aoe}}
+				<div class='persistent-aoe lightning'>
+					<div class='bolt-wrap'>
+						<div class='bolt'></div>
+						<div class='bolt'></div>
+						<div class='bolt'></div>
+						<div class='bolt'></div>
+						<div class='bolt'></div>
+					</div>
+				</div>
+			{{/if}}
+		</script>
+		
+		<script id='summon-point-unit-slot-template' type='text/x-jsrender'>	
+			<div class='card-wrapper'>		
+				<div class='{{:unit.get('type')}} {{:unit.get('sub_type')}} card requirements-met'>
+					<div class='border'>
+						<div class='title'>
+							{{:unit.get('title')}}
+						</div>
+						<div class='sunburst'></div>					
+						<div class='unit-overlay'></div>					
+						<div class='description'>						
+						</div>
+						<div class='attributes'>
+							{{for unit.get('attributes')}}
+								<span class='{{:type}}'>{{:value}}</span>
+							{{/for}}							
+							<div style='clear:both;'></div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</script>
 		
 		<!-- end jsrender templates -->

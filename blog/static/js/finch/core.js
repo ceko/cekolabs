@@ -60,6 +60,14 @@ models.Card = Backbone.Model.extend({
 		}
 	},
 	
+	is_front_effect: function() {
+		return this.get('type') == 'defensive' || this.get('type') == 'persistent-aoe';
+	},
+	
+	is_unit: function() {
+		return this.get('type') == 'unit';
+	},
+	
 	requirements_met: function() {
 		var unused_queued_elements = finch.game.controls.elements.get('queued_elements').slice(0); //clone?
 		var requirements = this.get('requirements');
@@ -197,6 +205,7 @@ models.Hand = Backbone.Model.extend({
 		card_model.set('description', card_definition.description);
 		card_model.set('attributes', card_definition.attributes);
 		card_model.set('requirements', card_definition.requirements);
+		card_model.set('create_animation', card_definition.create_animation);
 		
 		var card_view = new views.Card({ model:card_model });
 		card_model.view = card_view;
@@ -214,6 +223,8 @@ models.SummonPoint = Backbone.Model.extend({
 	
 	shield_warn_timer: null,
 	shield_timer: null,
+	aoe_warn_timer: null,
+	aoe_timer: null,
 	
 	initialize: function() {
 		this.set({
@@ -221,7 +232,7 @@ models.SummonPoint = Backbone.Model.extend({
 			cards: []
 		});
 	},
-			
+
 	add_card: function(card_model) {
 		//can accept three types of cards, a wall/shield, a unit, and a ward.
 		//if this is called don't bother checking if it's valid, just add it to the card array.
@@ -233,12 +244,32 @@ models.SummonPoint = Backbone.Model.extend({
 				this.shield_warn_timer = setTimeout(this.warn_shield_expiration.bind(this), 7000);
 				this.shield_timer = setTimeout(this.destroy_shield.bind(this), 10000);
 				break;
+			case 'persistent-aoe':
+				this.set('aoe', card_model);
+				//aoe exists for 10 seconds.
+				this.aoe_warn_timer = setTimeout(this.warn_aoe_expiration.bind(this), 7000);
+				this.aoe_timer = setTimeout(this.destroy_aoe.bind(this), 10000);
+				break;
+			case 'unit':
+				this.set('unit', card_model);
+				//units exist until killed.
+				break;
 		}
 		
 		var cards = this.get('cards');
 		cards.push(card_model);
 		this.set('cards', cards);
 		this.trigger('change:cards', this, card_model, 'add');
+	},
+	
+	remove_card: function(card_model) {
+		var cards = this.get('cards');
+		var index = cards.indexOf(card_model);
+		if(index > -1) {
+			cards.splice(index, 1);
+		}
+		this.set('cards', cards);
+		this.trigger('change:cards', this, card_model, 'remove');
 	},
 	
 	warn_shield_expiration: function() {
@@ -250,10 +281,24 @@ models.SummonPoint = Backbone.Model.extend({
 		clearTimeout(this.shield_warn_timer);
 		clearTimeout(this.shield_timer);
 		var shield = this.get('shield');
-		this.set('shield', null);
+		this.remove_card(shield);
+		this.set('shield', null);		
 		this.trigger('shield_destroyed', shield);		
-	}
+	},
 	
+	warn_aoe_expiration: function() {
+		clearTimeout(this.aoe_warn_timer);
+		this.trigger('aoe_almost_expired');
+	},
+	
+	destroy_aoe: function() {
+		clearTimeout(this.aoe_warn_timer);
+		clearTimeout(this.aoe_timer);
+		var aoe = this.get('aoe');
+		this.remove_card(aoe);
+		this.set('aoe', null);		
+		this.trigger('aoe_destroyed', aoe);		
+	},
 });
 
 /** end backbone models **/
@@ -278,6 +323,14 @@ views.Global = Backbone.View.extend({
 		var key = String.fromCharCode(evt.which).toLowerCase();
 		finch.game.controls.elements.handle_keyup(key);
 	},
+});
+
+views.Animation = Backbone.Model.extend({	
+	parent_view: null,
+	start: function() {},
+	stop: function() {		
+		this.running = false;		
+	},	
 });
 
 views.Elements = Backbone.View.extend({
@@ -306,6 +359,7 @@ views.Card = Backbone.View.extend({
 	className: 'card-wrapper summonable',
 	
 	initialize: function() {
+		this.model.view = this;
 		finch.game.controls.elements.on("change:queued_elements", this.handle_queued_elements.bind(this));
 		this.draggable_initialized = false;
 		this.$el.data('view', this);
@@ -313,9 +367,17 @@ views.Card = Backbone.View.extend({
 	},
 	
 	can_summon_in: function(summon_point_view) {
-		//check if it already has a shield...
-		if(summon_point_view.model.get('shield'))
-			return false;
+		if(this.model.is_front_effect()) {
+			//check if it already has a shield...
+			if(summon_point_view.model.get('shield'))
+				return false;
+			//check if it already has aoe...
+			if(summon_point_view.model.get('aoe'))
+				return false;
+		}else if(this.model.is_unit()) {
+			if(summon_point_view.model.get('unit'))
+				return false;
+		}
 		
 		return true;
 	},
@@ -357,14 +419,15 @@ views.Card = Backbone.View.extend({
 		}
 	},
 	
-	render: function() {
+	render: function() {		
 		this.$el.html($("#card-template").render({ 
 			type: this.model.get('type'),
+			sub_type: this.model.get('sub_type'),
 			title: this.model.get('title'),
 			description: this.model.get('description'),
 			attributes: this.model.get('attributes'),
 			requirements: this.model.get('requirements')
-		}));
+		}));	
 		return this;
 	}
 	
@@ -397,6 +460,10 @@ views.SummonPoint = Backbone.View.extend({
 	
 	initialize: function() {
 		this.model.view = this; //should probably make this a standard.
+		this.shield_animation = null;
+		this.aoe_animation = null;
+		this.rendered = false;
+		
 		var _this = this;
 		this.$el.droppable({
 			accept: function($el) {
@@ -410,20 +477,37 @@ views.SummonPoint = Backbone.View.extend({
 				ui.draggable.data().view.handle_summoned(this.model);				
 			}
 		});
+		
 		this.model.on("change:cards", this.handle_cards_changed.bind(this));
 		this.model.on("shield_almost_expired", this.handle_shield_almost_expired.bind(this));
 		this.model.on("shield_destroyed", this.handle_shield_destroyed.bind(this));
+		this.model.on("aoe_almost_expired", this.handle_aoe_almost_expired.bind(this));
+		this.model.on("aoe_destroyed", this.handle_aoe_destroyed.bind(this));
 	},
 	
-	handle_cards_changed: function() {
+	handle_cards_changed: function(summon_point_model, card_model, action) {		
 		this.render();
+		switch(card_model.get('type')) {
+			case 'defensive':
+			case 'persistent-aoe':
+				this.render_top_slot();
+				break;
+			case 'unit':
+				this.render_unit_slot();
+				break;
+		}
 	},
 	
-	handle_shield_almost_expired: function() {
+	handle_shield_almost_expired: function() {		
 		this.$el.find('.shield').effect('pulsate', { times: 4, duration:3000});
 	},
 	
-	handle_shield_destroyed: function(shield) {
+	handle_shield_destroyed: function(shield) {		
+		if(this.shield_animation) {
+			this.shield_animation.stop();
+			this.shield_animation = null;
+		}
+		
 		var _this = this;
 		if(shield.get_dominant_effect()) {
 			this.$el.find('.shield').html($('<canvas></canvas>'));
@@ -434,19 +518,70 @@ views.SummonPoint = Backbone.View.extend({
 				colors = ["#CCC", "#FFF"];
 			}
 			var renderer = renderExplosion(canvas, context2D, 130, 75, colors);
-			setTimeout(function() { renderer.stopRendering(); _this.$el.find('.shield').remove()}, 5000);
+			var $marked_for_death = _this.$el.find('.shield');
+			setTimeout(function() { renderer.stopRendering(); $marked_for_death.remove()}, 5000);
 		}else{
 			this.$el.find('.shield').remove();
 		}
 	},
 	
-	render: function() {
-		//render units
-		//render shields
-		//render wards
+	handle_aoe_almost_expired: function() {		
+		this.$el.find('.persistent-aoe').effect('pulsate', { times: 4, duration:3000});
+	},
+	
+	handle_aoe_destroyed: function(shield) {		
+		if(this.aoe_animation) {
+			this.aoe_animation.stop();
+			this.aoe_animation = null;
+		}
 		
-		var shield = this.model.get('shield');		
-		this.$el.html($("#summon-point-template").render({ shield: shield }));		
+		var _this = this;		
+		this.$el.find('.persistent-aoe').remove();		
+	},
+	
+	handle_animation: function() {
+		if(!this.shield_animation) {
+			var shield = this.model.get('shield');
+			if(shield && shield.get('create_animation')) {
+				var animation = shield.get('create_animation')(this);				
+				animation.start();
+				this.shield_animation = animation;				
+			}
+		}
+		if(!this.aoe_animation) {
+			var aoe = this.model.get('aoe');
+			if(aoe && aoe.get('create_animation')) {
+				var animation = aoe.get('create_animation')(this);
+				animation.start();
+				this.aoe_animation = animation;
+			}
+		}
+	},
+	
+	render_top_slot: function() {
+		var shield = this.model.get('shield');	
+		var aoe = this.model.get('aoe');
+		this.$el.find('.top-slot').html($("#summon-point-top-slot-template").render({ 
+			shield: shield,
+			aoe: aoe
+		}));
+		this.handle_animation();
+	},
+	
+	render_unit_slot: function() {
+		var unit = this.model.get('unit');
+		this.$el.find('.unit-slot').html($("#summon-point-unit-slot-template").render({
+			unit: unit
+		}));
+		this.handle_animation();
+	},
+	
+	render: function() {
+		//render the basic skeleton only once.
+		if(!this.rendered) {
+			this.$el.html($("#summon-point-template").render());
+			this.rendered = true;
+		}				
 	}
 
 });
@@ -582,8 +717,17 @@ function renderExplosion(canvas, context2D, x, y, colors) {
 		explosions.push(new createExplosion(canvas, context2D, x, y, colors[i]));
 	}
 	
-	var render_interval = setInterval(function() {
-		canvas.width = canvas.width;
+	this.render_interval = setInterval(function() {		
+		// Store the current transformation matrix
+		context2D.save();
+
+		// Use the identity matrix while clearing the canvas
+		context2D.setTransform(1, 0, 0, 1, 0, 0);
+		context2D.clearRect(0, 0, canvas.width, canvas.height);
+
+		// Restore the transform
+		context2D.restore();
+		
 		for (var i=0; i<explosions.length; i++)
 		{
 			explosions[i].drawParticles();
@@ -591,7 +735,7 @@ function renderExplosion(canvas, context2D, x, y, colors) {
 	}, 1000.0/30.0);
 	
 	this.stopRendering = function() {
-		clearInterval(render_interval);		
+		clearInterval(this.render_interval);		
 	};
 	
 	return this;
@@ -663,6 +807,26 @@ finch.card_definitions = [
 		sub_type: 'rock-wall',
 		title: 'Fiery Rock Wall',
 		description: 'A powerful rock wall that does AoE damage when destroyed.',
+		create_animation: function(summon_point_view) {
+			var anim = new views.Animation();
+			anim.parent_view = summon_point_view;
+			anim.start = function() {
+				var _this = this;
+				this.running = true;
+				var $effect = this.parent_view.$el.find('.effect');
+				var animate_loop = function(top_movement, cnt) {
+					if(!_this.running) {
+						return;
+					} 
+					
+					var sign = cnt % 2 ? '+=' : '-='; 
+					$effect.animate({ top: sign + top_movement }, 500, function() { animate_loop(top_movement, cnt+1); });
+				}
+				animate_loop('5px', 1);
+			};		
+			
+			return anim;
+		},				
 		attributes: [
 		   {
 			   type: 'attack',
@@ -692,7 +856,7 @@ finch.card_definitions = [
 		type: 'defensive',
 		sub_type: 'rock-wall',
 		title: 'Cold Rock Wall',
-		description: 'A rock wall that slows enemies when destroyed.',
+		description: 'A rock wall that slows enemies when destroyed.',			
 		attributes: [
 		   {
 			   type: 'attack',
@@ -749,6 +913,27 @@ finch.card_definitions = [
 		sub_type: 'lightning',
 		title: 'Arcane Storm',
 		description: 'Does AoE lightning & arcane damage to all enemies on the field.',
+		create_animation: function(summon_point_view) {
+			var anim = new views.Animation();
+			anim.parent_view = summon_point_view;
+			anim.start = function() {
+				var _this = this;
+				this.running = true;
+				var $bolts = this.parent_view.$el.find('.bolt-wrap');
+				
+				var animate_loop = function(left_movement, cnt) {
+					if(!_this.running) {
+						return;
+					} 
+					
+					var sign = cnt % 2 ? '+=' : '-='; 
+					$bolts.animate({ left: sign + left_movement }, 250, function() { animate_loop(left_movement, cnt+1); });
+				}
+				animate_loop('3px', 1);		
+			};		
+			
+			return anim;
+		},	
 		attributes: [		            
 		   {
 			   type: 'attack',
@@ -769,7 +954,65 @@ finch.card_definitions = [
 			   element: 'shield'
 		   },
 	  	]
-	}
+	},
+	{
+		type: 'unit',	
+		sub_type: 'fumbling-novice',
+		title: 'Fumbling Novice',		
+		attributes: [
+		   {
+			   type: 'health',
+			   value: 3			   
+		   },
+		   {
+			   type: 'attack',
+			   value: 1
+		   }
+		],
+		requirements: [
+		   {
+			   type: 'element',
+			   element: 'lightning'
+		   },
+		   {
+			   type: 'element',
+			   element: 'lightning'
+		   },
+		   {
+			   type: 'element',
+			   element: 'lightning'
+		   },
+	  	]
+	},
+	{
+		type: 'unit',	
+		sub_type: 'senile-windbreaker',
+		title: 'Senile Windbreaker',		
+		attributes: [
+		   {
+			   type: 'health',
+			   value: 2			   
+		   },
+		   {
+			   type: 'attack',
+			   value: 2
+		   }
+		],
+		requirements: [
+		   {
+			   type: 'element',
+			   element: 'water'
+		   },
+		   {
+			   type: 'element',
+			   element: 'fire'
+		   },
+		   {
+			   type: 'element',
+			   element: 'arcane'
+		   },
+	  	]
+	},
 ];
 
 finch.game.start();

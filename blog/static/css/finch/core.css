@@ -83,6 +83,13 @@ html body #main-wrap #playing-field #battlefield .summon-point {
   margin-left: 20px;
   position: relative;
 }
+html body #main-wrap #playing-field #battlefield .summon-point .unit-slot .card-wrapper {
+  left: 7px;
+  top: 40px;
+}
+html body #main-wrap #playing-field #battlefield .summon-point .unit-slot .card-wrapper .card {
+  cursor: auto;
+}
 html body #main-wrap #playing-field #battlefield .summon-point.ui-state-active {
   background: rgba(255, 255, 255, 0.3);
 }
@@ -98,7 +105,7 @@ html body #main-wrap #playing-field #battlefield .summon-point .rock-shield .eff
   height: 90px;
   position: relative;
   z-index: 5;
-  top: -29px;
+  top: -35px;
 }
 html body #main-wrap #playing-field #battlefield .summon-point .rock-shield .effect.cold {
   margin-bottom: -90px;
@@ -120,9 +127,33 @@ html body #main-wrap #playing-field #battlefield .summon-point .rock-shield .wal
 html body #main-wrap #playing-field #battlefield .summon-point .rock-shield canvas {
   position: relative;
   z-index: 20;
-  width: 200px;
-  height: 200px;
+  width: 200px !important;
+  height: 200px !important;
   top: -70px;
+}
+html body #main-wrap #playing-field #battlefield .summon-point .persistent-aoe {
+  position: absolute;
+  top: -15px;
+  left: 5px;
+}
+html body #main-wrap #playing-field #battlefield .summon-point .persistent-aoe.lightning .bolt-wrap {
+  position: absolute;
+  width: 200px;
+}
+html body #main-wrap #playing-field #battlefield .summon-point .persistent-aoe.lightning .bolt {
+  display: inline-block;
+  width: 33px;
+  height: 59px;
+  background: url('../../images/finch/lightning-field.png');
+}
+html body #main-wrap #playing-field #battlefield .summon-point .persistent-aoe.lightning .bolt:nth-child(1) {
+  margin-top: -10px;
+}
+html body #main-wrap #playing-field #battlefield .summon-point .persistent-aoe.lightning .bolt:nth-child(3) {
+  margin-top: -15px;
+}
+html body #main-wrap #playing-field #battlefield .summon-point .persistent-aoe.lightning .bolt:nth-child(4) {
+  margin-top: -10px;
 }
 html body #main-wrap #playing-field #battlefield #enemy-side {
   position: relative;
@@ -318,6 +349,26 @@ html body .card-wrapper .card.persistent-aoe .border {
 html body .card-wrapper .card.persistent-aoe .title {
   border-bottom: 1px solid #8E4F96;
 }
+html body .card-wrapper .card.unit .border {
+  background: #73A6E2;
+  border: 1px solid #73A6E2;
+}
+html body .card-wrapper .card.unit .title {
+  border-bottom: 1px solid #73A6E2;
+}
+html body .card-wrapper .card.unit .unit-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 25;
+  top: -5px;
+}
+html body .card-wrapper .card.unit.fumbling-novice .unit-overlay {
+  background: url('../../images/finch/card-novice.png');
+}
+html body .card-wrapper .card.unit.senile-windbreaker .unit-overlay {
+  background: url('../../images/finch/card-senile-windbreaker.png');
+}
 html body .card-wrapper .card .border {
   border-radius: 5px;
   position: relative;
@@ -347,7 +398,7 @@ html body .card-wrapper .card .border .attributes {
   position: relative;
   z-index: 20;
   background: rgba(255, 255, 255, 0.7);
-  padding: 5px;
+  padding: 10px 5px 5px 5px;
 }
 html body .card-wrapper .card .border .attributes > span {
   display: inline-block;
