@@ -14,9 +14,22 @@
 			<div id='playing-field'>
 				<div id='status-bar'></div>
 				<div id='battlefield'>
-					<div id='instructions'>
-						<h1>De-queue each element set as it appears.</h1>
-						<a id='start-game'>Start the Game</a>
+					<div id='mode-selection'>
+						<div class='mode'>
+							<div class='mode-inner'>
+								<h2>Cancel out random elements as quickly as possible.</h2>
+								<a id='start-dequeue-game'>start</a>
+							</div>
+						</div>
+						<div class='mode'>
+							<div class='mode-inner'>
+								<h2>Queue random elements as quickly as possible.</h2>
+								<a id='start-queue-game'>start</a>
+							</div>
+						</div>
+					</div>
+					<div id='round-history-slot'>
+						
 					</div>
 				</div>
 				<div id='player-information'>
@@ -51,8 +64,11 @@
 								</div>
 							</div>							
 						</div>
-					</div>					
-				</div>
+					</div>	
+					<div id='stats-overview-slot'>
+												
+					</div>														
+				</div>				
 			</div>			
 		</div>	
 		
@@ -73,7 +89,7 @@
 			</div>			
 			{{for history}}
 				<div class='history'>					
-					<div class='queue'>
+					<div class='queue elements'>
 						{{for element_queue}}
 							<div class='{{:#data}}'>					
 							</div>
@@ -84,6 +100,54 @@
 					</div>
 				</div>
 			{{/for}}		
+		</script>
+		
+		<script id='round-history-template' type='text/x-jsrender'>
+			{{for history}}
+				<div class='game'>
+					<h2>Game #{{:#parent.data.length-#index}} ({{:label}})</h2>
+					<div class='rows'>
+						{{for history}}
+							<div class='row'>
+								<div class='elements'>
+									{{for element_queue}}
+										<div class='{{:#data}}'></div>
+									{{/for}}								
+								</div>
+								<div class='time'>
+									{{:time_to_complete}} ms
+								</div>
+								<div style='clear:both;'></div>
+							</div>
+						{{/for}}
+					</div>
+				</div>		
+			{{/for}}		
+		</script>
+		
+		<script id='stats-overview-template' type='text/x-jsrender'>
+			<h2>your stats</h2>
+			<div class='rows'>
+				<div class='row'>
+					<div class='label'>games played</div>
+					<div class='value'>{{:model.get('games_played')}}</div>		
+					<div style='clear:both;'></div>						
+				</div>
+				<div class='row'>
+					<div class='label'>fumbles</div>
+					<div class='value'>{{:model.get('fumbles')}}/{{:model.get('total_objectives')}} ({{:model.get('fumble_percentage')}}%)</div>
+					<div style='clear:both;'></div>								
+				</div>
+				<div class='row'>
+					<div class='label'>best time</div>
+					<div class='value'>{{:model.get('best_time')}} ms</div>
+					<div class='label'>worst time</div>
+					<div class='value'>{{:model.get('worst_time')}} ms</div>
+					<div class='label'>average</div>
+					<div class='value'>{{:model.get('average_time')}} ms</div>
+					<div style='clear:both;'></div>								
+				</div>
+			</div>
 		</script>
 		
 		<!-- end jsrender templates -->
