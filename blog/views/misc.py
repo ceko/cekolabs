@@ -16,3 +16,7 @@ import datetime
 @render_to('misc/finch.html')
 def finch(request):
     return { }
+
+@render_to('misc/finch-trainer.html')
+def finch_trainer(request):
+    return { }

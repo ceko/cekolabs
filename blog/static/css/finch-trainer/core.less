@@ -1,0 +1,596 @@
+
+* {
+	margin:0px;
+	padding:0px;
+}
+
+html {
+	font-family:Tahoma;
+	height:100%;
+
+	body {
+		background:url('../../images/finch/magicka-background.jpeg') no-repeat center #020C12;	
+		height:100%;	
+	
+		div.fizzling {
+							
+			width:46px;
+			height:46px;
+			display:inline-block;
+			background-size:cover;
+			margin: 6px 0px 0px 2px;
+											
+			&.water {										
+				background-image:url('../../images/finch/element-water.png');
+			}
+			
+			&.life {
+				background-image:url('../../images/finch/element-life.png');
+			}
+			
+			&.shield {
+				background-image:url('../../images/finch/element-shield.png');
+			}
+			
+			&.cold {
+				background-image:url('../../images/finch/element-cold.png');
+			}
+			
+			&.lightning {
+				background-image:url('../../images/finch/element-lightning.png');
+			}
+			
+			&.arcane {
+				background-image:url('../../images/finch/element-arcane.png');
+			}
+			
+			&.earth {
+				background-image:url('../../images/finch/element-earth.png');
+			}
+			
+			&.fire {
+				background-image:url('../../images/finch/element-fire.png');
+			}
+			
+			&.unknown {
+				background-image:url('../../images/finch/element-unknown.png');
+			}
+			
+		}
+	
+		#main-wrap {
+		
+			height:100%;
+			display:table;
+			margin:auto; 
+			
+			#playing-field {				
+				display:table-cell;
+				vertical-align:middle;
+				width:1000px;
+				height:800px;
+				margin:auto;								
+				
+				* {
+					vertical-align:top;
+				}
+				
+				#status-bar {
+					height:43px;
+					background:#000;
+					border:5px solid #111;
+					border-bottom:1px solid #666;					
+				}
+				
+				#battlefield {
+					width:990px;
+					position:relative;
+					border:5px solid #111;
+					border-top:none;
+					border-bottom:none;
+					height:533px;
+					background:url('../../images/finch/battlefield-background.png');										
+					
+					#instructions {
+						width:500px;						
+						margin:auto;
+						position:relative;
+						top:150px;
+						padding:10px;
+						border:1px solid #333;
+						border-radius:5px;
+						background:rgba(255,255,255,.5);
+						
+						a {
+							margin-top:30px;							
+							display:block;
+							padding:10px;
+							background:rgb(150, 218, 118);
+							border-radius:5px;
+							border: 1px solid #4C8133;
+							cursor:pointer;
+						}
+												
+					}
+					
+					#objective-history {
+						position:absolute;
+						background: rgba(0,0,0,.5);
+						padding: 10px;
+						border-radius: 5px;
+						margin-bottom:5px; 
+						
+						.queue-header {
+							float:left;
+							width:120px;
+							margin-right:50px;
+							color:#FFF;
+							font-size:.8em;
+							margin-left:5px;
+						}
+						
+						.time-header {
+							float:left;
+							color:#FFF;
+							font-size:.8em;
+							margin-left:3px;
+						}
+						
+						.time {
+							float:left;
+							margin:11px;
+							color:#FFF;
+						}
+						
+						.queue {	
+							
+							width:120px;
+							margin-right:50px;
+							float:left;
+												 
+							div {
+								width:30px;
+								height:30px;
+								display:inline-block;
+								background-size:cover;
+								margin: 6px 0px 0px 2px;
+																
+								&.water {										
+									background-image:url('../../images/finch/element-water.png');
+								}
+								
+								&.life {
+									background-image:url('../../images/finch/element-life.png');
+								}
+								
+								&.shield {
+									background-image:url('../../images/finch/element-shield.png');
+								}
+								
+								&.cold {
+									background-image:url('../../images/finch/element-cold.png');
+								}
+								
+								&.lightning {
+									background-image:url('../../images/finch/element-lightning.png');
+								}
+								
+								&.arcane {
+									background-image:url('../../images/finch/element-arcane.png');
+								}
+								
+								&.earth {
+									background-image:url('../../images/finch/element-earth.png');
+								}
+								
+								&.fire {
+									background-image:url('../../images/finch/element-fire.png');
+								}
+								
+								&.unknown {
+									background-image:url('../../images/finch/element-unknown.png');
+								}
+								
+							}	
+							
+						}	
+						
+					}
+					
+					#element-queue {
+						position:absolute;
+						width:171px;
+						height:60px;
+						border-radius:5px;
+						border:2px solid #FFF;
+						background-color:rgba(0,0,0,.5);
+						padding-left:15px;
+						z-index:60;
+						
+						> div {
+							
+							width:46px;
+							height:46px;
+							display:inline-block;
+							background-size:cover;
+							margin: 6px 0px 0px 2px;
+															
+							&.water {										
+								background-image:url('../../images/finch/element-water.png');
+							}
+							
+							&.life {
+								background-image:url('../../images/finch/element-life.png');
+							}
+							
+							&.shield {
+								background-image:url('../../images/finch/element-shield.png');
+							}
+							
+							&.cold {
+								background-image:url('../../images/finch/element-cold.png');
+							}
+							
+							&.lightning {
+								background-image:url('../../images/finch/element-lightning.png');
+							}
+							
+							&.arcane {
+								background-image:url('../../images/finch/element-arcane.png');
+							}
+							
+							&.earth {
+								background-image:url('../../images/finch/element-earth.png');
+							}
+							
+							&.fire {
+								background-image:url('../../images/finch/element-fire.png');
+							}
+							
+							&.unknown {
+								background-image:url('../../images/finch/element-unknown.png');
+							}
+							
+						}						
+					}
+					
+				}
+				
+				#player-information {
+					border:5px solid #111;
+					border-top:none;
+					height:232px;
+					background:url('../../images/finch/card-draw-background.png');
+					overflow:hidden;
+										
+					#player-controls {
+						display:inline-block;												
+						padding:10px;
+						width:280px;
+						border-right:1px solid #5F5F5F;
+						box-shadow:inset -1px 0px #000;
+						
+						#magicka-bar {							
+							height:25px;
+							border-bottom:1px solid #FFF;
+							
+							span {
+								font-size:14px;
+								position:absolute;
+								color:#FFF;
+								margin:3px 0px 0px 5px;
+							}
+							
+							.current {
+								width:10%;
+								height:100%;
+								background-color:#CE9522;
+							}
+						}
+						
+						#health-bar {							
+							height:25px;
+														
+							span {
+								font-size:14px;
+								position:absolute;
+								color:#FFF;
+								margin:4px 0px 0px 5px;
+							}
+							
+							.current {
+								width:100%;
+								height:100%;
+								background-color:#9E1215;
+							}
+						}
+						
+						#elements-controls {
+							> div {
+								
+								&.row1 {
+									margin-top:10px;
+								}
+							
+								&.row2 {									
+									margin-left:30px;
+									margin-top:-5px;
+								}
+							
+								> div {
+									height:80px;
+									width:53px;
+									display:inline-block;
+									margin-right:5px;									
+									background-position:bottom;
+									background-repeat:no-repeat;
+									
+									span {
+										font-size:18px;
+										color:#FFF;
+										display:block;
+										text-align:center;
+									}
+									
+									&.pressed {
+										position:relative;
+										top:3px;
+										left:3px;
+									}
+									
+									&.active:before {
+										width:53px;
+										height:80px;
+										position:absolute;
+										background:radial-gradient(circle at center 52px, rgba(255,255,255,.8) 0px,rgba(255,255,255,0) 30px);
+										content:"";
+									}
+									
+									&.water {										
+										background-image:url('../../images/finch/element-water.png');
+									}
+									
+									&.life {
+										background-image:url('../../images/finch/element-life.png');
+									}
+									
+									&.shield {
+										background-image:url('../../images/finch/element-shield.png');
+									}
+									
+									&.cold {
+										background-image:url('../../images/finch/element-cold.png');
+									}
+									
+									&.lightning {
+										background-image:url('../../images/finch/element-lightning.png');
+									}
+									
+									&.arcane {
+										background-image:url('../../images/finch/element-arcane.png');
+									}
+									
+									&.earth {
+										background-image:url('../../images/finch/element-earth.png');
+									}
+									
+									&.fire {
+										background-image:url('../../images/finch/element-fire.png');
+									}
+									
+								}
+							}
+						}
+						
+					}
+				}
+				
+				#card-draw-area {
+					
+					display:inline-block;
+					position:relative;			
+					height:164px;			
+										
+				}
+			}
+				
+		}
+	
+		.card-wrapper {
+			display:inline-block;
+			width:172px;
+			position:absolute;
+			top:18px;
+			left:700px;
+			
+			&.ui-draggable-dragging {
+				z-index:30;
+			}
+			
+			.card {
+				opacity:.5;
+				&.requirements-met {
+					opacity:1;
+					cursor:pointer;
+				}
+				background:#FFF;
+				box-shadow:5px 5px 5px rgba(0,0,0,.7);
+				border-radius:5px;							
+				padding:3px;
+				width:178px;
+				
+				&.defensive {
+					.border {
+						background:#D09C24;
+						border:1px solid #D09C24;
+					}
+					
+					.title {
+						border-bottom:1px solid #7E5E14;
+					}
+				}
+				
+				&.persistent-aoe {
+					.border {
+						background:#C172CB;
+						border:1px solid #C172CB;
+					}
+					
+					.title {
+						border-bottom:1px solid #8E4F96;
+					}
+				}
+				
+				&.unit {
+					.border {
+						background:#73A6E2;
+						border:1px solid #73A6E2;
+					}
+					
+					.title {
+						border-bottom:1px solid #73A6E2;
+					}
+					
+					.unit-overlay {
+						position:absolute;
+						width:100%;
+						height:100%;
+						z-index:25;
+						top:-5px;
+					}
+					
+					&.fumbling-novice {
+						.unit-overlay {
+							background:url('../../images/finch/card-novice.png');
+						}
+					}
+					
+					&.senile-windbreaker {
+						.unit-overlay {
+							background:url('../../images/finch/card-senile-windbreaker.png');
+						}
+					}
+					
+				}
+				
+				.border {
+					border-radius:5px;								
+					position:relative;					
+													
+					.title {
+						padding:5px 10px;
+						font-size:18px;									
+					}
+					
+					.sunburst {
+						width:100%;
+						height:100%;
+						position:absolute;
+						top:0px;									
+						background: url('../../images/finch/card-sunburst.png') no-repeat;
+						z-index:10;
+						opacity:.3;
+					}
+					
+					.description {
+						position:relative;
+						z-index:20;
+						font-size:14px;
+						background: rgba(255,255,255, .7);
+						padding:10px;	
+						height:50px;								
+					}
+					
+					.attributes {
+						position:relative;
+						z-index:20;
+						background: rgba(255,255,255, .7);
+						padding:10px 5px 5px 5px;
+						
+						> span {
+							display:inline-block;
+							height:25px;
+							padding-left:30px;
+						}
+						
+						.health {	
+							float:left;
+							background:url('../../images/finch/health-icon.png') no-repeat;
+						}
+						
+						.attack {	
+							float:right;
+							background:url('../../images/finch/attack-icon.png') no-repeat;
+						}
+						
+					}
+					
+				}
+				
+			}
+			
+			.requirements {
+				
+				margin: 10px 0px 0px 17px;
+				
+				> div {
+					width:46px;
+					height:46px;
+					display:inline-block;
+					background-size:cover;
+						
+					&:before {
+						content:"";
+						position:absolute;
+						background: radial-gradient(ellipse at center, #ffffff 0%, rgba(255, 255, 255, 0) 80%);
+						width: 46px;
+						height: 46px;
+						background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.5) 70%, rgba(0, 0, 0, 0) 75%);									
+					}	
+													
+					&.fulfilled:before {									
+						background: radial-gradient(ellipse at center, rgba(255,255,255,0) 30%, rgba(255,255,255,.5) 65%, rgba(255, 255, 255, 0) 75%);									
+					}
+												
+													
+					&.water {										
+						background-image:url('../../images/finch/element-water.png');
+					}
+					
+					&.life {
+						background-image:url('../../images/finch/element-life.png');
+					}
+					
+					&.shield {
+						background-image:url('../../images/finch/element-shield.png');
+					}
+					
+					&.cold {
+						background-image:url('../../images/finch/element-cold.png');
+					}
+					
+					&.lightning {
+						background-image:url('../../images/finch/element-lightning.png');
+					}
+					
+					&.arcane {
+						background-image:url('../../images/finch/element-arcane.png');
+					}
+					
+					&.earth {
+						background-image:url('../../images/finch/element-earth.png');
+					}
+					
+					&.fire {
+						background-image:url('../../images/finch/element-fire.png');
+					}
+					
+				}
+				
+			}
+									
+		}
+		
+	}
+	
+}

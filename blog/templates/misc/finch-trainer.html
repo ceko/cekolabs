@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>	
+		{% load compressed %}
+		<title>finch@dave-lafferty.com</title>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>	
+		{% compressed_css 'finch-trainer' %}
+	</head>
+	<body>
+		<div id='main-wrap'>
+			<div id='playing-field'>
+				<div id='status-bar'></div>
+				<div id='battlefield'>
+					<div id='instructions'>
+						<h1>De-queue each element set as it appears.</h1>
+						<a id='start-game'>Start the Game</a>
+					</div>
+				</div>
+				<div id='player-information'>
+					<div id='player-controls'>						
+						<div id='elements-controls'>
+							<div class='row1'>
+								<div class='water'>
+									<span>Q</span>								
+								</div>
+								<div class='life'>
+									<span>W</span>								
+								</div>
+								<div class='shield'>
+									<span>E</span>								
+								</div>
+								<div class='cold'>
+									<span>R</span>								
+								</div>
+							</div>
+							<div class='row2'>
+								<div class='lightning'>
+									<span>A</span>								
+								</div>
+								<div class='arcane'>
+									<span>S</span>								
+								</div>
+								<div class='earth'>
+									<span>D</span>								
+								</div>
+								<div class='fire'>
+									<span>F</span>								
+								</div>
+							</div>							
+						</div>
+					</div>					
+				</div>
+			</div>			
+		</div>	
+		
+		{% verbatim %}
+		<!-- jsrender templates -->
+		<script id='element-queue-template' type='text/x-jsrender'>			
+			{{for queued_elements}}
+				<div class='{{:name}}'>					
+				</div>
+			{{/for}}		
+		</script>
+		
+		<script id='history-template' type='text/x-jsrender'>
+			<div class='header'>
+				<div class='queue-header'>elements</div>
+				<div class='time-header'>time (ms)</div>
+				<div style='clear:both;'></div>
+			</div>			
+			{{for history}}
+				<div class='history'>					
+					<div class='queue'>
+						{{for element_queue}}
+							<div class='{{:#data}}'>					
+							</div>
+						{{/for}}
+					</div>
+					<div class='time'>
+						{{:time_to_complete}}
+					</div>
+				</div>
+			{{/for}}		
+		</script>
+		
+		<!-- end jsrender templates -->
+		{% endverbatim %}
+			
+		{% compressed_js 'finch-trainer' %}		
+	</body>
+</html>

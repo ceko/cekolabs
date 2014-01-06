@@ -1,0 +1,453 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+html {
+  font-family: Tahoma;
+  height: 100%;
+}
+html body {
+  background: url('../../images/finch/magicka-background.jpeg') no-repeat center #020c12;
+  height: 100%;
+}
+html body div.fizzling {
+  width: 46px;
+  height: 46px;
+  display: inline-block;
+  background-size: cover;
+  margin: 6px 0px 0px 2px;
+}
+html body div.fizzling.water {
+  background-image: url('../../images/finch/element-water.png');
+}
+html body div.fizzling.life {
+  background-image: url('../../images/finch/element-life.png');
+}
+html body div.fizzling.shield {
+  background-image: url('../../images/finch/element-shield.png');
+}
+html body div.fizzling.cold {
+  background-image: url('../../images/finch/element-cold.png');
+}
+html body div.fizzling.lightning {
+  background-image: url('../../images/finch/element-lightning.png');
+}
+html body div.fizzling.arcane {
+  background-image: url('../../images/finch/element-arcane.png');
+}
+html body div.fizzling.earth {
+  background-image: url('../../images/finch/element-earth.png');
+}
+html body div.fizzling.fire {
+  background-image: url('../../images/finch/element-fire.png');
+}
+html body div.fizzling.unknown {
+  background-image: url('../../images/finch/element-unknown.png');
+}
+html body #main-wrap {
+  height: 100%;
+  display: table;
+  margin: auto;
+}
+html body #main-wrap #playing-field {
+  display: table-cell;
+  vertical-align: middle;
+  width: 1000px;
+  height: 800px;
+  margin: auto;
+}
+html body #main-wrap #playing-field * {
+  vertical-align: top;
+}
+html body #main-wrap #playing-field #status-bar {
+  height: 43px;
+  background: #000;
+  border: 5px solid #111;
+  border-bottom: 1px solid #666;
+}
+html body #main-wrap #playing-field #battlefield {
+  width: 990px;
+  position: relative;
+  border: 5px solid #111;
+  border-top: none;
+  border-bottom: none;
+  height: 533px;
+  background: url('../../images/finch/battlefield-background.png');
+}
+html body #main-wrap #playing-field #battlefield #instructions {
+  width: 500px;
+  margin: auto;
+  position: relative;
+  top: 150px;
+  padding: 10px;
+  border: 1px solid #333;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.5);
+}
+html body #main-wrap #playing-field #battlefield #instructions a {
+  margin-top: 30px;
+  display: block;
+  padding: 10px;
+  background: #96da76;
+  border-radius: 5px;
+  border: 1px solid #4C8133;
+  cursor: pointer;
+}
+html body #main-wrap #playing-field #battlefield #objective-history {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+html body #main-wrap #playing-field #battlefield #objective-history .queue-header {
+  float: left;
+  width: 120px;
+  margin-right: 50px;
+  color: #FFF;
+  font-size: .8em;
+  margin-left: 5px;
+}
+html body #main-wrap #playing-field #battlefield #objective-history .time-header {
+  float: left;
+  color: #FFF;
+  font-size: .8em;
+  margin-left: 3px;
+}
+html body #main-wrap #playing-field #battlefield #objective-history .time {
+  float: left;
+  margin: 11px;
+  color: #FFF;
+}
+html body #main-wrap #playing-field #battlefield #objective-history .queue {
+  width: 120px;
+  margin-right: 50px;
+  float: left;
+}
+html body #main-wrap #playing-field #battlefield #objective-history .queue div {
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  background-size: cover;
+  margin: 6px 0px 0px 2px;
+}
+html body #main-wrap #playing-field #battlefield #objective-history .queue div.water {
+  background-image: url('../../images/finch/element-water.png');
+}
+html body #main-wrap #playing-field #battlefield #objective-history .queue div.life {
+  background-image: url('../../images/finch/element-life.png');
+}
+html body #main-wrap #playing-field #battlefield #objective-history .queue div.shield {
+  background-image: url('../../images/finch/element-shield.png');
+}
+html body #main-wrap #playing-field #battlefield #objective-history .queue div.cold {
+  background-image: url('../../images/finch/element-cold.png');
+}
+html body #main-wrap #playing-field #battlefield #objective-history .queue div.lightning {
+  background-image: url('../../images/finch/element-lightning.png');
+}
+html body #main-wrap #playing-field #battlefield #objective-history .queue div.arcane {
+  background-image: url('../../images/finch/element-arcane.png');
+}
+html body #main-wrap #playing-field #battlefield #objective-history .queue div.earth {
+  background-image: url('../../images/finch/element-earth.png');
+}
+html body #main-wrap #playing-field #battlefield #objective-history .queue div.fire {
+  background-image: url('../../images/finch/element-fire.png');
+}
+html body #main-wrap #playing-field #battlefield #objective-history .queue div.unknown {
+  background-image: url('../../images/finch/element-unknown.png');
+}
+html body #main-wrap #playing-field #battlefield #element-queue {
+  position: absolute;
+  width: 171px;
+  height: 60px;
+  border-radius: 5px;
+  border: 2px solid #FFF;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding-left: 15px;
+  z-index: 60;
+}
+html body #main-wrap #playing-field #battlefield #element-queue > div {
+  width: 46px;
+  height: 46px;
+  display: inline-block;
+  background-size: cover;
+  margin: 6px 0px 0px 2px;
+}
+html body #main-wrap #playing-field #battlefield #element-queue > div.water {
+  background-image: url('../../images/finch/element-water.png');
+}
+html body #main-wrap #playing-field #battlefield #element-queue > div.life {
+  background-image: url('../../images/finch/element-life.png');
+}
+html body #main-wrap #playing-field #battlefield #element-queue > div.shield {
+  background-image: url('../../images/finch/element-shield.png');
+}
+html body #main-wrap #playing-field #battlefield #element-queue > div.cold {
+  background-image: url('../../images/finch/element-cold.png');
+}
+html body #main-wrap #playing-field #battlefield #element-queue > div.lightning {
+  background-image: url('../../images/finch/element-lightning.png');
+}
+html body #main-wrap #playing-field #battlefield #element-queue > div.arcane {
+  background-image: url('../../images/finch/element-arcane.png');
+}
+html body #main-wrap #playing-field #battlefield #element-queue > div.earth {
+  background-image: url('../../images/finch/element-earth.png');
+}
+html body #main-wrap #playing-field #battlefield #element-queue > div.fire {
+  background-image: url('../../images/finch/element-fire.png');
+}
+html body #main-wrap #playing-field #battlefield #element-queue > div.unknown {
+  background-image: url('../../images/finch/element-unknown.png');
+}
+html body #main-wrap #playing-field #player-information {
+  border: 5px solid #111;
+  border-top: none;
+  height: 232px;
+  background: url('../../images/finch/card-draw-background.png');
+  overflow: hidden;
+}
+html body #main-wrap #playing-field #player-information #player-controls {
+  display: inline-block;
+  padding: 10px;
+  width: 280px;
+  border-right: 1px solid #5F5F5F;
+  box-shadow: inset -1px 0px #000000;
+}
+html body #main-wrap #playing-field #player-information #player-controls #magicka-bar {
+  height: 25px;
+  border-bottom: 1px solid #FFF;
+}
+html body #main-wrap #playing-field #player-information #player-controls #magicka-bar span {
+  font-size: 14px;
+  position: absolute;
+  color: #FFF;
+  margin: 3px 0px 0px 5px;
+}
+html body #main-wrap #playing-field #player-information #player-controls #magicka-bar .current {
+  width: 10%;
+  height: 100%;
+  background-color: #CE9522;
+}
+html body #main-wrap #playing-field #player-information #player-controls #health-bar {
+  height: 25px;
+}
+html body #main-wrap #playing-field #player-information #player-controls #health-bar span {
+  font-size: 14px;
+  position: absolute;
+  color: #FFF;
+  margin: 4px 0px 0px 5px;
+}
+html body #main-wrap #playing-field #player-information #player-controls #health-bar .current {
+  width: 100%;
+  height: 100%;
+  background-color: #9E1215;
+}
+html body #main-wrap #playing-field #player-information #player-controls #elements-controls > div.row1 {
+  margin-top: 10px;
+}
+html body #main-wrap #playing-field #player-information #player-controls #elements-controls > div.row2 {
+  margin-left: 30px;
+  margin-top: -5px;
+}
+html body #main-wrap #playing-field #player-information #player-controls #elements-controls > div > div {
+  height: 80px;
+  width: 53px;
+  display: inline-block;
+  margin-right: 5px;
+  background-position: bottom;
+  background-repeat: no-repeat;
+}
+html body #main-wrap #playing-field #player-information #player-controls #elements-controls > div > div span {
+  font-size: 18px;
+  color: #FFF;
+  display: block;
+  text-align: center;
+}
+html body #main-wrap #playing-field #player-information #player-controls #elements-controls > div > div.pressed {
+  position: relative;
+  top: 3px;
+  left: 3px;
+}
+html body #main-wrap #playing-field #player-information #player-controls #elements-controls > div > div.active:before {
+  width: 53px;
+  height: 80px;
+  position: absolute;
+  background: radial-gradient(circle at center 52px, rgba(255, 255, 255, 0.8) 0px, rgba(255, 255, 255, 0) 30px);
+  content: "";
+}
+html body #main-wrap #playing-field #player-information #player-controls #elements-controls > div > div.water {
+  background-image: url('../../images/finch/element-water.png');
+}
+html body #main-wrap #playing-field #player-information #player-controls #elements-controls > div > div.life {
+  background-image: url('../../images/finch/element-life.png');
+}
+html body #main-wrap #playing-field #player-information #player-controls #elements-controls > div > div.shield {
+  background-image: url('../../images/finch/element-shield.png');
+}
+html body #main-wrap #playing-field #player-information #player-controls #elements-controls > div > div.cold {
+  background-image: url('../../images/finch/element-cold.png');
+}
+html body #main-wrap #playing-field #player-information #player-controls #elements-controls > div > div.lightning {
+  background-image: url('../../images/finch/element-lightning.png');
+}
+html body #main-wrap #playing-field #player-information #player-controls #elements-controls > div > div.arcane {
+  background-image: url('../../images/finch/element-arcane.png');
+}
+html body #main-wrap #playing-field #player-information #player-controls #elements-controls > div > div.earth {
+  background-image: url('../../images/finch/element-earth.png');
+}
+html body #main-wrap #playing-field #player-information #player-controls #elements-controls > div > div.fire {
+  background-image: url('../../images/finch/element-fire.png');
+}
+html body #main-wrap #playing-field #card-draw-area {
+  display: inline-block;
+  position: relative;
+  height: 164px;
+}
+html body .card-wrapper {
+  display: inline-block;
+  width: 172px;
+  position: absolute;
+  top: 18px;
+  left: 700px;
+}
+html body .card-wrapper.ui-draggable-dragging {
+  z-index: 30;
+}
+html body .card-wrapper .card {
+  opacity: .5;
+  background: #FFF;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.7);
+  border-radius: 5px;
+  padding: 3px;
+  width: 178px;
+}
+html body .card-wrapper .card.requirements-met {
+  opacity: 1;
+  cursor: pointer;
+}
+html body .card-wrapper .card.defensive .border {
+  background: #D09C24;
+  border: 1px solid #D09C24;
+}
+html body .card-wrapper .card.defensive .title {
+  border-bottom: 1px solid #7E5E14;
+}
+html body .card-wrapper .card.persistent-aoe .border {
+  background: #C172CB;
+  border: 1px solid #C172CB;
+}
+html body .card-wrapper .card.persistent-aoe .title {
+  border-bottom: 1px solid #8E4F96;
+}
+html body .card-wrapper .card.unit .border {
+  background: #73A6E2;
+  border: 1px solid #73A6E2;
+}
+html body .card-wrapper .card.unit .title {
+  border-bottom: 1px solid #73A6E2;
+}
+html body .card-wrapper .card.unit .unit-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 25;
+  top: -5px;
+}
+html body .card-wrapper .card.unit.fumbling-novice .unit-overlay {
+  background: url('../../images/finch/card-novice.png');
+}
+html body .card-wrapper .card.unit.senile-windbreaker .unit-overlay {
+  background: url('../../images/finch/card-senile-windbreaker.png');
+}
+html body .card-wrapper .card .border {
+  border-radius: 5px;
+  position: relative;
+}
+html body .card-wrapper .card .border .title {
+  padding: 5px 10px;
+  font-size: 18px;
+}
+html body .card-wrapper .card .border .sunburst {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  background: url('../../images/finch/card-sunburst.png') no-repeat;
+  z-index: 10;
+  opacity: .3;
+}
+html body .card-wrapper .card .border .description {
+  position: relative;
+  z-index: 20;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 10px;
+  height: 50px;
+}
+html body .card-wrapper .card .border .attributes {
+  position: relative;
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 10px 5px 5px 5px;
+}
+html body .card-wrapper .card .border .attributes > span {
+  display: inline-block;
+  height: 25px;
+  padding-left: 30px;
+}
+html body .card-wrapper .card .border .attributes .health {
+  float: left;
+  background: url('../../images/finch/health-icon.png') no-repeat;
+}
+html body .card-wrapper .card .border .attributes .attack {
+  float: right;
+  background: url('../../images/finch/attack-icon.png') no-repeat;
+}
+html body .card-wrapper .requirements {
+  margin: 10px 0px 0px 17px;
+}
+html body .card-wrapper .requirements > div {
+  width: 46px;
+  height: 46px;
+  display: inline-block;
+  background-size: cover;
+}
+html body .card-wrapper .requirements > div:before {
+  content: "";
+  position: absolute;
+  background: radial-gradient(ellipse at center, #ffffff 0%, rgba(255, 255, 255, 0) 80%);
+  width: 46px;
+  height: 46px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.5) 70%, rgba(0, 0, 0, 0) 75%);
+}
+html body .card-wrapper .requirements > div.fulfilled:before {
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.5) 65%, rgba(255, 255, 255, 0) 75%);
+}
+html body .card-wrapper .requirements > div.water {
+  background-image: url('../../images/finch/element-water.png');
+}
+html body .card-wrapper .requirements > div.life {
+  background-image: url('../../images/finch/element-life.png');
+}
+html body .card-wrapper .requirements > div.shield {
+  background-image: url('../../images/finch/element-shield.png');
+}
+html body .card-wrapper .requirements > div.cold {
+  background-image: url('../../images/finch/element-cold.png');
+}
+html body .card-wrapper .requirements > div.lightning {
+  background-image: url('../../images/finch/element-lightning.png');
+}
+html body .card-wrapper .requirements > div.arcane {
+  background-image: url('../../images/finch/element-arcane.png');
+}
+html body .card-wrapper .requirements > div.earth {
+  background-image: url('../../images/finch/element-earth.png');
+}
+html body .card-wrapper .requirements > div.fire {
+  background-image: url('../../images/finch/element-fire.png');
+}

@@ -154,6 +154,12 @@ PIPELINE_CSS = {
         ),
         'output_filename': 'css/finch/core.css'
     },
+    'finch-trainer': {
+        'source_filenames': (
+            'css/finch-trainer/core.less',
+        ),
+        'output_filename': 'css/finch-trainer/core.css'
+    },
 }
 
 PIPELINE_JS = {
@@ -184,6 +190,13 @@ PIPELINE_JS = {
             'js/finch/core.js',
         ),
         'output_filename': 'js/finch/core.min.js',
+    },
+    'finch-trainer': {
+        'source_filenames': (
+            'js/jsrender.min.js',
+            'js/finch-trainer/core.js',
+        ),
+        'output_filename': 'js/finch-trainer/core.min.js',
     }
 }
 
