@@ -12,6 +12,8 @@ urlpatterns = patterns('cekolabs.core.views',
     url(r'^django-form-architect$', 'django_form_architect', name='django_form_architect'),
     url(r'^resume$', 'resume', name='resume'),
     url(r'^ksp-mods', 'ksp_mods', name='ksp_mods'),
+    url(r'^trainer$', 'magicka_trainer', name='magicka_trainer'),
+    url(r'^trainer-save-history$', 'magicka_trainer_save_history', name='magicka_trainer_save_history'),
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

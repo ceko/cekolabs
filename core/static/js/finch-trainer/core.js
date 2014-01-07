@@ -1,7 +1,7 @@
 
 var finch = {}
 finch.game = {	
-	round_length: 3,
+	round_length: 5,
 	statebag: {},
 	set_mode: function(mode) {
 		finch.game.statebag.mode = mode;
@@ -70,6 +70,7 @@ finch.game = {
 				finch.game.views.mode_selection.show();
 				finch.game.views.objective_history.transition_to_round_history(function() {
 					finch.game.round_history.add_history(finch.game.statebag.mode, history);
+					finch.game.round_history.save_history(finch.game.statebag.mode, history);
 					finch.game.stats_overview.update();
 					finch.game.objective_history.clear();
 				});
@@ -295,6 +296,13 @@ models.RoundHistory = Backbone.Model.extend({
 		});
 		this.set('history', history);
 		this.trigger('change:history', this, history);
+	},
+	save_history: function(round_label, round_history) {
+		$.ajax({
+			url: '/trainer-save-history',
+			type: 'POST',
+			data: { label: JSON.stringify(round_label), history: JSON.stringify(round_history) }
+		});		
 	}
 });
 
@@ -580,9 +588,46 @@ views.QueuedElements = Backbone.View.extend({
 });
 /** end views **/
 
-/** particle effects **/
+/** csrf support **/
 
-/** end particle effects **/
+$(document).ajaxSend(function(event, xhr, settings) {
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    function sameOrigin(url) {
+        // url could be relative or scheme relative or absolute
+        var host = document.location.host; // host + port
+        var protocol = document.location.protocol;
+        var sr_origin = '//' + host;
+        var origin = protocol + sr_origin;
+        // Allow absolute or scheme relative URLs to same origin
+        return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+            (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+            // or any other URL that isn't scheme relative or absolute i.e relative.
+            !(/^(\/\/|http:|https:).*/.test(url));
+    }
+    function safeMethod(method) {
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+    }
+});
+
+/** end csrf support **/
 
 finch.game.views.mode_selection = new views.ModeSelection();
 finch.game.stats_overview = new models.StatsOverview();
