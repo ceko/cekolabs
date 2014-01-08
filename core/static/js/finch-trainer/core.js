@@ -290,9 +290,14 @@ models.RoundHistory = Backbone.Model.extend({
 	},
 	add_history: function(round_label, round_history) {		
 		var history = this.get('history');
+		var total_time = 0;
+		for(var i=0;i<round_history.length;i++) {
+			total_time += round_history[i].time_to_complete;
+		}
 		history.push({ 
 			label: round_label,
-			history: round_history
+			history: round_history,
+			average_time: Math.floor(total_time / round_history.length)
 		});
 		this.set('history', history);
 		this.trigger('change:history', this, history);
@@ -316,7 +321,7 @@ models.ObjectiveHistory = Backbone.Model.extend({
 		this.set('history', []);
 	},
 	add_history: function(time_to_complete, element_queue, fumble) {		
-		var history = this.get('history');
+		var history = this.get('history');		
 		history.push({ 
 			time_to_complete: time_to_complete,
 			element_queue: element_queue,
@@ -345,16 +350,15 @@ views.RoundHistory = Backbone.View.extend({
 	},
 	
 	render: function() {
-		var history = this.model.get('history');		
-					
-		//first time rendering position it in the middle of the playing field.
-		if(!this.already_rendered) {
-			//this.already_rendered = true;		
-			console.log(history);
-			this.$el.html($("#round-history-template").render({ history: history.slice(0).reverse() }));
-		}
+		var history = this.model.get('history');
+		
+		this.$el.prepend($("#round-history-template").render({ history: history[history.length-1], game_number: history.length }));		
 		
 		this.$el.find('.game:first').hide().slideDown();
+		this.$el.find('.game:not(:first)').find('.rows').slideUp('fast');
+		this.$el.find('.game:first .header').on('click', function() {
+			$(this).closest('.game').find('.rows').slideToggle();
+		});
 		
 		return this;
 	}
@@ -399,7 +403,8 @@ views.ObjectiveHistory = Backbone.View.extend({
 			opacity: 0,
 		}, function() {
 			if(callback) callback();
-			_this.already_rendered = false;			
+			_this.already_rendered = false;
+			$(this).hide();
 		});		
 	},
 	
@@ -418,6 +423,7 @@ views.ObjectiveHistory = Backbone.View.extend({
 				left: $battlefield.outerWidth() / 2 - this.$el.outerWidth() / 2 - 140,
 			});
 			this.$el.css({ opacity: 100 });
+			this.$el.show();
 		}
 		
 		return this;		
@@ -453,26 +459,83 @@ views.ModeSelection = Backbone.View.extend({
 	el: $('#mode-selection'),
 	events: {
 		'click #start-dequeue-game': 'start_dequeue_game',
-		'click #start-queue-game': 'start_queue_game'
+		'click #start-queue-game': 'start_queue_game',
+		'change #round-length': 'change_round_length',
+	},
+	
+	initialize: function() {
+		$('#round-length').val(finch.game.round_length);
+	},
+	
+	change_round_length: function() {
+		finch.game.round_length = parseInt($('#round-length').val());
 	},
 	
 	start_queue_game: function() {
-		this.$el.fadeOut('fast');
-		finch.game.set_mode('queue');
-		finch.game.start();
-		finch.game.load_next_objective();
-		finch.game.views.queued_elements.show()
+		var callback = function() {
+			finch.game.set_mode('queue');
+			finch.game.start();
+			finch.game.load_next_objective();
+			finch.game.views.queued_elements.show()
+		};
+		
+		this.show_countdown(callback.bind(this));
+		this.$el.fadeOut('fast');				
+		this.set_game_mode_text('Queue Shown Elements');
 	},
 	
 	start_dequeue_game: function() {
-		this.$el.fadeOut('fast');
-		finch.game.set_mode('dequeue');
-		finch.game.start();
-		finch.game.load_next_objective();
+		var callback = function() {
+			finch.game.set_mode('dequeue');
+			finch.game.start();
+			finch.game.load_next_objective();
+			finch.game.views.queued_elements.show()
+		};
+		
+		this.show_countdown(callback.bind(this));
+		this.$el.fadeOut('fast');		
+		this.set_game_mode_text('Cancel Queued Elements');
+	},
+	
+	show_countdown: function(callback) {
+		var $countdown_original = $('<div class="countdown">3</div>');
+		$("#battlefield").append($countdown_original);
+		$countdown_original.css({
+			'position': 'absolute',
+			'top': $('#battlefield').height()/2 - $countdown_original.height()/2,
+			'left': ($('#battlefield').width()-$('#round-history-slot').width())/2 - $countdown_original.height()/2,
+			'display': 'none'
+		});
+		
+		var advance_countdown = function(cnt) {
+			var $countdown = $countdown_original.clone();
+			$('#battlefield').append($countdown);
+			$countdown.text(cnt).show();
+			$countdown.effect('puff', {percent:300}, 500, function() {				
+				$countdown.remove();
+			});
+			
+			setTimeout(function() {
+				if(cnt==1) {
+					callback();
+					$countdown_original.remove();
+				}else{
+					advance_countdown(cnt-1);
+				}
+			}, 1000);
+			
+		};
+		
+		advance_countdown(3);
+	},
+	
+	set_game_mode_text: function(text) {
+		$('#game-mode-display').text(text);
 	},
 	
 	show: function() {
 		this.$el.fadeIn('fast');
+		this.set_game_mode_text('None Selected');
 	}
 });
 

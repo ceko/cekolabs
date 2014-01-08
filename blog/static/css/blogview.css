@@ -22,7 +22,6 @@
   padding: 20px;
   font-size: 16px;
   /* desert scheme ported from vim to google prettify */
-
 }
 .Post .post p,
 .Post .teaser p {
@@ -106,31 +105,18 @@
   border-radius: 2px;
   box-shadow: 0px 1px 1px 1px #CCC;
   /* string  - pink */
-
   /* comment - skyblue */
-
   /* type    - lightgreen */
-
   /* literal - darkred */
-
   /* punctuation */
-
   /* plaintext */
-
   /* html/xml tag    - lightyellow */
-
   /* attribute name  - khaki */
-
   /* attribute value - pink */
-
   /* decimal         - lightgreen */
-
   /* Specify class=linenums on a pre to get line numbering */
-
   /* IE indents via margin-left */
-
   /* Alternate shading for lines */
-
 }
 .Post .post code.prettyprint *,
 .Post .teaser code.prettyprint * {
@@ -296,7 +282,6 @@
   padding: 20px;
   font-size: 16px;
   /* desert scheme ported from vim to google prettify */
-
 }
 #main-wrap #main-content #markdown_preview .post p,
 #main-wrap #main-content #markdown_preview .teaser p {
@@ -380,31 +365,18 @@
   border-radius: 2px;
   box-shadow: 0px 1px 1px 1px #CCC;
   /* string  - pink */
-
   /* comment - skyblue */
-
   /* type    - lightgreen */
-
   /* literal - darkred */
-
   /* punctuation */
-
   /* plaintext */
-
   /* html/xml tag    - lightyellow */
-
   /* attribute name  - khaki */
-
   /* attribute value - pink */
-
   /* decimal         - lightgreen */
-
   /* Specify class=linenums on a pre to get line numbering */
-
   /* IE indents via margin-left */
-
   /* Alternate shading for lines */
-
 }
 #main-wrap #main-content #markdown_preview .post code.prettyprint *,
 #main-wrap #main-content #markdown_preview .teaser code.prettyprint * {
@@ -642,7 +614,6 @@
   /*.post-teaser:first-child {
 			padding-top:0px;			
 		}*/
-
 }
 #main-wrap #main-content .post-teasers .post {
   padding: 1% 0% 1% 1%;
@@ -655,7 +626,6 @@
   padding: 20px;
   font-size: 16px;
   /* desert scheme ported from vim to google prettify */
-
 }
 #main-wrap #main-content .post-teasers .post p,
 #main-wrap #main-content .post-teasers .teaser p {
@@ -739,31 +709,18 @@
   border-radius: 2px;
   box-shadow: 0px 1px 1px 1px #CCC;
   /* string  - pink */
-
   /* comment - skyblue */
-
   /* type    - lightgreen */
-
   /* literal - darkred */
-
   /* punctuation */
-
   /* plaintext */
-
   /* html/xml tag    - lightyellow */
-
   /* attribute name  - khaki */
-
   /* attribute value - pink */
-
   /* decimal         - lightgreen */
-
   /* Specify class=linenums on a pre to get line numbering */
-
   /* IE indents via margin-left */
-
   /* Alternate shading for lines */
-
 }
 #main-wrap #main-content .post-teasers .post code.prettyprint *,
 #main-wrap #main-content .post-teasers .teaser code.prettyprint * {
@@ -1008,7 +965,6 @@
 				border-top:1px solid #EEE;				
 			}
 			*/
-
 }
 @media (max-width: 825px) {
   #main-wrap #main-content #blogpost .leftcol-content {
@@ -1035,7 +991,6 @@
   padding: 20px;
   font-size: 16px;
   /* desert scheme ported from vim to google prettify */
-
 }
 #main-wrap #main-content #blogpost .leftcol-content .post p,
 #main-wrap #main-content #blogpost .leftcol-content .teaser p {
@@ -1119,31 +1074,18 @@
   border-radius: 2px;
   box-shadow: 0px 1px 1px 1px #CCC;
   /* string  - pink */
-
   /* comment - skyblue */
-
   /* type    - lightgreen */
-
   /* literal - darkred */
-
   /* punctuation */
-
   /* plaintext */
-
   /* html/xml tag    - lightyellow */
-
   /* attribute name  - khaki */
-
   /* attribute value - pink */
-
   /* decimal         - lightgreen */
-
   /* Specify class=linenums on a pre to get line numbering */
-
   /* IE indents via margin-left */
-
   /* Alternate shading for lines */
-
 }
 #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint *,
 #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint * {

@@ -14,17 +14,41 @@
 			<div id='playing-field'>
 				<div id='status-bar'></div>
 				<div id='battlefield'>
+					<div id='game-title-slot'>
+						Game Mode: <span id='game-mode-display'>None selected</span>
+					</div>
 					<div id='mode-selection'>
-						<div class='mode'>
-							<div class='mode-inner'>
-								<h2>Cancel out random elements as quickly as possible.</h2>
-								<a id='start-dequeue-game'>start</a>
-							</div>
+						<div class='options'>
+							<div class='round-length'>
+								Round Length
+								<select id='round-length'>
+									<option>1</option>
+									<option>2</option>
+									<option>3</option>
+									<option>4</option>
+									<option>5</option>
+									<option>6</option>
+									<option>7</option>
+									<option>8</option>
+									<option>9</option>
+									<option>10</option>
+									<option>15</option>
+									<option>20</option>									
+								</select>
+							</div>							
 						</div>
-						<div class='mode'>
-							<div class='mode-inner'>
-								<h2>Queue random elements as quickly as possible.</h2>
-								<a id='start-queue-game'>start</a>
+						<div class='modes'>
+							<div class='mode'>
+								<div class='mode-inner'>
+									<h2>Cancel out random elements as quickly as possible.</h2>
+									<a id='start-dequeue-game'>start</a>
+								</div>
+							</div>
+							<div class='mode'>
+								<div class='mode-inner'>
+									<h2>Queue random elements as quickly as possible.</h2>
+									<a id='start-queue-game'>start</a>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -102,27 +126,31 @@
 			{{/for}}		
 		</script>
 		
-		<script id='round-history-template' type='text/x-jsrender'>
-			{{for history}}
-				<div class='game'>
-					<h2>Game #{{:#parent.data.length-#index}} ({{:label}})</h2>
-					<div class='rows'>
-						{{for history}}
-							<div class='row'>
-								<div class='elements'>
-									{{for element_queue}}
-										<div class='{{:#data}}'></div>
-									{{/for}}								
-								</div>
-								<div class='time'>
-									{{:time_to_complete}} ms
-								</div>
-								<div style='clear:both;'></div>
+		<script id='round-history-template' type='text/x-jsrender'>			
+			<div class='game'>
+				<div class='header'>
+					<h2>Game #{{:game_number}} ({{:history.label}})</h2><span class='total-time'>{{:history.average_time}} ms avg.
+				</div>
+				<div class='rows'>
+					{{for history.history}}
+						<div class='row'>
+							<div class='elements'>
+								{{for element_queue}}
+									<div class='{{:#data}}'></div>
+								{{/for}}
+								{{if fumble}}
+									<div class='fumble' tooltip='fumble' title='fumble'></div>
+								{{/if}}								
 							</div>
-						{{/for}}
-					</div>
-				</div>		
-			{{/for}}		
+							
+							<div class='time'>
+								{{:time_to_complete}} ms
+							</div>
+							<div style='clear:both;'></div>
+						</div>
+					{{/for}}
+				</div>
+			</div>
 		</script>
 		
 		<script id='stats-overview-template' type='text/x-jsrender'>

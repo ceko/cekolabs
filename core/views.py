@@ -1,5 +1,5 @@
 from __future__ import absolute_import, unicode_literals
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from annoying.decorators import render_to
 from cekolabs.blog import models as blog_models
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -32,6 +32,9 @@ def error_500(request):
 @render_to('misc/finch.html')
 def finch(request):
     return { }
+
+def magicka_trainer_redirect(request):
+    return HttpResponseRedirect('/trainer')
 
 @ensure_csrf_cookie
 @render_to('misc/finch-trainer.html')

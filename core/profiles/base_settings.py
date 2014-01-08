@@ -7,6 +7,11 @@ PROJECT_ROOT = "/".join(os.path.realpath(__file__).split('/')[:-3]) + "/"
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
+HOST_MIDDLEWARE_URLCONF_MAP = {
+    'apps.magickawizardwars.com': 'cekolabs.core.urls_magickawizardwars',
+    'apps.magickawizardwars.com:8080': 'cekolabs.core.urls_magickawizardwars'
+}
+
 ADMINS = (
     ('Dave Lafferty', 'c.david.lafferty@gmail.com'),
 )
@@ -79,6 +84,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'cekolabs.core.middleware.MultiHostMiddleware'
     #'pipeline.middleware.MinifyHTMLMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
