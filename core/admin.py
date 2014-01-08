@@ -18,9 +18,13 @@ class TrainerComboHistoryAdmin(admin.TabularInline):
         
 
 class TrainerRoundHistoryAdmin(admin.ModelAdmin):
+    list_display = ['submitted_on', 'submitted_by', 'queues_completed']
     inlines = [
         TrainerComboHistoryAdmin        
     ]
+    
+    def queues_completed(self, model):
+        return models.TrainerComboHistory.objects.filter(round = model).count()
     
     def has_add_permission(self, request, obj=None):
         return False
