@@ -201,6 +201,7 @@ PIPELINE_JS = {
         'source_filenames': (
             'js/jsrender.min.js',
             'js/finch-trainer/core.js',
+            'js/google-analytics.js'
         ),
         'output_filename': 'js/finch-trainer/core.min.js',
     }
