@@ -4,9 +4,9 @@
 		<meta name="viewport" content="width=device-width" />
 		<meta content="True" name="HandheldFriendly">
 		<meta content="320" name="MobileOptimized">
+		<title>{% block title %}dave-lafferty.com{% endblock %}</title>
 		{% block header %}		
-			{% load compressed %}
-			<title>dave-lafferty.com</title>
+			{% load compressed %}			
 			<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 			<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
 			{% compressed_css 'core' %}			
