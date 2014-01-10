@@ -15,12 +15,13 @@
 				<div id='status-bar'></div>
 				<div id='battlefield'>
 					<div id='game-title-slot'>
-						Game Mode: <span id='game-mode-display'>None selected</span>
+						<span>Game Mode:</span><span id='game-mode-display'>None selected</span>
+						<div id='cancel-game'>cancel game</div>
 					</div>
 					<div id='mode-selection'>
 						<div class='options'>
 							<div class='round-length'>
-								Round Length
+								round length
 								<select id='round-length'>
 									<option>1</option>
 									<option>2</option>
@@ -39,15 +40,21 @@
 						</div>
 						<div class='modes'>
 							<div class='mode'>
-								<div class='mode-inner'>
-									<h2>Cancel out random elements as quickly as possible.</h2>
-									<a id='start-dequeue-game'>start</a>
+								<div class='mode-inner dequeue-mode'>
+									<h3>Cancel random elements</h3>
+									<div class='image'></div>									
 								</div>
 							</div>
 							<div class='mode'>
-								<div class='mode-inner'>
-									<h2>Queue random elements as quickly as possible.</h2>
-									<a id='start-queue-game'>start</a>
+								<div class='mode-inner queue-mode'>
+									<h3>Queue random elements</h3>
+									<div class='image'></div>									
+								</div>
+							</div>
+							<div class='mode'>
+								<div class='mode-inner ward-buster-mode'>
+									<h3>Break enemy defenses</h3>
+									<div class='image'></div>									
 								</div>
 							</div>
 						</div>

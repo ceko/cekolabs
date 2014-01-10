@@ -65,7 +65,8 @@ html {
 		}
 	
 		#main-wrap {
-		
+			width:100%;
+			max-width:1000px;
 			height:100%;
 			display:table;
 			margin:auto; 
@@ -116,8 +117,8 @@ html {
 			#playing-field {				
 				display:table-cell;
 				vertical-align:middle;
-				width:1000px;
-				height:800px;
+				max-width:1000px;
+				min-width:800px;				
 				margin:auto;								
 				
 				* {
@@ -130,12 +131,12 @@ html {
 				}
 				
 				#battlefield {
-					width:990px;
+					max-width:990px;
 					position:relative;
 					border:5px solid #111;
 					border-top:none;
 					border-bottom:none;
-					height:533px;
+					height:400px;
 					background:url('../../images/finch/battlefield-background.jpg');										
 					
 					.countdown {
@@ -150,6 +151,21 @@ html {
 						padding: 5px;
 						background: #111;
 						color: #FFF;
+						
+						> * {
+							padding:5px;
+							display:inline-block;
+						}
+						
+						#cancel-game {							
+							float: right;
+							margin-right: 320px;
+							width: 110px;
+							text-align: center;							
+							background: #DA5E5E;
+							display:none;	
+							cursor:pointer;						
+						}						
 					}
 					
 					#round-history-slot {
@@ -200,7 +216,7 @@ html {
 								width:145px;
 								
 								.fumble {
-									background-image: url('../..//images/finch/fumble.png');
+									background-image: url('../../images/finch/fumble.png');
 									height: 20px;
 									width: 20px;
 									margin: 5px;
@@ -222,17 +238,17 @@ html {
 					}
 					
 					#mode-selection {
-						width: 500px;
-						position: relative;
+						width: 450px;
+						position: absolute;
 						top: 150px;						
 						left: 75px;
 						border: 5px solid rgba(0,0,0,.5);
 						border-radius: 5px;
-						background: rgba(255, 255, 255, 0.5);
+						background: #333;
 						
 						.options {
 							padding: 10px 15px;
-							background: #333;
+							background: #111;
 							color: #FFF;
 							
 							.round-length {
@@ -241,21 +257,51 @@ html {
 								}
 							}
 						}
-						
-						.modes {
-							padding: 10px;
-						}
-						
+												
 						.mode {
-							width:49%;
-							display:inline-block;
-														
+							&:hover {
+								background:#444;
+								cursor:pointer;
+							}
+							&:first-child {
+								border-top:none;
+							}
+							border-bottom:1px solid #111;
+							border-top:1px solid #666;
+							padding:10px;
+							color:#FFF;
+																					
 							.mode-inner {
 								margin:5px;
-								h2 {
+								h3 {
+									margin:0px;
+									padding:0px;
 									font-size:20px;
-									height:80px;
+									font-weight:normal;
+									display:inline-block;														
 								}
+								
+								.image {
+									width:80px;
+									height:44px;
+									margin:-18px 0px;
+									display:inline-block;
+									float:right;
+								}
+								
+								&.dequeue-mode {
+									.image {										
+										background-image:url('../../images/finch/cancel-queue-mode-icon.png');
+									}
+								}
+								
+								&.queue-mode {
+									.image {									
+										margin-top:-11px;	
+										background-image:url('../../images/finch/queue-mode-icon.png');
+									}
+								}
+								
 							}							
 						}
 						
@@ -351,15 +397,14 @@ html {
 					border-top:none;					
 					background:url('../../images/finch/card-draw-background.png');
 					overflow:hidden;
+					display:table;
 															
-					#player-controls {
-						display:inline-block;												
+					#player-controls {																		
 						padding:10px;
 						width:280px;
 						border-right:1px solid #5F5F5F;
 						box-shadow:inset -1px 0px #000;
-						float:left;
-						
+												
 						#elements-controls {
 							> div {
 								
@@ -440,8 +485,8 @@ html {
 					}
 					
 					#stats-overview-slot {
-						display:inline-block;
-						width:689px;
+						display:table-cell;
+						width:100%;
 						color:#fff;
 						
 						h2 {							
@@ -454,202 +499,7 @@ html {
 								
 			}
 				
-		}
-	
-		.card-wrapper {
-			display:inline-block;
-			width:172px;
-			position:absolute;
-			top:18px;
-			left:700px;
-			
-			&.ui-draggable-dragging {
-				z-index:30;
-			}
-			
-			.card {
-				opacity:.5;
-				&.requirements-met {
-					opacity:1;
-					cursor:pointer;
-				}
-				background:#FFF;
-				box-shadow:5px 5px 5px rgba(0,0,0,.7);
-				border-radius:5px;							
-				padding:3px;
-				width:178px;
-				
-				&.defensive {
-					.border {
-						background:#D09C24;
-						border:1px solid #D09C24;
-					}
-					
-					.title {
-						border-bottom:1px solid #7E5E14;
-					}
-				}
-				
-				&.persistent-aoe {
-					.border {
-						background:#C172CB;
-						border:1px solid #C172CB;
-					}
-					
-					.title {
-						border-bottom:1px solid #8E4F96;
-					}
-				}
-				
-				&.unit {
-					.border {
-						background:#73A6E2;
-						border:1px solid #73A6E2;
-					}
-					
-					.title {
-						border-bottom:1px solid #73A6E2;
-					}
-					
-					.unit-overlay {
-						position:absolute;
-						width:100%;
-						height:100%;
-						z-index:25;
-						top:-5px;
-					}
-					
-					&.fumbling-novice {
-						.unit-overlay {
-							background:url('../../images/finch/card-novice.png');
-						}
-					}
-					
-					&.senile-windbreaker {
-						.unit-overlay {
-							background:url('../../images/finch/card-senile-windbreaker.png');
-						}
-					}
-					
-				}
-				
-				.border {
-					border-radius:5px;								
-					position:relative;					
-													
-					.title {
-						padding:5px 10px;
-						font-size:18px;									
-					}
-					
-					.sunburst {
-						width:100%;
-						height:100%;
-						position:absolute;
-						top:0px;									
-						background: url('../../images/finch/card-sunburst.png') no-repeat;
-						z-index:10;
-						opacity:.3;
-					}
-					
-					.description {
-						position:relative;
-						z-index:20;
-						font-size:14px;
-						background: rgba(255,255,255, .7);
-						padding:10px;	
-						height:50px;								
-					}
-					
-					.attributes {
-						position:relative;
-						z-index:20;
-						background: rgba(255,255,255, .7);
-						padding:10px 5px 5px 5px;
-						
-						> span {
-							display:inline-block;
-							height:25px;
-							padding-left:30px;
-						}
-						
-						.health {	
-							float:left;
-							background:url('../../images/finch/health-icon.png') no-repeat;
-						}
-						
-						.attack {	
-							float:right;
-							background:url('../../images/finch/attack-icon.png') no-repeat;
-						}
-						
-					}
-					
-				}
-				
-			}
-			
-			.requirements {
-				
-				margin: 10px 0px 0px 17px;
-				
-				> div {
-					width:46px;
-					height:46px;
-					display:inline-block;
-					background-size:cover;
-						
-					&:before {
-						content:"";
-						position:absolute;
-						background: radial-gradient(ellipse at center, #ffffff 0%, rgba(255, 255, 255, 0) 80%);
-						width: 46px;
-						height: 46px;
-						background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.5) 70%, rgba(0, 0, 0, 0) 75%);									
-					}	
-													
-					&.fulfilled:before {									
-						background: radial-gradient(ellipse at center, rgba(255,255,255,0) 30%, rgba(255,255,255,.5) 65%, rgba(255, 255, 255, 0) 75%);									
-					}
-												
-													
-					&.water {										
-						background-image:url('../../images/finch/element-water.png');
-					}
-					
-					&.life {
-						background-image:url('../../images/finch/element-life.png');
-					}
-					
-					&.shield {
-						background-image:url('../../images/finch/element-shield.png');
-					}
-					
-					&.cold {
-						background-image:url('../../images/finch/element-cold.png');
-					}
-					
-					&.lightning {
-						background-image:url('../../images/finch/element-lightning.png');
-					}
-					
-					&.arcane {
-						background-image:url('../../images/finch/element-arcane.png');
-					}
-					
-					&.earth {
-						background-image:url('../../images/finch/element-earth.png');
-					}
-					
-					&.fire {
-						background-image:url('../../images/finch/element-fire.png');
-					}
-					
-				}
-				
-			}
-									
-		}
+		}	
 		
 	}
 	

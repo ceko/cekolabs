@@ -6,78 +6,79 @@ finch.game = {
 	set_mode: function(mode) {
 		finch.game.statebag.mode = mode;
 	},		
-	start: function() {
-		if(finch.game.paused) {
-			finch.game.unpause();
-			return;
+	start: function() {		
+		finch.game.unpause();
+		
+		if(!finch.game.initialized) {
+			finch.game.initialized = true;
+			//create all uninitialized models
+			finch.game.controls = {
+				elements: new models.controls.Elements(),
+				elements_helper: new models.controls.Elements({ ignore_keystrokes: true }),
+			};		
+			finch.game.objective_history = new models.ObjectiveHistory();
+			finch.game.round_history = new models.RoundHistory();
+			
+			finch.game.views.global = new views.Global();
+			finch.game.views.elements = new views.Elements({ suppress_fizzle: true, model:finch.game.controls.elements });
+			finch.game.views.queued_elements = new views.QueuedElements({ model:finch.game.controls.elements });
+			finch.game.views.queued_elements.auto_fadeout = false;
+			
+			finch.game.views.queued_elements_helper = new views.QueuedElements({ model:finch.game.controls.elements_helper });
+			finch.game.views.queued_elements_helper.auto_fadeout = false;
+			finch.game.views.queued_elements_helper.helper_mode = true;
+			
+			finch.game.views.objective_history = new views.ObjectiveHistory({ model:finch.game.objective_history });
+			finch.game.views.round_history = new views.RoundHistory({ model:finch.game.round_history });
+			
+			finch.game.controls.elements.on("element_queue_try", function(model) {
+				if(finch.game.loading_next_objective || finch.game.paused)
+					return;
+				
+				finch.game.statebag.objective_keypresses++;
+			});
+			
+			finch.game.controls.elements.on("change:queued_elements", function(model, queued_elements) {			
+				if(finch.game.loading_next_objective || finch.game.paused)
+					return;
+				
+				if(finch.game.statebag.mode == 'dequeue') {				
+					if(queued_elements.length == 0) {
+						var elapsed_time = (new Date()).getTime() - finch.game.last_objective_start_time;
+						var fumble = finch.game.statebag.objective_keypresses > 3;
+						
+						finch.game.objective_history.add_history(elapsed_time, finch.game.last_objective, fumble);
+						if(finch.game.objective_history.get('history').length < finch.game.round_length)
+							finch.game.load_next_objective();
+					}
+				}else{
+					if(finch.game.controls.elements_helper.matches_elements(queued_elements)) {
+						var elapsed_time = (new Date()).getTime() - finch.game.last_objective_start_time;
+						var fumble = finch.game.statebag.objective_keypresses > 3;
+						finch.game.controls.elements.clear_queued_elements();
+						
+						finch.game.objective_history.add_history(elapsed_time, queued_elements, fumble);
+						if(finch.game.objective_history.get('history').length < finch.game.round_length)
+							finch.game.load_next_objective();
+					}
+				}
+			});
+			finch.game.objective_history.on("change:history", function(model, history) {
+				if(history.length === finch.game.round_length) {
+					finch.game.pause();
+					finch.game.controls.elements.clear_queued_elements();				
+					finch.game.views.mode_selection.show();
+					finch.game.views.objective_history.transition_to_round_history(function() {
+						finch.game.round_history.add_history(finch.game.statebag.mode, history);
+						finch.game.round_history.save_history(finch.game.statebag.mode, history);
+						finch.game.stats_overview.update();
+						finch.game.objective_history.clear();
+					});
+					finch.game.views.queued_elements.hide()
+					finch.game.views.queued_elements_helper.hide()
+				}
+			});
 		}
-		//create all uninitialized models
-		finch.game.controls = {
-			elements: new models.controls.Elements(),
-			elements_helper: new models.controls.Elements({ ignore_keystrokes: true }),
-		};		
-		finch.game.objective_history = new models.ObjectiveHistory();
-		finch.game.round_history = new models.RoundHistory();
-		
-		finch.game.views.global = new views.Global();
-		finch.game.views.elements = new views.Elements({ suppress_fizzle: true, model:finch.game.controls.elements });
-		finch.game.views.queued_elements = new views.QueuedElements({ model:finch.game.controls.elements });
-		finch.game.views.queued_elements.auto_fadeout = false;
-		
-		finch.game.views.queued_elements_helper = new views.QueuedElements({ model:finch.game.controls.elements_helper });
-		finch.game.views.queued_elements_helper.auto_fadeout = false;
-		finch.game.views.queued_elements_helper.helper_mode = true;
-		
-		finch.game.views.objective_history = new views.ObjectiveHistory({ model:finch.game.objective_history });
-		finch.game.views.round_history = new views.RoundHistory({ model:finch.game.round_history });
-		
-		finch.game.controls.elements.on("element_queue_try", function(model) {
-			if(finch.game.loading_next_objective || finch.game.paused)
-				return;
-			
-			finch.game.statebag.objective_keypresses++;
-		});
-		
-		finch.game.controls.elements.on("change:queued_elements", function(model, queued_elements) {			
-			if(finch.game.loading_next_objective || finch.game.paused)
-				return;
-			
-			if(finch.game.statebag.mode == 'dequeue') {				
-				if(queued_elements.length == 0) {
-					var elapsed_time = (new Date()).getTime() - finch.game.last_objective_start_time;
-					var fumble = finch.game.statebag.objective_keypresses > 3;
-					
-					finch.game.objective_history.add_history(elapsed_time, finch.game.last_objective, fumble);
-					if(finch.game.objective_history.get('history').length < finch.game.round_length)
-						finch.game.load_next_objective();
-				}
-			}else{
-				if(finch.game.controls.elements_helper.matches_elements(queued_elements)) {
-					var elapsed_time = (new Date()).getTime() - finch.game.last_objective_start_time;
-					var fumble = finch.game.statebag.objective_keypresses > 3;
-					finch.game.controls.elements.clear_queued_elements();
-					
-					finch.game.objective_history.add_history(elapsed_time, queued_elements, fumble);
-					if(finch.game.objective_history.get('history').length < finch.game.round_length)
-						finch.game.load_next_objective();
-				}
-			}
-		});
-		finch.game.objective_history.on("change:history", function(model, history) {
-			if(history.length === finch.game.round_length) {
-				finch.game.pause();
-				finch.game.controls.elements.clear_queued_elements();				
-				finch.game.views.mode_selection.show();
-				finch.game.views.objective_history.transition_to_round_history(function() {
-					finch.game.round_history.add_history(finch.game.statebag.mode, history);
-					finch.game.round_history.save_history(finch.game.statebag.mode, history);
-					finch.game.stats_overview.update();
-					finch.game.objective_history.clear();
-				});
-				finch.game.views.queued_elements.hide()
-				finch.game.views.queued_elements_helper.hide()
-			}
-		});
 	},
 	pause: function() {
 		finch.game.paused = true;
@@ -408,10 +409,15 @@ views.ObjectiveHistory = Backbone.View.extend({
 		});		
 	},
 	
+	hide: function() {
+		this.$el.hide();
+	},
+	
 	render: function() {				
 		var history = this.model.get('history');		
 		this.$el.html($("#history-template").render({ history: history.slice(0).reverse() }));
-			
+		this.$el.show().find(".history:first").hide().fadeIn();	
+		
 		//first time rendering position it in the middle of the playing field.
 		if(!this.already_rendered) {
 			this.already_rendered = true;		
@@ -458,17 +464,36 @@ views.Global = Backbone.View.extend({
 views.ModeSelection = Backbone.View.extend({
 	el: $('#mode-selection'),
 	events: {
-		'click #start-dequeue-game': 'start_dequeue_game',
-		'click #start-queue-game': 'start_queue_game',
-		'change #round-length': 'change_round_length',
+		'click .dequeue-mode': 'start_dequeue_game',
+		'click .queue-mode': 'start_queue_game',
+		'change #round-length': 'change_round_length'		
 	},
 	
 	initialize: function() {
 		$('#round-length').val(finch.game.round_length);
+		$('#cancel-game').click(this.cancel_game.bind(this));
+		this.countdown_timer = null;
 	},
 	
 	change_round_length: function() {
 		finch.game.round_length = parseInt($('#round-length').val());
+	},
+	
+	cancel_game: function() {
+		finch.game.pause();
+		if(finch.game.controls.elements)
+			finch.game.controls.elements.clear_queued_elements();				
+		finch.game.views.mode_selection.show();	
+		if(finch.game.objective_history) {
+			finch.game.objective_history.clear();
+			finch.game.views.objective_history.hide();
+		}
+		if(finch.game.views.queued_elements)
+			finch.game.views.queued_elements.hide()
+		if(finch.game.views.queued_elements_helper)
+			finch.game.views.queued_elements_helper.hide()
+		this.countdown_timer = clearTimeout(this.countdown_timer);
+		$('.countdown').remove();
 	},
 	
 	start_queue_game: function() {
@@ -479,6 +504,7 @@ views.ModeSelection = Backbone.View.extend({
 			finch.game.views.queued_elements.show()
 		};
 		
+		$('#cancel-game').show();
 		this.show_countdown(callback.bind(this));
 		this.$el.fadeOut('fast');				
 		this.set_game_mode_text('Queue Shown Elements');
@@ -492,6 +518,7 @@ views.ModeSelection = Backbone.View.extend({
 			finch.game.views.queued_elements.show()
 		};
 		
+		$('#cancel-game').show();
 		this.show_countdown(callback.bind(this));
 		this.$el.fadeOut('fast');		
 		this.set_game_mode_text('Cancel Queued Elements');
@@ -503,11 +530,13 @@ views.ModeSelection = Backbone.View.extend({
 		$countdown_original.css({
 			'position': 'absolute',
 			'top': $('#battlefield').height()/2 - $countdown_original.height()/2,
-			'left': ($('#battlefield').width()-$('#round-history-slot').width())/2 - $countdown_original.height()/2,
+			'left': ($('#battlefield').width()-$('#round-history-slot').width())/2 - $countdown_original.width()/2,
 			'display': 'none'
 		});
-		
-		var advance_countdown = function(cnt) {
+				
+		this.countdown_timer = clearTimeout(this.countdown_timer);
+		var _this = this;
+		var advance_countdown = function(cnt) {			
 			var $countdown = $countdown_original.clone();
 			$('#battlefield').append($countdown);
 			$countdown.text(cnt).show();
@@ -515,18 +544,18 @@ views.ModeSelection = Backbone.View.extend({
 				$countdown.remove();
 			});
 			
-			setTimeout(function() {
+			this.countdown_timer = setTimeout(function() {
 				if(cnt==1) {
-					callback();
+					if(_this.countdown_timer) callback();
 					$countdown_original.remove();
 				}else{
-					advance_countdown(cnt-1);
+					if(_this.countdown_timer) advance_countdown(cnt-1);
 				}
 			}, 1000);
 			
 		};
 		
-		advance_countdown(3);
+		this.countdown_timer = setTimeout(function() { advance_countdown(3); }, 1);
 	},
 	
 	set_game_mode_text: function(text) {
@@ -534,7 +563,12 @@ views.ModeSelection = Backbone.View.extend({
 	},
 	
 	show: function() {
-		this.$el.fadeIn('fast');
+		$('#cancel-game').hide();
+		this.$el.fadeIn('fast');		
+		this.$el.css({			
+			'top': $('#game-title-slot').height()/2 + $('#battlefield').innerHeight()/2 - this.$el.outerHeight()/2,
+			'left': ($('#battlefield').width()-$('#round-history-slot').width())/2 - this.$el.width()/2			
+		});
 		this.set_game_mode_text('None Selected');
 	}
 });
@@ -696,3 +730,4 @@ finch.game.views.mode_selection = new views.ModeSelection();
 finch.game.stats_overview = new models.StatsOverview();
 finch.game.views.stats_overview = new views.StatsOverview({ model: finch.game.stats_overview });
 finch.game.views.stats_overview.render();
+finch.game.views.mode_selection.show();
