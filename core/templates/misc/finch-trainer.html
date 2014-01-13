@@ -18,6 +18,7 @@
 						<span>Game Mode:</span><span id='game-mode-display'>None selected</span>
 						<div id='cancel-game'>cancel game</div>
 					</div>
+					<div id='opponent-slot'></div>
 					<div id='mode-selection'>
 						<div class='options'>
 							<div class='round-length'>
@@ -37,7 +38,7 @@
 									<option>20</option>									
 								</select>
 							</div>							
-						</div>
+						</div>						
 						<div class='modes'>
 							<div class='mode'>
 								<div class='mode-inner dequeue-mode'>
@@ -52,9 +53,9 @@
 								</div>
 							</div>
 							<div class='mode'>
-								<div class='mode-inner ward-buster-mode'>
+								<div class='mode-inner offensive-mode'>
 									<h3>Break enemy defenses</h3>
-									<div class='image'></div>									
+									<div class='image'></div>																	
 								</div>
 							</div>
 						</div>
@@ -105,7 +106,8 @@
 		
 		{% verbatim %}
 		<!-- jsrender templates -->
-		<script id='element-queue-template' type='text/x-jsrender'>			
+		<script id='element-queue-template' type='text/x-jsrender'>
+			<div class='cast-bar'><div></div></div>			
 			{{for queued_elements}}
 				<div class='{{:name}}'>					
 				</div>
@@ -117,12 +119,12 @@
 				<div class='queue-header'>elements</div>
 				<div class='time-header'>time (ms)</div>
 				<div style='clear:both;'></div>
-			</div>			
+			</div>
 			{{for history}}
-				<div class='history'>					
+				<div class='history'>
 					<div class='queue elements'>
 						{{for element_queue}}
-							<div class='{{:#data}}'>					
+							<div class='{{:#data}}'>
 							</div>
 						{{/for}}
 					</div>
@@ -130,7 +132,24 @@
 						{{:time_to_complete}}
 					</div>
 				</div>
-			{{/for}}		
+			{{/for}}
+			<div class='history-shadow'></div>		
+		</script>
+		
+		<script id='opponent-template' type='text/x-jsrender'>
+			<div class='opponent'>				
+				<div class='player-icon'></div>
+				<div class='ward-group'>
+					<div class='outer-ward'><div class='{{: model.get('outer_ward') }}'></div></div>
+					<div class='inner-ward'><div class='{{: model.get('inner_ward') }}'></div></div>
+				</div>	
+				{{if model.get('shield_active')}}
+					<div class='shield'></div>
+				{{/if}}
+				{{if model.get('wall_active')}}
+					<div class='defensive-wall'></div>
+				{{/if}}				
+			</div>
 		</script>
 		
 		<script id='round-history-template' type='text/x-jsrender'>			
@@ -156,6 +175,53 @@
 							<div style='clear:both;'></div>
 						</div>
 					{{/for}}
+				</div>
+			</div>
+		</script>
+		
+		<script id='offensive-mode-instructions' type='text/x-jsrender'>
+			<div class='mode-instructions'>
+				<div class='nav'>
+					<span class='nav-back'>&laquo; back</span>
+				</div>
+				<div class='body'>
+					Defeat your enemy by casting optimal spells:
+					<div class='animated-instructions'>
+						<div class='elements'>
+							<div class='arcane anim-1'></div>
+							<div class='earth anim-2'></div>
+							<div class='fire anim-3'></div>							
+						</div>
+						<div class='input anim-4'>right mouse button [hold]</div>
+					</div>					    	
+					<div class='sub-option'>
+						<div class='header'>difficulty</div>
+						<div class='value'>
+							<select class='difficulty'>
+								<option value='easy'>easy</option>
+								<option value='normal' selected>normal</option>
+								<option value='hard'>hard</option>
+							</select>
+						</div>
+					</div>
+					<div class='sub-option'>
+						<div class='header'>health</div>
+						<div class='value'>
+							<select class='health'>
+								<option value='100'>100</option>
+								<option value='200'>200</option>
+								<option value='300'>300</option>
+								<option value='400'>400</option>
+								<option value='500' selected>500</option>
+								<option value='600'>600</option>
+								<option value='700'>700</option>
+								<option value='800'>800</option>
+								<option value='900'>900</option>
+								<option value='1000'>1000</option>								
+							</select>
+						</div>
+					</div>
+					<div class='start-button'>start game</div>
 				</div>
 			</div>
 		</script>

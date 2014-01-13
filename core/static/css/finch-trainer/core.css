@@ -10,6 +10,67 @@ html body {
   background: url('../../images/finch/magicka-background.jpg') no-repeat center #020c12;
   height: 100%;
 }
+html body .ward-group {
+  position: relative;
+}
+html body .ward-group .outer-ward {
+  -webkit-mask-image: url('../../images/finch/ward-outer-mask.png');
+  -o-mask-image: url('../../images/finch/ward-outer-mask.png');
+  -moz-mask-image: url('../../images/finch/ward-outer-mask.png');
+  mask-image: url('../../images/finch/ward-outer-mask.png');
+  -webkit-mask-size: cover;
+  -o-mask-size: cover;
+  -moz-mask-size: cover;
+  mask-size: cover;
+  height: 100%;
+  width: 100%;
+}
+html body .ward-group .outer-ward > div {
+  width: 100%;
+  height: 100%;
+}
+html body .ward-group .inner-ward {
+  position: absolute;
+  top: 0px;
+  -webkit-mask-image: url('../../images/finch/ward-inner-mask.png');
+  -o-mask-image: url('../../images/finch/ward-inner-mask.png');
+  -moz-mask-image: url('../../images/finch/ward-inner-mask.png');
+  mask-image: url('../../images/finch/ward-inner-mask.png');
+  -webkit-mask-size: cover;
+  -o-mask-size: cover;
+  -moz-mask-size: cover;
+  mask-size: cover;
+  height: 100%;
+  width: 100%;
+}
+html body .ward-group .inner-ward > div {
+  width: 100%;
+  height: 100%;
+}
+html body .ward-group .water {
+  background-color: blue;
+}
+html body .ward-group .life {
+  background-color: green;
+}
+html body .ward-group .shield {
+  background-color: yellow;
+}
+html body .ward-group .cold {
+  background-color: white;
+}
+html body .ward-group .lightning {
+  background-color: purple;
+}
+html body .ward-group .arcane {
+  background-color: darkred;
+}
+html body .ward-group .earth {
+  background-color: brown;
+}
+html body .ward-group .fire {
+  background-color: red;
+}
 html body .elements > div {
   background-size: cover;
   height: 46px;
@@ -104,6 +165,7 @@ html body #main-wrap #playing-field #status-bar {
   border-bottom: 5px solid #111;
 }
 html body #main-wrap #playing-field #battlefield {
+  overflow: hidden;
   max-width: 990px;
   position: relative;
   border: 5px solid #111;
@@ -111,6 +173,47 @@ html body #main-wrap #playing-field #battlefield {
   border-bottom: none;
   height: 400px;
   background: url('../../images/finch/battlefield-background.jpg');
+}
+html body #main-wrap #playing-field #battlefield #opponent-slot {
+  position: absolute;
+  width: 218px;
+}
+html body #main-wrap #playing-field #battlefield #opponent-slot .opponent {
+  position: relative;
+  width: 190px;
+}
+html body #main-wrap #playing-field #battlefield #opponent-slot .opponent .player-icon {
+  background: url('../../images/finch/objective-mage.png');
+  width: 70px;
+  height: 85px;
+  position: absolute;
+  left: 67px;
+  top: 71px;
+  z-index: 10;
+}
+html body #main-wrap #playing-field #battlefield #opponent-slot .opponent .ward-group {
+  left: 44px;
+  top: 44px;
+}
+html body #main-wrap #playing-field #battlefield #opponent-slot .opponent .ward-group > div {
+  width: 124px;
+  height: 124px;
+}
+html body #main-wrap #playing-field #battlefield #opponent-slot .opponent .shield {
+  background: url('../../images/finch/dome-shield.png');
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 218px;
+  height: 218px;
+  z-index: 15;
+}
+html body #main-wrap #playing-field #battlefield #opponent-slot .opponent .defensive-wall {
+  background: url('../../images/finch/rock-wall-down.png');
+  position: absolute;
+  width: 213px;
+  height: 75px;
+  top: 150px;
 }
 html body #main-wrap #playing-field #battlefield .countdown {
   position: absolute;
@@ -187,6 +290,61 @@ html body #main-wrap #playing-field #battlefield #round-history-slot .game .time
   float: left;
   margin: 7px 0px 0px 25px;
 }
+html body #main-wrap #playing-field #battlefield .mode-instructions {
+  width: 450px;
+  position: absolute;
+  border: 5px solid rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  background: #333;
+  box-shadow: 0px 0px 30px 0px rgba(122, 153, 187, 0.51);
+  display: none;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .nav {
+  padding: 10px 15px;
+  background: #111;
+  color: #FFF;
+  cursor: pointer;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .body {
+  padding: 10px;
+  color: #FFF;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .body .sub-option {
+  margin: 10px 10px 10px 0px;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .body .sub-option .header {
+  width: 100px;
+  display: inline-block;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .body .sub-option .value {
+  display: inline-block;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .body .animated-instructions {
+  margin-top: 15px;
+  margin-bottom: 30px;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .body .animated-instructions .elements {
+  display: inline-block;
+  margin-right: 15px;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .body .animated-instructions .elements > div {
+  display: inline-block;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .body .input {
+  display: inline-block;
+  margin-top: 10px;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .body .start-button {
+  float: right;
+  text-align: center;
+  background: #299125;
+  border: 1px solid #0A1B09;
+  cursor: pointer;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  color: #FFF;
+}
 html body #main-wrap #playing-field #battlefield #mode-selection {
   width: 450px;
   position: absolute;
@@ -195,6 +353,7 @@ html body #main-wrap #playing-field #battlefield #mode-selection {
   border: 5px solid rgba(0, 0, 0, 0.5);
   border-radius: 5px;
   background: #333;
+  box-shadow: 0px 0px 30px 0px rgba(122, 153, 187, 0.51);
 }
 html body #main-wrap #playing-field #battlefield #mode-selection .options {
   padding: 10px 15px;
@@ -256,6 +415,15 @@ html body #main-wrap #playing-field #battlefield #objective-history {
   padding: 10px;
   border-radius: 5px;
   margin-bottom: 5px;
+  max-height: 190px;
+  overflow-y: hidden;
+}
+html body #main-wrap #playing-field #battlefield #objective-history .history-shadow {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  z-index: 10;
+  box-shadow: 0px 0px 20px 10px #000;
 }
 html body #main-wrap #playing-field #battlefield #objective-history .queue-header {
   float: left;
@@ -309,6 +477,20 @@ html body #main-wrap #playing-field #battlefield .element-queue > div {
   display: inline-block;
   background-size: cover;
   margin: 6px 0px 0px 2px;
+}
+html body #main-wrap #playing-field #battlefield .element-queue .cast-bar {
+  display: none;
+  position: absolute;
+  width: 100%;
+  height: 15px;
+  background-color: rgba(236, 231, 115, 0.35);
+  left: -2px;
+  top: -30px;
+}
+html body #main-wrap #playing-field #battlefield .element-queue .cast-bar > div {
+  background-color: #e7e748;
+  height: 100%;
+  width: 0%;
 }
 html body #main-wrap #playing-field #player-information {
   border: 5px solid #111;

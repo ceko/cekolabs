@@ -12,6 +12,83 @@ html {
 		background:url('../../images/finch/magicka-background.jpg') no-repeat center #020C12;	
 		height:100%;	
 	
+		.ward-group {
+			position:relative;
+			
+			.outer-ward {
+				-webkit-mask-image: url('../../images/finch/ward-outer-mask.png');
+				-o-mask-image: url('../../images/finch/ward-outer-mask.png');
+				-moz-mask-image: url('../../images/finch/ward-outer-mask.png');
+				mask-image: url('../../images/finch/ward-outer-mask.png');
+				-webkit-mask-size: cover;
+				-o-mask-size: cover;
+				-moz-mask-size: cover;
+				mask-size: cover;
+				
+				height:100%;
+				width:100%;
+				
+				> div {
+					width:100%;
+					height:100%;
+				}
+			}
+			
+			.inner-ward {
+				position:absolute;	
+				top:0px;			
+				-webkit-mask-image: url('../../images/finch/ward-inner-mask.png');
+				-o-mask-image: url('../../images/finch/ward-inner-mask.png');
+				-moz-mask-image: url('../../images/finch/ward-inner-mask.png');
+				mask-image: url('../../images/finch/ward-inner-mask.png');
+				-webkit-mask-size: cover;
+				-o-mask-size: cover;
+				-moz-mask-size: cover;
+				mask-size: cover;
+				
+				height:100%;
+				width:100%;
+				
+				> div {
+					width:100%;
+					height:100%;
+				}
+			}
+			
+			.water {
+				background-color:blue;
+			}
+			
+			.life {
+				background-color: green;
+			}
+			
+			.shield {
+				background-color: yellow;
+			}
+			
+			.cold {
+				background-color: white;
+			}
+			
+			.lightning {
+				background-color: purple;
+			}
+			
+			.arcane {
+				background-color: darkred;
+			}
+			
+			.earth {
+				background-color: brown;
+			}
+			
+			.fire {
+				background-color: red;
+			}
+			
+		}
+	
 		.elements {
 			
 			> div {
@@ -131,6 +208,7 @@ html {
 				}
 				
 				#battlefield {
+					overflow:hidden;
 					max-width:990px;
 					position:relative;
 					border:5px solid #111;
@@ -138,6 +216,54 @@ html {
 					border-bottom:none;
 					height:400px;
 					background:url('../../images/finch/battlefield-background.jpg');										
+					
+					#opponent-slot {
+						position:absolute;					
+						width:218px;
+						
+						.opponent {
+							position:relative;
+							width:190px;
+							.player-icon {
+								background:url('../../images/finch/objective-mage.png');
+								width:70px;
+								height:85px;
+								position: absolute;
+								left: 67px;
+								top: 71px;
+								z-index: 10;
+							}
+							
+							.ward-group {
+								left:44px;
+								top:44px; 
+								> div {
+									width:124px;
+									height:124px;								
+								}							
+							}
+							
+							.shield {							
+								background:url('../../images/finch/dome-shield.png');
+								position:absolute;
+								top:0px;
+								left:0px;
+								width:218px;
+								height:218px;
+								z-index:15;
+							}
+							
+							.defensive-wall {
+								background:url('../../images/finch/rock-wall-down.png');							
+								position:absolute;
+								width:213px;
+								height:75px;
+								top:150px;
+							}
+							
+						}
+						
+					}
 					
 					.countdown {
 						position: absolute;
@@ -237,6 +363,71 @@ html {
 												
 					}
 					
+					.mode-instructions {
+						width:450px;
+						position:absolute;
+						border: 5px solid rgba(0,0,0,.5);
+						border-radius: 5px;
+						background: #333;
+						box-shadow: 0px 0px 30px 0px rgba(122, 153, 187, 0.51);
+						display:none;
+						
+						.nav {
+							padding: 10px 15px;
+							background: #111;
+							color: #FFF;
+							cursor:pointer;
+						}
+						
+						.body {
+							padding:10px;
+							color:#FFF;	
+							
+							.sub-option {
+								margin:10px 10px 10px 0px;
+								.header {
+									width:100px;
+									display:inline-block;
+								}
+								.value {
+									display:inline-block;
+								}
+							}
+							
+							.animated-instructions {
+								margin-top:15px;
+								margin-bottom:30px;
+								.elements {
+									display:inline-block;
+									margin-right:15px;
+									
+									> div {										
+										display:inline-block;																				
+									}
+								}
+							}
+							
+							.input {
+								display:inline-block;
+								margin-top:10px;
+							}
+							
+							.start-button {
+								float: right;
+								text-align: center;
+								background: #299125;
+								border: 1px solid #0A1B09;
+								cursor: pointer;
+								margin-bottom: 10px;
+								padding: 10px;
+								border-radius: 5px;
+								color: #FFF;
+							}
+													
+						}
+						
+					}
+					
 					#mode-selection {
 						width: 450px;
 						position: absolute;
@@ -245,6 +436,7 @@ html {
 						border: 5px solid rgba(0,0,0,.5);
 						border-radius: 5px;
 						background: #333;
+						box-shadow: 0px 0px 30px 0px rgba(122, 153, 187, 0.51);
 						
 						.options {
 							padding: 10px 15px;
@@ -302,6 +494,12 @@ html {
 									}
 								}
 								
+								&.ward-buster-mode {
+									.image {										
+										
+									}
+								}
+								
 							}							
 						}
 						
@@ -323,6 +521,16 @@ html {
 						padding: 10px;
 						border-radius: 5px;
 						margin-bottom:5px; 
+						max-height: 190px;
+						overflow-y: hidden;
+						
+						.history-shadow {
+							position: absolute;
+							bottom: 0;
+							width: 100%;
+							z-index: 10;
+							box-shadow: 0px 0px 20px 10px #000;
+						}
 						
 						.queue-header {
 							float:left;
@@ -373,7 +581,7 @@ html {
 						background-color:rgba(0,0,0,.5);
 						padding-left:15px;
 						z-index:60;
-						
+												
 						&.helper-mode {
 							background:none;
 							border:none;
@@ -387,6 +595,22 @@ html {
 							display:inline-block;
 							background-size:cover;
 							margin: 6px 0px 0px 2px;							
+						}
+						
+						.cast-bar {
+							display:none;
+							position: absolute;
+							width: 100%;
+							height: 15px;
+							background-color: rgba(236, 231, 115, 0.35);
+							left: -2px;
+							top: -30px;
+							
+							> div {
+								background-color:rgb(231, 231, 72);
+								height:100%;
+								width:0%;
+							}
 						}						
 					}
 					
