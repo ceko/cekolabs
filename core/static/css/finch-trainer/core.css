@@ -176,7 +176,6 @@ html body #main-wrap #playing-field #battlefield {
 }
 html body #main-wrap #playing-field #battlefield #battlefield-particle-effects {
   position: absolute;
-  display: none;
 }
 html body #main-wrap #playing-field #battlefield #opponent-slot {
   position: absolute;
