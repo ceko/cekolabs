@@ -16,10 +16,10 @@ html {
 			position:relative;
 			
 			.outer-ward {
-				-webkit-mask-image: url('../../images/finch/ward-outer-mask.png');
-				-o-mask-image: url('../../images/finch/ward-outer-mask.png');
-				-moz-mask-image: url('../../images/finch/ward-outer-mask.png');
-				mask-image: url('../../images/finch/ward-outer-mask.png');
+				-webkit-mask-image: url('../../images/finch/ward-outer-mask.svg');
+				-o-mask-image: url('../../images/finch/ward-outer-mask.svg');
+				mask: url('../../images/finch/ward-outer-mask.svg');
+				mask-image: url('../../images/finch/ward-outer-mask.svg');
 				-webkit-mask-size: cover;
 				-o-mask-size: cover;
 				-moz-mask-size: cover;
@@ -37,10 +37,10 @@ html {
 			.inner-ward {
 				position:absolute;	
 				top:0px;			
-				-webkit-mask-image: url('../../images/finch/ward-inner-mask.png');
-				-o-mask-image: url('../../images/finch/ward-inner-mask.png');
-				-moz-mask-image: url('../../images/finch/ward-inner-mask.png');
-				mask-image: url('../../images/finch/ward-inner-mask.png');
+				-webkit-mask-image: url('../../images/finch/ward-inner-mask.svg');
+				-o-mask-image: url('../../images/finch/ward-inner-mask.svg');
+				-moz-mask-image: url('../../images/finch/ward-inner-mask.svg');
+				mask-image: url('../../images/finch/ward-inner-mask.svg');
 				-webkit-mask-size: cover;
 				-o-mask-size: cover;
 				-moz-mask-size: cover;
@@ -216,6 +216,11 @@ html {
 					border-bottom:none;
 					height:400px;
 					background:url('../../images/finch/battlefield-background.jpg');										
+					
+					#battlefield-particle-effects {
+						position:absolute;
+						display:none;
+					}
 					
 					#opponent-slot {
 						position:absolute;					

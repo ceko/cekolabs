@@ -59,6 +59,7 @@ models.controls.Elements = Backbone.Model.extend({
 	show_cast_bar: false,
 	ignore_keystrokes: false,
 	casting_interval: null,
+	combo_parser: null,
 	initialize: function() {
 		this.set({
 			queued_elements: [],	
@@ -83,11 +84,23 @@ models.controls.Elements = Backbone.Model.extend({
 			['lightning', 'water']
 		];
 		finch.game.views.global.on('right_mouse_press', this.handle_right_mouse_press.bind(this));
-		finch.game.views.global.on('right_mouse_release', this.handle_right_mouse_release.bind(this))
+		finch.game.views.global.on('right_mouse_release', this.handle_right_mouse_release.bind(this));
+		var _this = this;
+		this.on('change:queued_elements', function() {
+			_this.combo_parser = null;
+		})
 	},
 	clear_queued_elements: function() {
 		this.set('queued_elements', []);
 	},
+	get_combo_parser: function() {
+		if(!this.combo_parser) {
+			this.combo_parser = new models.ComboParser();
+			this.combo_parser.set_elements(this.get('queued_elements'));
+		}
+		
+		return this.combo_parser;
+	},	
 	get_random_elements: function(includes, excludes) {		
 		excludes = excludes || [];
 		var elements = [];
@@ -152,8 +165,21 @@ models.controls.Elements = Backbone.Model.extend({
 		return element_arr1.length == 0 & element_arr2.length == 0;
 	},
 	handle_right_mouse_press: function() {
+		if(!this.show_cast_bar)
+			return;
+		
+		var combo_parser = this.get_combo_parser();
+		if(combo_parser.is_instant_cast()) 
+			console.log('instant cast');		
+		if(combo_parser.is_channeled())
+			console.log('channeled');
+		if(combo_parser.is_charged())
+			console.log('charged');
+		combo_parser.determine_spell_type();
+		console.log('spell type: ' + combo_parser.get('spell_type'));
+		
 		if(this.get('queued_elements').length) {
-			if(this.instant_cast()) {
+			if(this.combo_is_instant_cast()) {
 				console.log('instant cast');
 				return;
 			}
@@ -181,21 +207,23 @@ models.controls.Elements = Backbone.Model.extend({
 			}
 		}
 	},
-	instant_cast: function() {
-		return false;
+	combo_is_instant_cast: function() {
+		return this.get_combo_parser().is_instant_cast();
 	},
 	combo_is_channeled: function() {
-		return false;
+		return this.get_combo_parser().is_channeled();
 	},
 	combo_is_charged: function() {
-		return true;
+		return this.get_combo_parser().is_charged();
 	},
 	handle_right_mouse_release: function() {
+		if(!this.show_cast_bar)
+			return;		
 		this.stop_casting();		
 	},
 	stop_casting: function() {		
 		this.casting_interval = clearInterval(this.casting_interval);
-		if(this.get('casting_power') > 0 || this.instant_cast() && this.get('queued_elements').length) {
+		if(this.get('casting_power') > 0 || this.combo_is_instant_cast() && this.get('queued_elements').length) {
 			console.log('spell cast');
 			this.trigger('spell_cast', Math.min(100, this.get('casting_power')));
 			this.set('queued_elements', []);
@@ -265,6 +293,111 @@ models.controls.Elements = Backbone.Model.extend({
 		
 		return -1;
 	}	
+});
+
+models.ComboParser = Backbone.Model.extend({
+	initialize: function() {
+		this.set({
+			/* cast targets: 
+			 * SELF
+			 * ENEMY
+			 */
+			'cast_target': 'SELF',
+			/* spell types:
+			 * WARD
+			 * SHIELD
+			 * MINES
+			 * ROCK_WALL
+			 * STORM
+			 * ELEMENTAL_BARRIER
+			 * ROCK_PROJECTILE
+			 * ICE_SHARDS
+			 * BEAM
+			 * SPRAY
+			 */
+			'spell_type': null,
+		});
+	},
+	set_elements: function(elements) {
+		this.set('elements', elements);
+	},
+	set_cast_target: function(target) {
+		this.set('cast_target', target);
+	},
+	determine_spell_type: function() {
+		var elements = this.get('elements');
+		var spell_type = 'UNKNOWN';
+		var elements_contain = function(element) {
+			return $.inArray(element, elements) != -1;
+		}
+		
+		if(this.is_instant_cast()) {
+			if(elements.length == 1) {
+				spell_type = 'SHIELD';
+			}else if(elements_contain('lightning')) {
+				spell_type = 'STORM';
+			}else if(elements_contain('earth')) {
+				spell_type = 'ROCK_WALL';
+			}else if(elements_contain('arcane')) {
+				spell_type = 'MINES';
+			}else{
+				spell_type = 'ELEMENTAL_BARRIER';
+			}
+		}else if(this.is_channeled()) {
+			if(elements_contain('life') || elements_contain('arcane')) {
+				spell_type = 'BEAM';
+			}else if(elements_contain('lightning')) {
+				spell_type = 'LIGHTNING';				
+			}else {
+				spell_type = 'SPRAY';
+			}
+		}else if(this.is_charged()) { 
+			if(elements_contain('earth')) {
+				spell_type = 'ROCK_PROJECTILE';
+			}else {
+				spell_type = 'ICE_SHARDS';
+			}
+		}
+		
+		this.set('spell_type', spell_type);
+	},
+	is_instant_cast: function() {
+		/*instant cast:  
+		 * wards - middle mouse button E[XX], can't cast
+		 * bubble - E
+		 * mines - ES[X]
+		 * elemental walls - ED[X]
+		 * lightning storms - EA[X]
+		 * elemental barriers - E[!SDA][X]		 
+		 */
+		var shield_index = $.inArray('shield', this.get('elements'));
+		return shield_index !== -1;
+	},
+	is_channeled: function() {
+		/* channeled:
+		 * !instant		 
+		 * !charged [can stop here]
+		 * beams: [W|S][XX]
+		 * lightning: A[XX]
+		 * sprays: [Q|R|F][XX]
+		 */		
+		return !this.is_instant_cast() && !this.is_charged();
+	},
+	is_charged: function() {
+		/* charged:
+		 * !instant		  
+		 * rock attacks: D[XX]
+		 * shard attacks: QR[X]
+		 */
+		var elements = this.get('elements');
+		var elements_contain = function(element) {
+			return $.inArray(element, elements) != -1;
+		}
+		return !this.is_instant_cast() 
+			   && elements_contain('earth')
+			   || (elements_contain('water') && elements_contain('cold'));
+	}
+	
 });
 
 models.Opponent = Backbone.Model.extend({
@@ -529,10 +662,69 @@ views.Global = Backbone.View.extend({
 		}
 	},
 	handle_oncontextmenu: function(evt) {
-		evt.preventDefault();		
+		if(!finch.game.paused)
+			evt.preventDefault();		
 	},
 	handle_resize: function() {
 		this.trigger('smart_resize');
+	}
+});
+
+views.BattlefieldParticleEffects = Backbone.View.extend({
+	el: $('#battlefield-particle-effects'),
+	initialize: function() {
+		finch.game.views.global.on('smart_resize', this.center.bind(this));
+		this.center();
+			
+		var canvas = this.$el.get(0);
+		
+		var createProton = function() {
+			proton = new Proton;
+			emitter = new Proton.Emitter();
+			emitter.rate = new Proton.Rate(new Proton.Span(35, 55), .1);
+			emitter.addInitialize(new Proton.Mass(1));
+			emitter.addInitialize(new Proton.ImageTarget(image));
+			emitter.addInitialize(new Proton.Position(new Proton.CircleZone(canvas.width / 2, canvas.height / 2 + 200, 10)));
+			emitter.addInitialize(new Proton.Life(3, 4));
+			emitter.addInitialize(new Proton.V(new Proton.Span(2, 3), new Proton.Span(0, 30, true), 'polar'));
+			emitter.addBehaviour(new Proton.Color('#ff0000', '#ffff00'));
+
+			emitter.addBehaviour(new Proton.Scale(1, .2));
+			emitter.addBehaviour(new Proton.Alpha(1, .2));
+			emitter.emit();
+			proton.addEmitter(emitter);
+
+			renderer = new Proton.Renderer('webgl', proton, canvas);
+			renderer.blendFunc("SRC_ALPHA", "ONE");
+
+			renderer.start();
+			
+			var do_animation = function() {
+				requestAnimationFrame(do_animation);
+				proton.update();
+			}
+			do_animation();
+		}		
+		
+		var image = new Image()
+		image.onload = function(e) {
+			createProton(e.target);
+			tick();
+		}
+		image.src = '/static/images/finch/particle.png';
+				
+	},
+	center: function(animate) {	
+		var height = $('#battlefield').innerHeight();
+		var width = ($('#battlefield').innerWidth()-$('#round-history-slot').outerWidth());
+				
+		this.$el.css({
+			height: height,
+			width: width
+		});		
+		
+		this.$el.get(0).width = width;
+		this.$el.get(0).height = height;
 	}
 });
 
@@ -1042,4 +1234,6 @@ $(function() {
 	finch.game.views.stats_overview = new views.StatsOverview({ model: finch.game.stats_overview });
 	finch.game.views.stats_overview.render();
 	finch.game.views.mode_selection.show();
+	finch.game.views.battlefield_particle_effects = new views.BattlefieldParticleEffects();
+	finch.game.views.mode_selection.start_offensive_game();
 });
