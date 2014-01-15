@@ -174,7 +174,8 @@ html body #main-wrap #playing-field #battlefield {
   height: 400px;
   background: url('../../images/finch/battlefield-background.jpg');
 }
-html body #main-wrap #playing-field #battlefield #battlefield-particle-effects {
+html body #main-wrap #playing-field #battlefield #battlefield-particle-effects,
+html body #main-wrap #playing-field #battlefield #battlefield-line-effects {
   position: absolute;
 }
 html body #main-wrap #playing-field #battlefield #opponent-slot {
@@ -226,6 +227,8 @@ html body #main-wrap #playing-field #battlefield .countdown {
   color: #FFF;
 }
 html body #main-wrap #playing-field #battlefield #game-title-slot {
+  z-index: 50;
+  position: relative;
   padding: 5px;
   background: #111;
   color: #FFF;
@@ -246,6 +249,7 @@ html body #main-wrap #playing-field #battlefield #game-title-slot #cancel-game {
 html body #main-wrap #playing-field #battlefield #round-history-slot {
   width: 321px;
   position: absolute;
+  z-index: 60;
   top: 0;
   right: 0;
   bottom: 0;

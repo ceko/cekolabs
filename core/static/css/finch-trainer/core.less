@@ -217,7 +217,7 @@ html {
 					height:400px;
 					background:url('../../images/finch/battlefield-background.jpg');										
 					
-					#battlefield-particle-effects {
+					#battlefield-particle-effects, #battlefield-line-effects {
 						position:absolute;
 					}
 					
@@ -278,6 +278,8 @@ html {
 					}
 					
 					#game-title-slot {
+						z-index:50;
+						position:relative;
 						padding: 5px;
 						background: #111;
 						color: #FFF;
@@ -301,6 +303,7 @@ html {
 					#round-history-slot {
 						width:321px;
 						position:absolute;
+						z-index:60;
 						top:0;
 						right:0;
 						bottom:0;

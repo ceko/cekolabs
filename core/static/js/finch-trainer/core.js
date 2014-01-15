@@ -168,17 +168,17 @@ models.controls.Elements = Backbone.Model.extend({
 		if(!this.show_cast_bar)
 			return;
 		
-		var combo_parser = this.get_combo_parser();
-		if(combo_parser.is_instant_cast()) 
-			console.log('instant cast');		
-		if(combo_parser.is_channeled())
-			console.log('channeled');
-		if(combo_parser.is_charged())
-			console.log('charged');
-		combo_parser.determine_spell_type();
-		console.log('spell type: ' + combo_parser.get('spell_type'));
-		
 		if(this.get('queued_elements').length) {
+			var combo_parser = this.get_combo_parser();
+			if(combo_parser.is_instant_cast()) 
+				console.log('instant cast');		
+			if(combo_parser.is_channeled())
+				console.log('channeled');
+			if(combo_parser.is_charged())
+				console.log('charged');
+			combo_parser.determine_spell_type();
+			console.log('spell type: ' + combo_parser.get('spell_type'));
+			this.trigger('cast_start');
 			if(this.combo_is_instant_cast()) {
 				console.log('instant cast');
 				return;
@@ -222,13 +222,14 @@ models.controls.Elements = Backbone.Model.extend({
 		this.stop_casting();		
 	},
 	stop_casting: function() {		
+		this.trigger('cast_stop');
+		this.set('casting_power', 0);
 		this.casting_interval = clearInterval(this.casting_interval);
 		if(this.get('casting_power') > 0 || this.combo_is_instant_cast() && this.get('queued_elements').length) {
 			console.log('spell cast');
-			this.trigger('spell_cast', Math.min(100, this.get('casting_power')));
-			this.set('queued_elements', []);
-		}
-		this.set('casting_power', 0);
+			this.trigger('spell_cast', Math.min(100, this.get('casting_power')));			
+		}				
+		this.set('queued_elements', []);
 	},
 	handle_keydown: function(key) {
 		if(this.casting_interval)
@@ -323,6 +324,12 @@ models.ComboParser = Backbone.Model.extend({
 	},
 	set_cast_target: function(target) {
 		this.set('cast_target', target);
+	},
+	get_spell_type: function() {
+		if(!this.get('spell_type')) {
+			this.determine_spell_type();
+		}
+		return this.get('spell_type');
 	},
 	determine_spell_type: function() {
 		var elements = this.get('elements');
@@ -670,49 +677,368 @@ views.Global = Backbone.View.extend({
 	}
 });
 
+views.BattlefieldLineEffects = Backbone.View.extend({
+	el: $('#battlefield-line-effects'),
+	initialize: function() {
+		finch.game.views.global.on('smart_resize', this.center.bind(this));
+		this.center();
+		this.canvas = this.$el.get(0);
+		this.context = this.canvas.getContext('2d');
+		this.beam_cnt = 0;
+		
+		//setInterval(this.draw_lightning.bind(this), 300);
+		//setInterval(this.draw_beam.bind(this), 100);
+		//this.draw_lightning();
+		
+	},
+	clear_canvas: function() {
+		
+		this.context.save();
+		this.context.setTransform(1, 0, 0, 1, 0, 0);
+		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);		
+		this.context.restore();
+	},
+	draw_beam: function() {
+		
+		this.clear_canvas();
+		
+		var origin = {
+			x: this.$el.get(0).width / 2,
+			y: this.$el.get(0).height			
+		};
+		
+		var end = {
+			x: this.$el.get(0).width / 2,
+			y: this.$el.get(0).height / 3
+		};
+		
+		var draw_multipoint_line = function(points, context) {
+			context.beginPath();
+			for(i=0;i<points.length;i++) {
+				if(i==0) {
+					context.moveTo(points[i].x, points[i].y);
+				}else{
+					context.lineTo(points[i].x, points[i].y);
+				}
+			}
+			context.stroke();
+		}
+		this.context.shadowBlur=30;
+		this.context.shadowColor='#00FF00';
+		this.context.strokeStyle = '#00FF00';
+		this.beam_cnt++;
+		this.context.lineWidth = (this.beam_cnt % 6 > 2 ? 1 : -1) * this.beam_cnt % 3 + 10;
+		console.log(this.context.lineWidth);
+		draw_multipoint_line([origin, end], this.context);
+	},
+	draw_lightning: function() {
+		this.clear_canvas();
+		
+		var origin = {
+			x: this.$el.get(0).width / 2,
+			y: this.$el.get(0).height			
+		};
+		
+		var end = {
+			x: this.$el.get(0).width / 2,
+			y: this.$el.get(0).height / 3
+		};
+		
+		var variable_points = [];
+		var twining_points = [];
+		var twining_points2 = [];
+		var total_points = 7;
+		var point_offset = {
+			x: (end.x - origin.x) / total_points,
+			y: (end.y - origin.y) / total_points
+		};
+		for(i=1;i<total_points-1;i++) {
+			var variable_point = {
+				x: i*point_offset.x+origin.x + (Math.random() * i*15) - i*15/2,
+				y: i*point_offset.y+origin.y + (Math.random() * i*15) - i*15/2
+			}
+			twining_points.push({
+				x: variable_point.x + (Math.random() * (total_points+1-i)*8) - (total_points+1-i)*8/2,
+				y: variable_point.y + (Math.random() * (total_points+1-i)*8) - (total_points+1-i)*8/2,
+			})
+			twining_points2.push({
+				x: variable_point.x + (Math.random() * (total_points+1-i)*8) - (total_points+1-i)*8/2,
+				y: variable_point.y + (Math.random() * (total_points+1-i)*8) - (total_points+1-i)*8/2,
+			})
+			variable_points.push(variable_point);
+		}
+		
+		var draw_multipoint_line = function(points, context) {
+			context.beginPath();
+			for(i=0;i<points.length;i++) {
+				if(i==0) {
+					context.moveTo(points[i].x, points[i].y);
+				}else{
+					context.lineTo(points[i].x, points[i].y);
+				}
+			}
+			context.stroke();
+		}
+		this.context.shadowBlur=10;
+		this.context.shadowColor='#FFFFFF';
+		this.context.strokeStyle = '#E9C1FC';
+		this.context.lineWidth = 2;
+		draw_multipoint_line([].concat.apply([], [[origin], twining_points, [end]]), this.context);
+		draw_multipoint_line([].concat.apply([], [[origin], twining_points2, [end]]), this.context);
+				
+		this.context.shadowColor='#FFFFFF';
+		this.context.strokeStyle = '#E9C1FC';
+		this.context.lineWidth = 4;
+		draw_multipoint_line([].concat.apply([], [[origin], variable_points, [end]]), this.context);
+	},
+	center: function(animate) {	
+		var height = $('#battlefield').innerHeight();
+		var width = ($('#battlefield').innerWidth()-$('#round-history-slot').outerWidth());
+				
+		this.$el.css({
+			height: height,
+			width: width
+		});		
+		
+		this.$el.get(0).width = width;
+		this.$el.get(0).height = height;
+	}
+});
+
 views.BattlefieldParticleEffects = Backbone.View.extend({
-	el: $('#battlefield-particle-effects'),
+	el: $('#battlefield-particle-effects'),	
+	proton: null,
+	renderer: null,	
+	emitters_queued_to_cancel: [],
 	initialize: function() {
 		finch.game.views.global.on('smart_resize', this.center.bind(this));
 		this.center();
 			
-		var canvas = this.$el.get(0);
+		var canvas = this.$el.get(0);		
+		this.proton = new Proton();
+		var renderer =  new Proton.Renderer('webgl', this.proton, canvas);		
+		//renderer.blendFunc("SRC_ALPHA", "ONE");	
+		//renderer.blendEquation('FUNC_SUBTRACT');
+		renderer.start();
+		this.renderer = renderer;
 		
-		var createProton = function() {
-			proton = new Proton;
-			emitter = new Proton.Emitter();
-			emitter.rate = new Proton.Rate(new Proton.Span(35, 55), .1);
-			emitter.addInitialize(new Proton.Mass(1));
-			emitter.addInitialize(new Proton.ImageTarget(image));
-			emitter.addInitialize(new Proton.Position(new Proton.CircleZone(canvas.width / 2, canvas.height / 2 + 200, 10)));
-			emitter.addInitialize(new Proton.Life(3, 4));
-			emitter.addInitialize(new Proton.V(new Proton.Span(2, 3), new Proton.Span(0, 30, true), 'polar'));
-			emitter.addBehaviour(new Proton.Color('#ff0000', '#ffff00'));
-
-			emitter.addBehaviour(new Proton.Scale(1, .2));
-			emitter.addBehaviour(new Proton.Alpha(1, .2));
-			emitter.emit();
-			proton.addEmitter(emitter);
-
-			renderer = new Proton.Renderer('webgl', proton, canvas);
-			renderer.blendFunc("SRC_ALPHA", "ONE");
-
-			renderer.start();
+		requestAnimationFrame(this.render_loop.bind(this));
+		finch.game.controls.elements.on('cast_start', this.handle_cast_start.bind(this));
+		finch.game.controls.elements.on('cast_stop', this.handle_cast_stop.bind(this));
+		
+		this.render_explosion_at('center', 300);
+		
+		//var fire_emitter = this.get_fire_emitter();
+		//fire_emitter.emit();
+		//this.proton.addEmitter(fire_emitter);
+		
+		//var water_emitter = this.get_water_emitter();
+		//water_emitter.emit();
+		//this.proton.addEmitter(water_emitter);
 			
-			var do_animation = function() {
-				requestAnimationFrame(do_animation);
-				proton.update();
-			}
-			do_animation();
-		}		
+		//var frost_emitter = this.get_frost_emitter();
+		//frost_emitter.emit();
+		//this.proton.addEmitter(frost_emitter);
 		
-		var image = new Image()
-		image.onload = function(e) {
-			createProton(e.target);
-			tick();
-		}
-		image.src = '/static/images/finch/particle.png';
+		/*var _this = this;
+								
+		setInterval(function() {
+			for(i=0;i<3;i++) {
+				var shard_emitter = _this.get_shard_emitter();
+				shard_emitter.emit(1, 2);
+				_this.proton.addEmitter(shard_emitter);
+								
+			}
+		}, 2000);
+		*/
+		
+		
+		
+	},
+	cancel_on_stopcast: function(emitter) {
+		this.emitters_queued_to_cancel.push(emitter);
+	},
+	handle_cast_start: function() {
+		var combo_parser = finch.game.controls.elements.get_combo_parser();
+		var elements = finch.game.controls.elements.get('queued_elements');
+			
+		switch(combo_parser.get_spell_type()) {
+			case 'SPRAY':
+				var emitter = null;
+				if($.inArray('fire', elements) !== -1) {
+					emitter = this.get_fire_emitter();
+					
+				}else if($.inArray('cold', elements) !== -1) {
+					emitter = this.get_cold_emitter();					
+				}else if($.inArray('water', elements) !== -1) {
+					emitter = this.get_water_emitter();					
+				}
 				
+				emitter.emit();
+				this.proton.addEmitter(emitter);
+				this.cancel_on_stopcast(emitter);							
+		}
+	},
+	handle_cast_stop: function() {
+		for(i=0;i<this.emitters_queued_to_cancel.length;i++) {
+			this.emitters_queued_to_cancel[i].stopEmit();
+		}
+		
+		var combo_parser = finch.game.controls.elements.get_combo_parser();
+		var elements = finch.game.controls.elements.get('queued_elements');
+		var collision_emitter_bounds = null;
+		var collision_callback = null;
+		var emitter_movespeed = 0;
+		
+		switch(combo_parser.get_spell_type()) {
+			case 'ICE_SHARDS':
+				for(i=0;i<3;i++) {
+					var emitter = this.get_shard_emitter();
+					emitter.emit(1,2);
+					this.proton.addEmitter(emitter);
+				}
+			case 'ROCK_PROJECTILE':
+				if($.inArray('fire', elements) !== -1) {
+					var emitter = this.get_fireball_emitter();
+					collision_emitter = emitter;
+					collision_emitter_bounds = -300; /* i think this is relative from where the emitter starts */
+					emitter.emit();
+					emitter_movespeed = 1;
+					this.proton.addEmitter(emitter);
+					collision_callback = (function() { this.render_explosion_at('center', this.$el.get(0).height + collision_emitter_bounds); }).bind(this);
+				}
+		}
+		
+		if(collision_emitter_bounds && emitter_movespeed) {
+			var last_timestamp = null
+			var move_emitter = function(timestamp) {								
+					if(last_timestamp) {
+						emitter.p.y = emitter.p.y - (timestamp - last_timestamp)*emitter_movespeed;					
+					}
+					if(emitter.p.y <= collision_emitter_bounds) {
+						emitter.stopEmit();
+						if(collision_callback) {
+							collision_callback();
+						}
+						return;
+					}					
+					last_timestamp = timestamp;
+				
+				requestAnimationFrame(move_emitter);
+			}
+			move_emitter();
+		}
+	},
+	render_loop: function() {
+		requestAnimationFrame(this.render_loop.bind(this));
+		this.proton.update();
+	},
+	render_explosion_at: function(x, y) {
+		if(x == 'center') {
+			x = this.$el.get(0).width / 2;
+		}
+		var emitter = new Proton.Emitter();
+		emitter.rate = new Proton.Rate(new Proton.Span(85, 100), .1);
+		emitter.addInitialize(new Proton.Mass(1));
+		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(x, y+50, 1)));
+		emitter.addInitialize(new Proton.Life(.5, 1));
+		emitter.addInitialize(new Proton.ImageTarget(['/static/images/finch/particle.png'], 32));
+		emitter.addInitialize(new Proton.Radius(20));
+		emitter.addInitialize(new Proton.V(new Proton.Span(4, 5), new Proton.Span(0, 360), 'polar'));
+		emitter.addBehaviour(new Proton.Alpha(1, 0));
+		emitter.addBehaviour(new Proton.Color('#ff0000', '#ffff00'));
+		emitter.addBehaviour(new Proton.Scale(Proton.getSpan(0.3, 4), 0));
+		
+		emitter.emit('once');
+		
+		this.proton.addEmitter(emitter);		
+	},
+	get_fireball_emitter: function() {
+		var emitter = new Proton.Emitter();
+		emitter.rate = new Proton.Rate(new Proton.Span(5, 8), .01);
+		emitter.addInitialize(new Proton.Mass(1));
+		emitter.addInitialize(new Proton.ImageTarget('/static/images/finch/particle.png'));
+		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(this.$el.get(0).width / 2, this.$el.get(0).height + 20, 1)));		
+		emitter.addInitialize(new Proton.Life(.2, .3));
+		emitter.addInitialize(new Proton.V(new Proton.Span(-2, -3), new Proton.Span(180, 35, true), 'polar'));
+		emitter.addBehaviour(new Proton.Color('#ff0000', '#ffff00'));
+		emitter.addBehaviour(new Proton.Scale(1, .2));
+		emitter.addBehaviour(new Proton.Alpha(1, .2));
+		
+		return emitter;
+	},
+	get_shard_emitter: function() {		
+		var emitter = new Proton.Emitter();
+		emitter.rate = new Proton.Rate(new Proton.Span(5, 10), .01);
+		emitter.addInitialize(new Proton.Mass(1));
+		emitter.addInitialize(new Proton.ImageTarget('/static/images/finch/particle.png'));
+		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(this.$el.get(0).width / 2, this.$el.get(0).height + 20, 0)));
+		emitter.addInitialize(new Proton.Life(1, 1));
+		emitter.addInitialize(new Proton.V(new Proton.Span(1, 3), new Proton.Span(180, .1, true), 'polar'));
+		emitter.addBehaviour(new Proton.Color('#FFFFEF', '#FFFFEE'));
+		emitter.addBehaviour(new Proton.Scale(.4, .2));
+		emitter.addBehaviour(new Proton.Alpha(1, 0));		
+		
+		var drift = (Math.floor(Math.random()*8)+1) - 4;
+		var last_timestamp = null
+		var move_emitter = function(timestamp) {
+			if(last_timestamp) {
+				emitter.p.y = emitter.p.y - (timestamp - last_timestamp);	
+				emitter.p.x = emitter.p.x + drift;
+			}
+			requestAnimationFrame(move_emitter);
+			last_timestamp = timestamp;
+		}
+		move_emitter();
+		
+		return emitter;
+	},
+	get_fire_emitter: function() {
+		emitter = new Proton.Emitter();
+		emitter.rate = new Proton.Rate(new Proton.Span(25, 85), .15);
+		emitter.addInitialize(new Proton.Mass(1));
+		emitter.addInitialize(new Proton.ImageTarget('/static/images/finch/particle.png'));
+		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(this.$el.get(0).width / 2, this.$el.get(0).height + 20, 10)));
+		emitter.addInitialize(new Proton.Life(1, 1.5));
+		emitter.addInitialize(new Proton.V(new Proton.Span(3, 4), new Proton.Span(0, 25, true), 'polar'));
+		emitter.addBehaviour(new Proton.Color('#ff0000', '#ffff00'));
+
+		emitter.addBehaviour(new Proton.Scale(1.3, .2));
+		emitter.addBehaviour(new Proton.Alpha(1, .2));
+		
+		return emitter;
+	},
+	get_cold_emitter: function() {
+		emitter = new Proton.Emitter();
+		emitter.rate = new Proton.Rate(new Proton.Span(25, 55), .1);
+		emitter.addInitialize(new Proton.Mass(1));
+		emitter.addInitialize(new Proton.ImageTarget('/static/images/finch/particle.png'));
+		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(this.$el.get(0).width / 2, this.$el.get(0).height + 20, 10)));
+		emitter.addInitialize(new Proton.Life(.5, 2));
+		emitter.addInitialize(new Proton.V(new Proton.Span(3.8, 4), new Proton.Span(0, 25, true), 'polar'));
+		emitter.addBehaviour(new Proton.Color('#FFFFEF', '#FFFFEE'));
+
+		emitter.addBehaviour(new Proton.Scale(2, 0));
+		emitter.addBehaviour(new Proton.Alpha(1, .3));
+		
+		return emitter;
+	},
+	get_water_emitter: function() {
+		emitter = new Proton.Emitter();
+		emitter.rate = new Proton.Rate(new Proton.Span(25, 30), .10);
+		emitter.addInitialize(new Proton.Mass(1));
+		emitter.addInitialize(new Proton.ImageTarget('/static/images/finch/particle.png'));
+		//emitter.addInitialize(new Proton.InitialColor('#1D1D83'));
+		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(this.$el.get(0).width / 2, this.$el.get(0).height + 20, 10)));
+		emitter.addInitialize(new Proton.Life(2, 3.2));
+		emitter.addInitialize(new Proton.V(new Proton.Span(5, 5.5), new Proton.Span(0, 20, true), 'polar'));
+		emitter.addBehaviour(new Proton.Color('#0003EE', '#0000CC'));
+		emitter.addBehaviour(new Proton.Gravity(5));
+		
+		emitter.addBehaviour(new Proton.Scale(2.0, 0));
+		emitter.addBehaviour(new Proton.Alpha(1, 1));
+		
+		return emitter;
 	},
 	center: function(animate) {	
 		var height = $('#battlefield').innerHeight();
@@ -900,7 +1226,7 @@ views.ModeSelection = Backbone.View.extend({
 			
 		};
 		
-		this.countdown_timer = setTimeout(function() { advance_countdown(3); }, 1);
+		this.countdown_timer = setTimeout(function() { advance_countdown(1); }, 1);
 	},
 	
 	set_game_mode_text: function(text) {
@@ -1114,11 +1440,7 @@ finch.game = {
 		
 		if(!finch.game.initialized) {
 			finch.game.initialized = true;
-			//create all uninitialized models
-			finch.game.controls = {
-				elements: new models.controls.Elements(),
-				elements_helper: new models.controls.Elements({ ignore_keystrokes: true }),
-			};		
+			//create all uninitialized models					
 			finch.game.opponent = new models.Opponent();
 			finch.game.objective_history = new models.ObjectiveHistory();
 			finch.game.round_history = new models.RoundHistory();
@@ -1194,8 +1516,7 @@ finch.game = {
 	},
 	views: {
 		global: new views.Global()
-	},
-	controls: {},
+	},	
 	load_next_objective: function() {		
 		finch.game.loading_next_objective = true;
 		finch.game.statebag.objective_keypresses = 0;
@@ -1226,14 +1547,39 @@ finch.game = {
 		finch.game.views.queued_elements.render();
 		finch.game.views.opponent.render();
 	}
+};
+finch.game.controls = {		
+	elements: new models.controls.Elements(),
+	elements_helper: new models.controls.Elements({ ignore_keystrokes: true }),		
 }
 
 $(function() {
+	/* proton custom code */
+	(function(Proton, undefined) {
+	    function InitialColor(color) {
+	            InitialColor._super_.call(this);
+	            this.initial_color = Proton.Util.hexToRGB(color);
+	    }
+
+	    Proton.Util.inherits(InitialColor, Proton.Initialize);
+	    InitialColor.prototype.initialize = function(particle) {
+	    		particle.transform.rgb.r = this.initial_color.r;
+	    		particle.transform.rgb.g = this.initial_color.g;
+	    		particle.transform.rgb.b = this.initial_color.b;
+	            //particle.color = new Proton.ColorSpan(this.initial_color);
+	    };
+
+	    Proton.InitialColor = InitialColor;
+	})(Proton);
+	/* end proton custmo code */
+	
+	
 	finch.game.views.mode_selection = new views.ModeSelection();
 	finch.game.stats_overview = new models.StatsOverview();
 	finch.game.views.stats_overview = new views.StatsOverview({ model: finch.game.stats_overview });
 	finch.game.views.stats_overview.render();
 	finch.game.views.mode_selection.show();
 	finch.game.views.battlefield_particle_effects = new views.BattlefieldParticleEffects();
+	finch.game.views.battlefield_line_effects = new views.BattlefieldLineEffects();
 	finch.game.views.mode_selection.start_offensive_game();
 });
