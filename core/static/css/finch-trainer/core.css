@@ -10,6 +10,17 @@ html body {
   background: url('../../images/finch/magicka-background.jpg') no-repeat center #020c12;
   height: 100%;
 }
+html body #title-bar {
+  padding: 5px;
+  color: #FFF;
+}
+html body #title-bar > div {
+  margin: auto;
+  max-width: 990px;
+}
+html body #title-bar a {
+  color: #FFF;
+}
 html body .ward-group {
   position: relative;
 }
@@ -177,6 +188,8 @@ html body #main-wrap #playing-field #battlefield {
 html body #main-wrap #playing-field #battlefield #battlefield-particle-effects,
 html body #main-wrap #playing-field #battlefield #battlefield-line-effects {
   position: absolute;
+  z-index: 15;
+  display: none;
 }
 html body #main-wrap #playing-field #battlefield #opponent-slot {
   position: absolute;
@@ -353,6 +366,7 @@ html body #main-wrap #playing-field #battlefield .mode-instructions .body .start
   color: #FFF;
 }
 html body #main-wrap #playing-field #battlefield #mode-selection {
+  display: none;
   width: 450px;
   position: absolute;
   top: 150px;
@@ -373,7 +387,6 @@ html body #main-wrap #playing-field #battlefield #mode-selection .options .round
 html body #main-wrap #playing-field #battlefield #mode-selection .mode {
   border-bottom: 1px solid #111;
   border-top: 1px solid #666;
-  padding: 10px;
   color: #FFF;
 }
 html body #main-wrap #playing-field #battlefield #mode-selection .mode:hover {
@@ -384,7 +397,7 @@ html body #main-wrap #playing-field #battlefield #mode-selection .mode:first-chi
   border-top: none;
 }
 html body #main-wrap #playing-field #battlefield #mode-selection .mode .mode-inner {
-  margin: 5px;
+  padding: 15px;
 }
 html body #main-wrap #playing-field #battlefield #mode-selection .mode .mode-inner h3 {
   margin: 0px;

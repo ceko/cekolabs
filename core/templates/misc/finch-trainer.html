@@ -5,18 +5,21 @@
 		<title>Magicka: Wizard Wars skill trainer</title>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>	
+		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>			
 		{% compressed_css 'finch-trainer' %}
 	</head>
 	<body>
-		<div id='main-wrap'>
+		<div id='title-bar'>
+			<div>
+				<a href='http://magickawizardwars.com'>Visit magickawizardwars.com, the best unofficial site for the game!</a>
+			</div>
+		</div>
+		<div id='main-wrap'>		
 			<div id='playing-field'>
 				<div id='status-bar'></div>
 				<div id='battlefield'>
-					<canvas id='battlefield-particle-effects'></canvas>
 					<canvas id='battlefield-line-effects'></canvas>
+					<canvas id='battlefield-particle-effects'></canvas>					
 					<div id='game-title-slot'>
 						<span>Game Mode:</span><span id='game-mode-display'>None selected</span>
 						<div id='cancel-game'>cancel game</div>
@@ -55,7 +58,7 @@
 									<div class='image'></div>									
 								</div>
 							</div>
-							<div class='mode'>
+							<div class='mode' style='display:none;'>
 								<div class='mode-inner offensive-mode'>
 									<h3>Break enemy defenses</h3>
 									<div class='image'></div>																	

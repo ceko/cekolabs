@@ -200,6 +200,8 @@ PIPELINE_JS = {
     'finch-trainer': {
         'source_filenames': (
             'js/jsrender.min.js',
+            'js/underscore.min.js',
+            'js/backbone.min.js',
             'js/finch-trainer/core.js',
             'js/proton-1.0.0.min.js',
             'js/google-analytics.js'

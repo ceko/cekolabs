@@ -12,6 +12,20 @@ html {
 		background:url('../../images/finch/magicka-background.jpg') no-repeat center #020C12;	
 		height:100%;	
 	
+		#title-bar {
+			padding:5px;
+			color:#FFF;
+			
+			> div {
+				margin:auto;
+				max-width:990px;
+			}
+			
+			a {
+				color:#FFF;
+			}	
+		}
+	
 		.ward-group {
 			position:relative;
 			
@@ -219,6 +233,8 @@ html {
 					
 					#battlefield-particle-effects, #battlefield-line-effects {
 						position:absolute;
+						z-index:15;
+						display:none;
 					}
 					
 					#opponent-slot {
@@ -436,6 +452,7 @@ html {
 					}
 					
 					#mode-selection {
+						display:none;
 						width: 450px;
 						position: absolute;
 						top: 150px;						
@@ -466,12 +483,11 @@ html {
 								border-top:none;
 							}
 							border-bottom:1px solid #111;
-							border-top:1px solid #666;
-							padding:10px;
+							border-top:1px solid #666;							
 							color:#FFF;
 																					
 							.mode-inner {
-								margin:5px;
+								padding:15px;
 								h3 {
 									margin:0px;
 									padding:0px;

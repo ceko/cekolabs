@@ -240,13 +240,7 @@ models.controls.Elements = Backbone.Model.extend({
 			pressed_elements[element] = true;
 			this.set('pressed_elements', pressed_elements);
 			this.trigger('change:pressed_elements', this, pressed_elements);
-		}
-	},
-	handle_keyup: function(key) {
-		if(this.casting_interval)
-			return;
-		var element = this.keybindings[key];		
-		if(element) {
+			
 			this.trigger('element_queue_try');
 			var incompatibility_index = (this.element_incompatibility_index(element, this.get('queued_elements')));
 			var queued_elements = this.get('queued_elements');
@@ -265,7 +259,13 @@ models.controls.Elements = Backbone.Model.extend({
 			
 			this.set('queued_elements', queued_elements);
 			this.trigger('change:queued_elements', this, queued_elements);
-			
+		}
+	},
+	handle_keyup: function(key) {
+		if(this.casting_interval)
+			return;
+		var element = this.keybindings[key];		
+		if(element) {
 			var pressed_elements = this.get('pressed_elements');
 			delete pressed_elements[element];
 			this.set('pressed_elements', pressed_elements);
@@ -669,8 +669,8 @@ views.Global = Backbone.View.extend({
 		}
 	},
 	handle_oncontextmenu: function(evt) {
-		if(!finch.game.paused)
-			evt.preventDefault();		
+		//if(!finch.game.paused)
+		//	evt.preventDefault();		
 	},
 	handle_resize: function() {
 		this.trigger('smart_resize');
@@ -678,28 +678,37 @@ views.Global = Backbone.View.extend({
 });
 
 views.BattlefieldLineEffects = Backbone.View.extend({
+	images: [],
 	el: $('#battlefield-line-effects'),
 	initialize: function() {
+		this.images['rock'] = new Image();
+		this.images['rock'].src = '/static/images/finch/particle-rock.png';
+		
 		finch.game.views.global.on('smart_resize', this.center.bind(this));
 		this.center();
 		this.canvas = this.$el.get(0);
 		this.context = this.canvas.getContext('2d');
-		this.beam_cnt = 0;
-		
+		this.beam_cnt = 0;		
 		//setInterval(this.draw_lightning.bind(this), 300);
 		//setInterval(this.draw_beam.bind(this), 100);
 		//this.draw_lightning();
 		
 	},
+	queue_canvas_clear: function() {
+		this.clear_canvas();
+	},
 	clear_canvas: function() {
-		
+		//this should happen automatically, maybe i should make a draw queue or something and clear before the draw.
 		this.context.save();
 		this.context.setTransform(1, 0, 0, 1, 0, 0);
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);		
 		this.context.restore();
 	},
-	draw_beam: function() {
-		
+	// :( I suck at opengl, this is obviously a bad way to do this
+	draw_rock_at: function(x, y, height, width) {
+		this.context.drawImage(this.images['rock'], x, y, height, width);
+	},
+	draw_beam: function() {		
 		this.clear_canvas();
 		
 		var origin = {
@@ -817,43 +826,14 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 		var canvas = this.$el.get(0);		
 		this.proton = new Proton();
 		var renderer =  new Proton.Renderer('webgl', this.proton, canvas);		
-		//renderer.blendFunc("SRC_ALPHA", "ONE");	
+		renderer.blendFunc("SRC_ALPHA", "ONE");	
 		//renderer.blendEquation('FUNC_SUBTRACT');
 		renderer.start();
 		this.renderer = renderer;
 		
 		requestAnimationFrame(this.render_loop.bind(this));
 		finch.game.controls.elements.on('cast_start', this.handle_cast_start.bind(this));
-		finch.game.controls.elements.on('cast_stop', this.handle_cast_stop.bind(this));
-		
-		this.render_explosion_at('center', 300);
-		
-		//var fire_emitter = this.get_fire_emitter();
-		//fire_emitter.emit();
-		//this.proton.addEmitter(fire_emitter);
-		
-		//var water_emitter = this.get_water_emitter();
-		//water_emitter.emit();
-		//this.proton.addEmitter(water_emitter);
-			
-		//var frost_emitter = this.get_frost_emitter();
-		//frost_emitter.emit();
-		//this.proton.addEmitter(frost_emitter);
-		
-		/*var _this = this;
-								
-		setInterval(function() {
-			for(i=0;i<3;i++) {
-				var shard_emitter = _this.get_shard_emitter();
-				shard_emitter.emit(1, 2);
-				_this.proton.addEmitter(shard_emitter);
-								
-			}
-		}, 2000);
-		*/
-		
-		
-		
+		finch.game.controls.elements.on('cast_stop', this.handle_cast_stop.bind(this));		
 	},
 	cancel_on_stopcast: function(emitter) {
 		this.emitters_queued_to_cancel.push(emitter);
@@ -880,6 +860,7 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 		}
 	},
 	handle_cast_stop: function() {
+		var _this = this;
 		for(i=0;i<this.emitters_queued_to_cancel.length;i++) {
 			this.emitters_queued_to_cancel[i].stopEmit();
 		}
@@ -892,31 +873,59 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 		
 		switch(combo_parser.get_spell_type()) {
 			case 'ICE_SHARDS':
+				var draws = 0;
 				for(i=0;i<3;i++) {
 					var emitter = this.get_shard_emitter();
-					emitter.emit(1,2);
+					emitter.emit(1,2);					
 					this.proton.addEmitter(emitter);
 				}
+				break;
 			case 'ROCK_PROJECTILE':
+				var emitter = null;
+				var explosion_type = 'fire';
+				
 				if($.inArray('fire', elements) !== -1) {
-					var emitter = this.get_fireball_emitter();
-					collision_emitter = emitter;
-					collision_emitter_bounds = -300; /* i think this is relative from where the emitter starts */
-					emitter.emit();
-					emitter_movespeed = 1;
-					this.proton.addEmitter(emitter);
-					collision_callback = (function() { this.render_explosion_at('center', this.$el.get(0).height + collision_emitter_bounds); }).bind(this);
+					emitter = this.get_fireball_emitter();					
+				}else if($.inArray('water', elements) !== -1) {
+					emitter = this.get_waterball_emitter();
+					explosion_type = 'water';
+				}else if($.inArray('cold', elements) !== -1) {
+					emitter = this.get_frostball_emitter();
+					explosion_type = 'cold';
+				}else if($.inArray('arcane', elements) !== -1) {
+					emitter = this.get_deathball_emitter();
+					explosion_type = 'arcane';
+				}else {
+					emitter = this.get_lifeball_emitter();
+					explosion_type = 'life';
 				}
+				
+				collision_emitter = emitter;
+				collision_emitter_bounds = -300; /* i think this is relative from where the emitter starts */
+				emitter.emit();
+				emitter_movespeed = 1;
+				this.proton.addEmitter(emitter);
+				collision_callback = (function() { this.render_explosion_at('center', this.$el.get(0).height + collision_emitter_bounds, explosion_type); }).bind(this);
+				
+				var show_rock = function() {
+					finch.game.views.battlefield_line_effects.queue_canvas_clear();
+					
+					if(emitter.emitTotalTimes != -1) {
+						requestAnimationFrame(show_rock);
+						finch.game.views.battlefield_line_effects.draw_rock_at(_this.$el.get(0).width/2-18, _this.$el.get(0).height + emitter.p.y-15, 36, 36);
+					}
+				}
+				show_rock();
 		}
 		
 		if(collision_emitter_bounds && emitter_movespeed) {
 			var last_timestamp = null
 			var move_emitter = function(timestamp) {								
-					if(last_timestamp) {
+					if(last_timestamp) {										
 						emitter.p.y = emitter.p.y - (timestamp - last_timestamp)*emitter_movespeed;					
 					}
 					if(emitter.p.y <= collision_emitter_bounds) {
-						emitter.stopEmit();
+						emitter.stopEmit();						
 						if(collision_callback) {
 							collision_callback();
 						}
@@ -933,35 +942,106 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 		requestAnimationFrame(this.render_loop.bind(this));
 		this.proton.update();
 	},
-	render_explosion_at: function(x, y) {
+	render_explosion_at: function(x, y, type) {
 		if(x == 'center') {
 			x = this.$el.get(0).width / 2;
-		}
+		}		
+		var explosion_type = 'ragged';
+		if(type == 'life' || type == 'arcane')
+			explosion_type = 'uniform';
+		
 		var emitter = new Proton.Emitter();
-		emitter.rate = new Proton.Rate(new Proton.Span(85, 100), .1);
+		emitter.rate = new Proton.Rate(new Proton.Span(60, 75), .2);
 		emitter.addInitialize(new Proton.Mass(1));
-		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(x, y+50, 1)));
-		emitter.addInitialize(new Proton.Life(.5, 1));
-		emitter.addInitialize(new Proton.ImageTarget(['/static/images/finch/particle.png'], 32));
-		emitter.addInitialize(new Proton.Radius(20));
-		emitter.addInitialize(new Proton.V(new Proton.Span(4, 5), new Proton.Span(0, 360), 'polar'));
-		emitter.addBehaviour(new Proton.Alpha(1, 0));
-		emitter.addBehaviour(new Proton.Color('#ff0000', '#ffff00'));
-		emitter.addBehaviour(new Proton.Scale(Proton.getSpan(0.3, 4), 0));
+		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(x, y+50, 1)));		
+		emitter.addInitialize(new Proton.Life((explosion_type == 'ragged' ? .2 : .3), (explosion_type == 'ragged' ? .5 : .3)));
+		emitter.addInitialize(new Proton.ImageTarget('/static/images/finch/particle.png'));
+		emitter.addInitialize(new Proton.Radius(30));
+		emitter.addInitialize(new Proton.V(new Proton.Span((explosion_type == 'ragged' ? 4 : 6), 6), new Proton.Span(0, 360), 'polar'));
+		if(explosion_type == 'ragged')
+			emitter.addBehaviour(new Proton.Alpha(1, 0));
+		if(type == 'water') {
+			emitter.addBehaviour(new Proton.Color('#1010CA', '#1010EE'));
+		}else if(type == 'cold'){
+			emitter.addBehaviour(new Proton.Color('#FFFFEF', '#FFFFEE'));
+		}else if(type == 'arcane'){
+			emitter.addBehaviour(new Proton.Color('#110000', '#440000'));
+		}else if(type == 'life'){
+			emitter.addBehaviour(new Proton.Color('#004400', '#004400'));
+		}else{
+			emitter.addBehaviour(new Proton.Color('#AA0000', '#DDDD00'));
+		}
+		emitter.addBehaviour(new Proton.Scale(Proton.getSpan((explosion_type == 'ragged' ? .3 : 3), 3), 0));
 		
 		emitter.emit('once');
 		
 		this.proton.addEmitter(emitter);		
 	},
-	get_fireball_emitter: function() {
+	get_fireball_emitter: function() {		
 		var emitter = new Proton.Emitter();
 		emitter.rate = new Proton.Rate(new Proton.Span(5, 8), .01);
 		emitter.addInitialize(new Proton.Mass(1));
-		emitter.addInitialize(new Proton.ImageTarget('/static/images/finch/particle.png'));
+		emitter.addInitialize(new Proton.ImageTarget(['/static/images/finch/particle.png'], 32));
 		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(this.$el.get(0).width / 2, this.$el.get(0).height + 20, 1)));		
 		emitter.addInitialize(new Proton.Life(.2, .3));
 		emitter.addInitialize(new Proton.V(new Proton.Span(-2, -3), new Proton.Span(180, 35, true), 'polar'));
 		emitter.addBehaviour(new Proton.Color('#ff0000', '#ffff00'));
+		emitter.addBehaviour(new Proton.Scale(1, .2));
+		emitter.addBehaviour(new Proton.Alpha(1, .2));
+		
+		return emitter;
+	},
+	get_lifeball_emitter: function() {		
+		var emitter = new Proton.Emitter();
+		emitter.rate = new Proton.Rate(new Proton.Span(5, 8), .01);
+		emitter.addInitialize(new Proton.Mass(1));
+		emitter.addInitialize(new Proton.ImageTarget(['/static/images/finch/particle.png'], 32));
+		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(this.$el.get(0).width / 2, this.$el.get(0).height + 20, 1)));		
+		emitter.addInitialize(new Proton.Life(.2, .3));
+		emitter.addInitialize(new Proton.V(new Proton.Span(-2, -3), new Proton.Span(180, 35, true), 'polar'));
+		emitter.addBehaviour(new Proton.Color('#004400', '#004400'));
+		emitter.addBehaviour(new Proton.Scale(1, .2));
+		emitter.addBehaviour(new Proton.Alpha(1, .2));
+		
+		return emitter;
+	},
+	get_frostball_emitter: function() {		
+		var emitter = new Proton.Emitter();
+		emitter.rate = new Proton.Rate(new Proton.Span(5, 8), .01);
+		emitter.addInitialize(new Proton.Mass(1));
+		emitter.addInitialize(new Proton.ImageTarget(['/static/images/finch/particle.png'], 32));
+		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(this.$el.get(0).width / 2, this.$el.get(0).height + 20, 1)));		
+		emitter.addInitialize(new Proton.Life(.2, .3));
+		emitter.addInitialize(new Proton.V(new Proton.Span(-2, -3), new Proton.Span(180, 35, true), 'polar'));
+		emitter.addBehaviour(new Proton.Color('#FFFFEF', '#FFFFEE'));
+		emitter.addBehaviour(new Proton.Scale(1, .2));
+		emitter.addBehaviour(new Proton.Alpha(1, .2));
+		
+		return emitter;
+	},
+	get_deathball_emitter: function() {		
+		var emitter = new Proton.Emitter();
+		emitter.rate = new Proton.Rate(new Proton.Span(5, 8), .01);
+		emitter.addInitialize(new Proton.Mass(1));
+		emitter.addInitialize(new Proton.ImageTarget(['/static/images/finch/particle.png'], 32));
+		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(this.$el.get(0).width / 2, this.$el.get(0).height + 20, 1)));		
+		emitter.addInitialize(new Proton.Life(.2, .3));
+		emitter.addInitialize(new Proton.V(new Proton.Span(-2, -3), new Proton.Span(180, 35, true), 'polar'));
+		emitter.addBehaviour(new Proton.Color('#110000', '#440000'));
+		emitter.addBehaviour(new Proton.Scale(1, .2));
+		emitter.addBehaviour(new Proton.Alpha(1, .2));
+		
+		return emitter;
+	},
+	get_waterball_emitter: function() {		
+		var emitter = new Proton.Emitter();
+		emitter.rate = new Proton.Rate(new Proton.Span(5, 8), .01);
+		emitter.addInitialize(new Proton.Mass(1));
+		emitter.addInitialize(new Proton.ImageTarget(['/static/images/finch/particle.png'], 32));
+		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(this.$el.get(0).width / 2, this.$el.get(0).height + 20, 1)));		
+		emitter.addInitialize(new Proton.Life(.2, .3));
+		emitter.addInitialize(new Proton.V(new Proton.Span(-2, -3), new Proton.Span(180, 35, true), 'polar'));
+		emitter.addBehaviour(new Proton.Color('#1010CA', '#1010EE'));
 		emitter.addBehaviour(new Proton.Scale(1, .2));
 		emitter.addBehaviour(new Proton.Alpha(1, .2));
 		
@@ -1014,7 +1094,7 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 		emitter.addInitialize(new Proton.Mass(1));
 		emitter.addInitialize(new Proton.ImageTarget('/static/images/finch/particle.png'));
 		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(this.$el.get(0).width / 2, this.$el.get(0).height + 20, 10)));
-		emitter.addInitialize(new Proton.Life(.5, 2));
+		emitter.addInitialize(new Proton.Life(2, 2));
 		emitter.addInitialize(new Proton.V(new Proton.Span(3.8, 4), new Proton.Span(0, 25, true), 'polar'));
 		emitter.addBehaviour(new Proton.Color('#FFFFEF', '#FFFFEE'));
 
@@ -1025,18 +1105,17 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 	},
 	get_water_emitter: function() {
 		emitter = new Proton.Emitter();
-		emitter.rate = new Proton.Rate(new Proton.Span(25, 30), .10);
+		emitter.rate = new Proton.Rate(new Proton.Span(25, 30), .05);
 		emitter.addInitialize(new Proton.Mass(1));
-		emitter.addInitialize(new Proton.ImageTarget('/static/images/finch/particle.png'));
-		//emitter.addInitialize(new Proton.InitialColor('#1D1D83'));
+		emitter.addInitialize(new Proton.ImageTarget('/static/images/finch/particle.png'));		
 		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(this.$el.get(0).width / 2, this.$el.get(0).height + 20, 10)));
 		emitter.addInitialize(new Proton.Life(2, 3.2));
-		emitter.addInitialize(new Proton.V(new Proton.Span(5, 5.5), new Proton.Span(0, 20, true), 'polar'));
-		emitter.addBehaviour(new Proton.Color('#0003EE', '#0000CC'));
-		emitter.addBehaviour(new Proton.Gravity(5));
+		emitter.addInitialize(new Proton.V(new Proton.Span(9, 9.5), new Proton.Span(0, 15, true), 'polar'));
+		emitter.addBehaviour(new Proton.Color('#1010CA', '#1010EE'));
+		emitter.addBehaviour(new Proton.Gravity(15));
 		
-		emitter.addBehaviour(new Proton.Scale(2.0, 0));
-		emitter.addBehaviour(new Proton.Alpha(1, 1));
+		emitter.addBehaviour(new Proton.Scale(1, 0));
+		emitter.addBehaviour(new Proton.Alpha(1, .1));
 		
 		return emitter;
 	},
@@ -1215,7 +1294,7 @@ views.ModeSelection = Backbone.View.extend({
 				$countdown.remove();
 			});
 			
-			this.countdown_timer = setTimeout(function() {
+			_this.countdown_timer = setTimeout(function() {
 				if(cnt==1) {
 					if(_this.countdown_timer) callback();
 					$countdown_original.remove();
@@ -1226,7 +1305,7 @@ views.ModeSelection = Backbone.View.extend({
 			
 		};
 		
-		this.countdown_timer = setTimeout(function() { advance_countdown(1); }, 1);
+		this.countdown_timer = setTimeout(function() { advance_countdown(3); }, 1);
 	},
 	
 	set_game_mode_text: function(text) {
@@ -1304,7 +1383,7 @@ views.QueuedElements = Backbone.View.extend({
 	},
 	
 	handle_element_fizzle: function(model, element_index, requested_element) {
-		var $fizzled_element = $(this.$el.find('div').get(element_index));
+		var $fizzled_element = $(this.$el.find('> div').get(element_index+1 /* first element is cast bar */));
 		var $clone = $("<div class='elements'></div>");
 		$clone.append($fizzled_element.clone());
 		$clone.css({
@@ -1319,11 +1398,11 @@ views.QueuedElements = Backbone.View.extend({
 		$clone.animate({
 				top: '-=50',
 				opacity: '0',
-			}, 500, 'linear', function() {
+			}, 500, 'linear', function() {				
 				$(this).remove();
 			});
 		$requested.find('div').attr('class', requested_element + ' fizzling');
-		$requested.appendTo('body').effect('shake', 400, function() {
+		$requested.appendTo('body').effect('shake', 400, function() {			
 			$(this).remove();
 		});
 		
@@ -1571,7 +1650,7 @@ $(function() {
 
 	    Proton.InitialColor = InitialColor;
 	})(Proton);
-	/* end proton custmo code */
+	/* end proton custom code */
 	
 	
 	finch.game.views.mode_selection = new views.ModeSelection();
@@ -1579,7 +1658,6 @@ $(function() {
 	finch.game.views.stats_overview = new views.StatsOverview({ model: finch.game.stats_overview });
 	finch.game.views.stats_overview.render();
 	finch.game.views.mode_selection.show();
-	finch.game.views.battlefield_particle_effects = new views.BattlefieldParticleEffects();
-	finch.game.views.battlefield_line_effects = new views.BattlefieldLineEffects();
-	finch.game.views.mode_selection.start_offensive_game();
+	//finch.game.views.battlefield_particle_effects = new views.BattlefieldParticleEffects();
+	//finch.game.views.battlefield_line_effects = new views.BattlefieldLineEffects();	
 });
