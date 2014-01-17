@@ -1633,26 +1633,6 @@ finch.game.controls = {
 }
 
 $(function() {
-	/* proton custom code */
-	(function(Proton, undefined) {
-	    function InitialColor(color) {
-	            InitialColor._super_.call(this);
-	            this.initial_color = Proton.Util.hexToRGB(color);
-	    }
-
-	    Proton.Util.inherits(InitialColor, Proton.Initialize);
-	    InitialColor.prototype.initialize = function(particle) {
-	    		particle.transform.rgb.r = this.initial_color.r;
-	    		particle.transform.rgb.g = this.initial_color.g;
-	    		particle.transform.rgb.b = this.initial_color.b;
-	            //particle.color = new Proton.ColorSpan(this.initial_color);
-	    };
-
-	    Proton.InitialColor = InitialColor;
-	})(Proton);
-	/* end proton custom code */
-	
-	
 	finch.game.views.mode_selection = new views.ModeSelection();
 	finch.game.stats_overview = new models.StatsOverview();
 	finch.game.views.stats_overview = new views.StatsOverview({ model: finch.game.stats_overview });
@@ -1661,3 +1641,5 @@ $(function() {
 	//finch.game.views.battlefield_particle_effects = new views.BattlefieldParticleEffects();
 	//finch.game.views.battlefield_line_effects = new views.BattlefieldLineEffects();	
 });
+
+window.finch = finch;
