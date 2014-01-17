@@ -1,8 +1,8 @@
-var finch = {}
+window.finch = {}
 /** backbone models **/
 
 /** magicka button combination controls **/
-var models = { controls: {} };
+window.models = { controls: {} };
 
 models.StatsOverview = Backbone.Model.extend({
 	initialize: function() {
@@ -487,7 +487,7 @@ models.ObjectiveHistory = Backbone.Model.extend({
 /** end backbone models **/
 
 /** views **/
-var views = {};
+window.views = {};
 
 views.Opponent = Backbone.View.extend({
 	
@@ -669,8 +669,8 @@ views.Global = Backbone.View.extend({
 		}
 	},
 	handle_oncontextmenu: function(evt) {
-		//if(!finch.game.paused)
-		//	evt.preventDefault();		
+		if(!finch.game.paused)
+			evt.preventDefault();		
 	},
 	handle_resize: function() {
 		this.trigger('smart_resize');
@@ -1642,4 +1642,3 @@ $(function() {
 	//finch.game.views.battlefield_line_effects = new views.BattlefieldLineEffects();	
 });
 
-window.finch = finch;
