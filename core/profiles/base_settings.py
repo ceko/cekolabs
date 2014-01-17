@@ -166,6 +166,13 @@ PIPELINE_CSS = {
         ),
         'output_filename': 'css/finch-trainer/core.css'
     },
+    'particle-effect-builder': {
+        'source_filenames': (
+            'css/webgl/particle-effect-builder.less',
+            'css/spectrum.css',
+        ),
+        'output_filename': 'css/webgl/particle-effect-builder.css'
+    },
 }
 
 PIPELINE_JS = {
@@ -207,6 +214,17 @@ PIPELINE_JS = {
             'js/google-analytics.js'
         ),
         'output_filename': 'js/finch-trainer/core.min.js',
+    },
+    'particle-effect-builder': {
+        'source_filenames': (
+            'js/spectrum.js',
+            'js/jsrender.min.js',
+            'js/underscore.min.js',
+            'js/backbone.min.js',            
+            'js/proton-1.0.0.min.js',
+            'js/webgl/particle-effect-builder.js',            
+        ),
+        'output_filename': 'js/webgl/particle-effect-builder.min.js',
     }
 }
 

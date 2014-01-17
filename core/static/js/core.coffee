@@ -14,7 +14,9 @@ packery_callback = ->
 $(window).load ->
 	$('div.post-teasers').fadeIn()
 	packery_callback()
+	
+	window.exports = window.exports || {}
+	window.exports.prettify_complete = ->
+		packery_callback()
+
 	  
-window.exports = window.exports || {}
-window.exports.prettify_complete = ->
-	packery_callback()

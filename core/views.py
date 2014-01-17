@@ -28,6 +28,9 @@ def ksp_mods(request):
 def error_500(request):
     return HttpResponse('error')
 
+@render_to('misc/particle-effect-builder.html')
+def particle_effect_builder(request):
+    return { }
 
 @render_to('misc/finch.html')
 def finch(request):

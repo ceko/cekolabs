@@ -1,0 +1,94 @@
+{% extends 'masters/main.html' %}
+
+{% load compressed %}
+
+{% block header %}
+	{{ block.super }}
+	{% compressed_css 'particle-effect-builder' %}		
+{% endblock %}
+
+{% block footer %}
+	{{ block.super }}	
+	{% compressed_js 'particle-effect-builder' %}
+{% endblock %}
+
+{% block main_content %}
+	<div id='particle-config'>
+		<div class='option'>
+			<h3>Blending</h3>
+			<div>
+				src 
+				<select id='blending-source'></select> 
+				dst
+				<select id='blending-destination'></select>
+			</div>
+		</div>
+		<div class='option'>
+			<h3>Particle Count</h3>
+			<div>
+				<input type='text' id='count-min' /> - <input type='text' id='count-max' /> every <input type='text' id='spawn-interval' /> seconds 
+			</div>
+		</div>
+		<div class='option'>
+			<h3>Image Target</h3>
+			<div>
+				<input type='text' id='image-target' />  
+			</div>
+		</div>
+		<div class='option'>
+			<h3>Radius</h3>
+			<div>
+				<input type='text'  id='radius-min'/> - <input type='text' id='radius-max' /> 
+			</div>
+		</div>
+		<div class='option'>
+			<h3>Life</h3>
+			<div>
+				<input type='text'  id='life-min'/> - <input type='text' id='life-max' /> seconds 
+			</div>
+		</div>
+		<!-- can be polar or vector, only polar supported for now -->
+		<div class='option'>
+			<h3>Velocity</h3>
+			<div>
+				<input type='text' id='rpan-min'/> - <input type='text' id='rpan-max' /> rpan
+				<input type='text' id='thapan-initial'/> - <input type='text' id='thapan-drift' /> thapan 
+			</div>
+		</div>
+		
+		<div id='color-behavior' class='option behavior'>
+			<input type='checkbox' class='behavior-toggle' /> 
+			<h3>Color</h3>
+			<div>
+				<input type='text' id='color-start' /> - <input type='text' id='color-end' /> 
+			</div>
+		</div>
+		
+		<div id='scale-behavior' class='option behavior'>
+			<input type='checkbox' class='behavior-toggle' /> 
+			<h3>Scale</h3>
+			<div>
+				<input type='text' id='scale-start' /> - <input type='text' id='scale-end' /> 
+			</div>
+		</div>
+		
+		<div id='alpha-behavior' class='option behavior'>
+			<input type='checkbox' class='behavior-toggle' /> 
+			<h3>Alpha</h3>
+			<div>
+				<input type='text' id='alpha-start' /> - <input type='text' id='alpha-end' /> 
+			</div>
+		</div>
+		
+		<div id='gravity-behavior' class='option behavior'>
+			<input type='checkbox' class='behavior-toggle' /> 
+			<h3>Gravity</h3>
+			<div>
+				<input type='text' id='gravity' /> g <input type='text' id='gravity-life' /> life <input type='text' id='gravity-easing' /> easing  
+			</div>
+		</div>
+		
+		<input type='button' id='save-particle-settings' value='Save Settings' />
+	</div>
+	<canvas id='particle-host'></canvas>
+{% endblock %}

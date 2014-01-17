@@ -1,0 +1,32 @@
+body #particle-host {
+  width: 100%;
+  height: 600px;
+  background: #000;
+}
+body #particle-config {
+  margin: 20px 0px;
+}
+body #particle-config .option {
+  padding: 5px;
+}
+body #particle-config .option.behavior .behavior-toggle {
+  width: 30px;
+  text-align: center;
+}
+body #particle-config .option.behavior h3 {
+  width: 110px;
+}
+body #particle-config .option h3 {
+  width: 150px;
+  display: inline-block;
+  font-weight: bold;
+}
+body #particle-config .option > div {
+  display: inline-block;
+}
+body #particle-config .option > div input {
+  width: 50px;
+}
+body #particle-config .option > div #image-target {
+  width: 400px;
+}
