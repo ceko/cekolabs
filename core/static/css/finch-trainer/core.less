@@ -233,8 +233,7 @@ html {
 					
 					#battlefield-particle-effects, #battlefield-line-effects {
 						position:absolute;
-						z-index:15;
-						display:none;
+						z-index:16;						
 					}
 					
 					#opponent-slot {
@@ -263,7 +262,8 @@ html {
 								}							
 							}
 							
-							.shield {							
+							.shield {
+								display:none;							
 								background:url('../../images/finch/dome-shield.png');
 								position:absolute;
 								top:0px;
@@ -271,14 +271,21 @@ html {
 								width:218px;
 								height:218px;
 								z-index:15;
+								&.active {
+									display:block;
+								}
 							}
 							
 							.defensive-wall {
+								display:none;
 								background:url('../../images/finch/rock-wall-down.png');							
 								position:absolute;
 								width:213px;
 								height:75px;
 								top:150px;
+								&.active {
+									display:block;
+								}
 							}
 							
 						}

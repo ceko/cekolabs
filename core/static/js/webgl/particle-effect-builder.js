@@ -39,6 +39,10 @@ var models = {
 			});
 			this.render_loop();
 		},
+		move_active_emitter: function(x, y) {
+			this.active_emitter.p.x = x;
+			this.active_emitter.p.y = y;
+		},
 		set_src_blend: function(blend_mode) {
 			this.set('src_blend', blend_mode);
 			this.get('renderer').blendFunc(blend_mode, this.get('dst_blend'));
@@ -52,6 +56,7 @@ var models = {
 			requestAnimationFrame(this.render_loop.bind(this));
 		},
 		add_emitter: function(emitter) {
+			this.active_emitter = emitter;
 			var emitters = this.get('emitters');
 			emitters.push(emitter);
 			
@@ -164,6 +169,10 @@ var models = {
 			
 			//make configurable
 			emitter.addInitialize(new Proton.Mass(1));
+			emitter.addBehaviour(new Proton.Repulsion({
+				x: particle_tester.views.renderer.$el.get(0).width / 2,
+				y: 100,
+			}, 20, 100));
 			//emitter.addBehaviour(new Proton.Color('random', 'random', Infinity, Proton.easeInSine));
 			//emitter.addInitialize(new Proton.ImageTarget('/static/images/finch/particle.png'));						
 		}
@@ -176,7 +185,22 @@ var views = {
 		el: $('#particle-host'),
 		initialize: function() {
 			this.$el.get(0).width = this.$el.innerWidth();
-			this.$el.get(0).height = this.$el.innerHeight();			
+			this.$el.get(0).height = this.$el.innerHeight();
+			this.$el.mousedown(this.handle_mousedown.bind(this));
+			this.$el.mouseup(this.handle_mouseup.bind(this));
+			this.$el.mousemove(this.handle_mousemove.bind(this));
+		},
+		handle_mousemove: function(event) {
+			if(this.mousedown)
+				particle_tester.models.renderer.move_active_emitter(event.offsetX, event.offsetY);
+		},
+		handle_mousedown: function() {
+			this.mousedown = true;
+			console.log('mousedown');
+		},
+		handle_mouseup: function() {
+			this.mousedown = false;
+			console.log('mouseup');
 		}
 	}),
 	ParticleSettings: Backbone.View.extend({

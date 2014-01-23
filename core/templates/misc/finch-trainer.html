@@ -58,7 +58,7 @@
 									<div class='image'></div>									
 								</div>
 							</div>
-							<div class='mode' style='display:none;'>
+							<div class='mode'>
 								<div class='mode-inner offensive-mode'>
 									<h3>Break enemy defenses</h3>
 									<div class='image'></div>																	
@@ -148,13 +148,9 @@
 				<div class='ward-group'>
 					<div class='outer-ward'><div class='{{: model.get('outer_ward') }}'></div></div>
 					<div class='inner-ward'><div class='{{: model.get('inner_ward') }}'></div></div>
-				</div>	
-				{{if model.get('shield_active')}}
-					<div class='shield'></div>
-				{{/if}}
-				{{if model.get('wall_active')}}
-					<div class='defensive-wall'></div>
-				{{/if}}				
+				</div>
+				<div class='shield {{if model.get('shield_active')}}active{{/if}}'></div>								
+				<div class='defensive-wall {{if model.get('wall_active')}}active{{/if}}'></div>				
 			</div>
 		</script>
 		
