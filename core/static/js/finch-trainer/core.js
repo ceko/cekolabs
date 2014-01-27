@@ -65,6 +65,7 @@ models.controls.Elements = Backbone.Model.extend({
 			queued_elements: [],	
 			pressed_elements: [],
 			casting_power: 0,
+			casting: false,
 		});
 		this.keybindings = {
 			'q': 'water',
@@ -107,6 +108,7 @@ models.controls.Elements = Backbone.Model.extend({
 		if(includes) {
 			elements = includes.slice(0);
 		}
+		
 		while(elements.length < 3) {
 			var keybinding_index = Math.floor(Math.random()*8);
 			var cnt = 0;
@@ -168,25 +170,20 @@ models.controls.Elements = Backbone.Model.extend({
 		if(!this.show_cast_bar)
 			return;
 		
-		if(this.get('queued_elements').length) {
-			var combo_parser = this.get_combo_parser();
-			if(combo_parser.is_instant_cast()) 
-				console.log('instant cast');		
-			if(combo_parser.is_channeled())
-				console.log('channeled');
-			if(combo_parser.is_charged())
-				console.log('charged');
+		if(this.get('queued_elements').length) {			
+			var combo_parser = this.get_combo_parser();		
 			combo_parser.determine_spell_type();
-			console.log('spell type: ' + combo_parser.get('spell_type'));
+			
 			this.trigger('cast_start');
 			if(this.combo_is_instant_cast()) {
-				console.log('instant cast');
+				console.log('instant cast - DO SOMETHING');
 				return;
 			}
-				
+			
 			var _this = this;
 			
 			var casting_interval_function = function() {
+				_this.set('casting', true);
 				if(_this.combo_is_channeled()) {
 					_this.trigger('spell_channeling');
 					console.log('channeling');
@@ -196,7 +193,7 @@ models.controls.Elements = Backbone.Model.extend({
 					_this.set('casting_power', 0);
 					return;
 				}
-				_this.set('casting_power', _this.get('casting_power')+10);			
+				_this.set('casting_power', _this.get('casting_power')+combo_parser.get_power_interval());			
 			};
 			
 			if(this.combo_is_channeled() || this.combo_is_charged()) {
@@ -222,6 +219,7 @@ models.controls.Elements = Backbone.Model.extend({
 		this.stop_casting();		
 	},
 	stop_casting: function() {		
+		this.set('casting', false);		
 		this.trigger('cast_stop');
 		this.set('casting_power', 0);
 		this.casting_interval = clearInterval(this.casting_interval);
@@ -325,6 +323,13 @@ models.ComboParser = Backbone.Model.extend({
 	set_cast_target: function(target) {
 		this.set('cast_target', target);
 	},
+	get_power_interval: function() {
+		var interval = 10;
+		if(this.get_spell_type() == 'LIGHTNING')
+			interval = 20;
+		
+		return interval;
+	},
 	get_spell_type: function() {
 		if(!this.get('spell_type')) {
 			this.determine_spell_type();
@@ -409,20 +414,94 @@ models.ComboParser = Backbone.Model.extend({
 
 models.Opponent = Backbone.Model.extend({
 	ai_timeout: null,
+	wall_expire_timeout: null,
+	shield_expire_timeout: null,
+	cast_timeout: null,
+	spell_gap: 1500,
+	last_spell_cast: 0,
 	initialize: function() {
 		this.set({
 			'outer_ward': null,
 			'inner_ward': null,
 			'shield_active': false,
-			'wall_active': false
+			'wall_active': false,
+			'casting': false,
 		});		
 	},
-	ai_step: function() {		
-		this.set_starting_wards();
-		this.set('shield_active', !this.get('shield_active'));
-		this.set('wall_active', !this.get('wall_active'));
-		
-		this.ai_timeout = setTimeout(this.ai_step.bind(this), 1000);		
+	ai_step: function() {
+		var time = (new Date()).getTime();
+		if(time - this.last_spell_cast > this.spell_gap) {			
+			//what is user casting
+			
+			/*set wards based on conditions:
+			 *  - what's being cast
+			 *  - what's status of the character (frozen, wet, fire)
+			 */
+			
+			var elements = finch.game.controls.elements.get('queued_elements');
+			var casting = finch.game.controls.elements.get('casting');
+			var combo_parser = finch.game.controls.elements.get_combo_parser();
+			
+			var spell = null;
+			var _this = this;
+			
+			if(casting) {
+				switch(combo_parser.get_spell_type()) {
+					case 'SPRAY':
+					case 'BEAM':
+						if(!this.get('shield_active'))
+							spell = this.cast_shield;
+						
+						break;
+					case 'ROCK_PROJECTILE':
+					case 'LIGHTNING':
+						if(!this.get('wall_active'))
+							spell = this.cast_wall;
+						break;
+				}
+				
+				if(!spell) {
+					//change wards based on what's cast
+					var random_ward_elements = finch.game.controls.elements.get_random_elements(includes=elements, excludes=['life', 'shield']);
+					
+					if(random_ward_elements.length == 3) {
+						spell = function() { this.set_wards(random_ward_elements[1], random_ward_elements[2]) };					
+					}
+				}
+			}
+			
+			if(spell && !this.cast_timeout) {
+				this.last_spell_cast = time;
+				this.set('casting', true);
+				var _this = this;
+				this.cast_timeout = setTimeout(function() { 
+					spell.call(_this);
+					_this.cast_timeout = clearTimeout(_this.cast_timeout);
+					_this.set('casting', false);
+				}, 1000);			
+			}	
+		}
+		this.ai_timeout = setTimeout(this.ai_step.bind(this), 300);		
+	},
+	cast_shield: function() {
+		var _this = this;
+		this.set('shield_active', true);
+		this.shield_expire_timeout = setTimeout(function() {
+			_this.set('shield_active', false);
+		}, 5000);
+	},
+	cast_wall: function() {
+		this.set('wall_active', true);
+		var _this = this;
+		this.wall_expire_timeout = setTimeout(function() {
+			_this.set('wall_active', false);
+		}, 5000);
+	},
+	set_wards: function(inner_ward, outer_ward) {
+		this.set({
+			'inner_ward': inner_ward,
+			'outer_ward': outer_ward
+		});
 	},
 	set_starting_wards: function() {
 		var random_ward_elements = finch.game.controls.elements.get_random_elements(includes=['shield'], excludes=['life']);
@@ -434,10 +513,7 @@ models.Opponent = Backbone.Model.extend({
 	},
 	skynet_enabled: function() {
 		this.set_starting_wards();
-		if(!this.ai_timeout) this.ai_timeout = setTimeout(this.ai_step.bind(this), 1000);
-		
-		this.set('shield_active', true);
-		this.set('wall_active', true);
+		if(!this.ai_timeout) this.ai_timeout = setTimeout(this.ai_step.bind(this), 1000);				
 	}
 });
 
@@ -504,6 +580,18 @@ views.Opponent = Backbone.View.extend({
 		this.model.on('change:inner_ward', this.handle_ward_change.bind(this));
 		this.model.on('change:shield_active', this.handle_shield_change.bind(this));
 		this.model.on('change:wall_active', this.handle_wall_change.bind(this));
+		this.model.on('change:casting', this.handle_casting_change.bind(this));
+	},
+	handle_casting_change: function() {
+		var casting = this.model.get('casting');
+		this.$el.find('.cast-bar .inner').stop().css({'width': '0%'});
+		
+		if(casting) {
+			this.$el.find('.cast-bar .inner')				
+				.animate({
+					width: '100%'
+				}, 1000);
+		}
 	},
 	handle_ward_change: function() {
 		this.$el.find('.outer-ward > div').get(0).className = this.model.get('outer_ward');
@@ -803,7 +891,7 @@ views.BattlefieldLineEffects = Backbone.View.extend({
 		
 		var end = {
 			x: this.$el.get(0).width / 2,
-			y: 180
+			y: finch.game.opponent.get("wall_active") ? 260 : 180
 		};
 		
 		var variable_points = [];
@@ -947,6 +1035,12 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 				var emitter = this.get_lightning_endpoint_emitter();
 				var render_spark = function() {
 					if(emitter.alive) {
+						if(finch.game.opponent.get("wall_active")) {
+							emitter.p.y = -150;							
+						}else{
+							emitter.p.y = -230;
+						}
+							
 						emitter.emit('once');					
 						emitter.timeout = setTimeout(render_spark, 300);
 					}
@@ -954,7 +1048,11 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 				emitter.alive = true;
 				render_spark();
 				this.proton.addEmitter(emitter);
-				emitter.p.y = -230;
+				if(finch.game.opponent.get("wall_active")) {
+					emitter.p.y = -150;							
+				}else{
+					emitter.p.y = -230;
+				}
 				this.cancel_on_stopcast(emitter);
 		}
 	},
@@ -1007,6 +1105,8 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 				
 				collision_emitter = emitter;
 				collision_emitter_bounds = -300; /* i think this is relative from where the emitter starts */
+				if(finch.game.opponent.get("wall_active"))
+					collision_emitter_bounds = -200;
 				emitter.emit();				
 				emitter_movespeed = Math.max(1.5*(Math.log(cast_power / 10) * Math.log(cast_power / 10)) / 5.3 /* log(10) * log(10) */, .2);
 				emitter_life = 350 * emitter_movespeed;
