@@ -185,6 +185,7 @@ models.controls.Elements = Backbone.Model.extend({
 			var casting_interval_function = function() {
 				_this.set('casting', true);
 				if(_this.combo_is_channeled()) {
+					_this.spell_landed(combo_parser, null, _this.get('casting_power'));					
 					_this.trigger('spell_channeling');
 					console.log('channeling');
 				}
@@ -217,6 +218,75 @@ models.controls.Elements = Backbone.Model.extend({
 		if(!this.show_cast_bar)
 			return;		
 		this.stop_casting();		
+	},
+	spell_landed: function(combo_parser, y, cast_power) {
+		//this is called when a spell may hit the opponent.  sometimes the view
+		//is responsible for calling this method.  the reason why i use the view
+		//is because certain things (like projectiles) have variable travel time and it can be 
+		//difficult to calculate that in the model.  for most spells though i can
+		//skip a tick and then calculate damage (like fire)
+		
+		//this will be greater than 0 if the spell damages rock walls.  if it is called it
+		var rock_health_subtractor = 0;
+		
+		/* This is an array of damage, looks like so:
+		 *
+		 * [0] => { element: fire, damage: 50, aoe: true, missed: false }
+		 * [1] => { element: earth, damage: 20, aoe: false, missed: true }
+		 * [2] => { element: arcane, damage: 35, aoe: true, missed: false }
+		 * 
+		 */
+		 		
+		var damage_components = combo_parser.get_damage_components(cast_power);
+		var projectile_limit = 110;
+		var aoe_limit = 210;
+		var spell_blocked = false;
+		var power_lower_limit = 0; /* anything under this power will not register damage */
+				
+		switch(combo_parser.get_spell_type()) {		
+			case 'ROCK_PROJECTILE':
+				rock_health_subtractor = 2;
+				spell_blocked = finch.game.opponent.get("wall_active");
+				break;
+			case 'SPRAY':
+				power_lower_limit = 30;
+				rock_health_subtractor = .5;
+				spell_blocked = finch.game.opponent.get("wall_active") || finch.game.opponent.get("shield_active");
+				break;
+			case 'ICE_SHARDS':				
+				rock_health_subtractor = 2;
+				spell_blocked = finch.game.opponent.get("wall_active");
+				aoe_limit = 110;
+				break;
+			case 'BEAM':
+				power_lower_limit = 30;
+				rock_health_subtractor = 1;
+				spell_blocked = finch.game.opponent.get("wall_active") || finch.game.opponent.get("shield_active");
+				break;
+			case 'LIGHTNING':
+				rock_health_subtractor = .8;
+				spell_blocked = finch.game.opponent.get("wall_active");
+				break;				
+		}
+		
+		if(cast_power >= power_lower_limit) {		
+			if(!y || y < 220 && y > 150)
+				finch.game.opponent.hurt_wall(rock_health_subtractor);
+			
+			if(!spell_blocked) {		
+				if(y) {
+					for(i=0;i<damage_components.length;i++) {			
+						if(y > projectile_limit && !damage_components[i].aoe) { //didn't hit the player, remove any non-aoe damage					
+							damage_components[i].missed = true;					
+						}else if(y > aoe_limit && damage_components[i].aoe) { //out of aoe range					
+							damage_components[i].missed = true;					
+						}
+					}
+				}
+				
+				finch.game.opponent.register_damage(damage_components, combo_parser);
+			}
+		}
 	},
 	stop_casting: function() {		
 		this.set('casting', false);		
@@ -336,6 +406,81 @@ models.ComboParser = Backbone.Model.extend({
 		}
 		return this.get('spell_type');
 	},
+	contains_steam: function() {
+		var elements = this.get('element');
+		return $.inArray('water', elements) != -1 && $.inArray('fire', elements) != -1;
+	},
+	contains_ice: function() {
+		var elements = this.get('element');
+		return $.inArray('water', elements) != -1 && $.inArray('cold', elements) != -1;
+	},
+	get_status_application_speed: function() {
+		switch(this.get_spell_type()) {
+			case 'ROCK_PROJECTILE':
+				return 2;				
+			case 'SPRAY':
+				return .2;				
+			case 'ICE_SHARDS':
+				return 0;
+			case 'BEAM':
+				return .2;
+			case 'LIGHTNING':
+				return .4;			 
+			default:
+				return 1;
+		}
+	},
+	get_damage_components: function(power) {
+		if(!power)
+			power = 100;
+				
+		var components = [];
+		var elements = this.get('elements');
+		var base_damage_table = {
+			'water': 0,
+			'life': -30,
+			'shield': 0,
+			'cold': 20,
+			'lightning': 30,
+			'arcane': 20,
+			'earth': 40,
+			'fire': 20	
+		};
+		
+		for(i=0;i<elements.length;i++) {
+			var element = elements[i];
+			var base_damage = base_damage_table[element];
+			var total_damage = 0;
+			var aoe = false;
+			
+			switch(this.get_spell_type()) {
+				case 'ROCK_PROJECTILE':
+					aoe = element != 'earth';
+					total_damage = base_damage * power / 100;
+					break;
+				case 'SPRAY':
+					total_damage = base_damage;
+					break;
+				case 'ICE_SHARDS':
+					aoe = false;
+					total_damage = base_damage * power / 100;
+					break;
+				case 'BEAM':
+					total_damage = base_damage;
+					break;
+				case 'LIGHTNING':
+					total_damage = base_damage;
+					break;			 
+				default:
+					total_damage = base_damage * power / 100;
+					break;
+			}
+			
+			components.push({ element: element, damage: total_damage, aoe: aoe, missed: false });
+		}
+		
+		return components;
+	},
 	determine_spell_type: function() {
 		var elements = this.get('elements');
 		var spell_type = 'UNKNOWN';
@@ -416,8 +561,12 @@ models.Opponent = Backbone.Model.extend({
 	ai_timeout: null,
 	wall_expire_timeout: null,
 	shield_expire_timeout: null,
+	fire_expire_timeout: null,
+	fire_damage_timeout: null,
+	wet_expire_timeout: null,
+	frozen_expire_timeout: null,
 	cast_timeout: null,
-	spell_gap: 1500,
+	spell_gap: 1700,
 	last_spell_cast: 0,
 	initialize: function() {
 		this.set({
@@ -426,7 +575,17 @@ models.Opponent = Backbone.Model.extend({
 			'shield_active': false,
 			'wall_active': false,
 			'casting': false,
-		});		
+			'wet': false,
+			'frozen_level': 0,
+			'on_fire': false,
+		});
+		var _this = this;
+		this.on('change:wall_active', function() {
+			_this.wall_expire_timeout = clearTimeout(_this.wall_expire_timeout);
+		});
+		this.on('change:shield_active', function() {
+			_this.shield_expire_timeout = clearTimeout(_this.shield_expire_timeout);
+		});
 	},
 	ai_step: function() {
 		var time = (new Date()).getTime();
@@ -436,6 +595,8 @@ models.Opponent = Backbone.Model.extend({
 			/*set wards based on conditions:
 			 *  - what's being cast
 			 *  - what's status of the character (frozen, wet, fire)
+			 *  - what's the health of the character 
+			 *  - nothing happening?  change ward, cast wall, heal a bit
 			 */
 			
 			var elements = finch.game.controls.elements.get('queued_elements');
@@ -483,14 +644,21 @@ models.Opponent = Backbone.Model.extend({
 		}
 		this.ai_timeout = setTimeout(this.ai_step.bind(this), 300);		
 	},
-	cast_shield: function() {
+	cast_shield: function() {				
 		var _this = this;
 		this.set('shield_active', true);
 		this.shield_expire_timeout = setTimeout(function() {
 			_this.set('shield_active', false);
 		}, 5000);
 	},
-	cast_wall: function() {
+	hurt_wall: function(amount) {
+		this.wall_health -= amount;
+		if(this.wall_health <= 0) {
+			this.set('wall_active', false);
+		}
+	},
+	cast_wall: function() {		
+		this.wall_health = 2;
 		this.set('wall_active', true);
 		var _this = this;
 		this.wall_expire_timeout = setTimeout(function() {
@@ -510,6 +678,90 @@ models.Opponent = Backbone.Model.extend({
 			'inner_ward': random_ward_elements[2]
 		});
 		
+	},
+	register_damage: function(damage_components, combo_parser) {
+		
+		var status_application_func = null;		
+		var physical_damage = 0;
+		var total_damage = 0;
+		
+		for(i=0;i<damage_components.length;i++) {
+			var component = damage_components[i];
+			if(!component.missed) {
+				switch(component.element) {
+					/*
+					 * water : apply wet, remove fire
+					 * life : nothing
+					 * shield : nothing
+					 * cold : apply frost
+					 * lightning : check for wet, remove, double damage
+					 * arcane: nothing
+					 * earth: shatter if frozen
+					 * fire: remove water, remove frozen, apply fire
+					 */
+			
+					case 'water':
+						if(!combo_parser.contains_steam() && !combo_parser.contains_ice())
+							status_application_func = this.apply_wet_status;
+						break;
+					case 'cold':
+						if(!combo_parser.contains_ice())
+							status_application_func = this.apply_cold_status;
+						break;
+					case 'lightning':
+						if(this.get('wet'))
+							component.damage = component.damage * 2;
+						break;
+					case 'earth':
+						physical_damage += component.damage;
+						break;
+					case 'fire':
+						if(!combo_parser.contains_steam())
+							status_application_func = this.apply_fire_status;
+						break;					
+				}
+				
+				total_damage += component.damage;
+			}
+		}
+		
+		console.log('total damage: ' + total_damage);
+		
+		if(status_application_func)
+			status_application_func.call(this, combo_parser.get_status_application_speed());
+	},
+	apply_wet_status: function(status_application_speed) {
+		/* i don't care for water about application speed */
+		if(this.get('on_fire')) {
+			this.set('on_fire', false);		
+		}else{
+			this.set('wet', true);
+		}
+	},
+	is_frozen: function() {
+		return this.get('frozen_level') >= 5;
+	},
+	apply_cold_status: function(status_application_speed) {
+		if(this.get('wet'))
+			status_application_speed = status_application_speed * 2;
+		
+		if(!this.is_frozen()) {
+			if(this.get('on_fire')) {
+				this.set('on_fire', false);
+			}else{
+				var frozen_level = Math.min(5, this.get('frozen_level') + status_application_speed);
+				this.set('frozen_level', frozen_level);
+			}
+		}
+	},
+	apply_fire_status: function(status_application_speed) {
+		if(this.is_frozen()) {
+			this.set('frozen_level', 0);			
+		}else if(this.get('wet')) {
+			this.set('wet', false);
+		}else{
+			this.set('on_fire', true);
+		}
 	},
 	skynet_enabled: function() {
 		this.set_starting_wards();
@@ -581,6 +833,10 @@ views.Opponent = Backbone.View.extend({
 		this.model.on('change:shield_active', this.handle_shield_change.bind(this));
 		this.model.on('change:wall_active', this.handle_wall_change.bind(this));
 		this.model.on('change:casting', this.handle_casting_change.bind(this));
+		
+		this.model.on('change:wet', this.handle_wet_change.bind(this));
+		this.model.on('change:frozen_level', this.handle_frozen_level_change.bind(this));
+		this.model.on('change:on_fire', this.handle_on_fire_change.bind(this));
 	},
 	handle_casting_change: function() {
 		var casting = this.model.get('casting');
@@ -598,17 +854,32 @@ views.Opponent = Backbone.View.extend({
 		this.$el.find('.inner-ward > div').get(0).className = this.model.get('inner_ward');
 	},
 	handle_shield_change: function() {
-		finch.game.views.battlefield_particle_effects.handle_shield_change(this.model.get('shield_active'));
+		finch.game.views.battlefield_particle_effects.handle_shield_change(this.model.get('shield_active'));		
 		if(this.model.get('shield_active'))
 			this.$el.find('.shield').addClass('active');
 		else
 			this.$el.find('.shield').removeClass('active');
 	},
 	handle_wall_change: function() {
+		finch.game.views.battlefield_particle_effects.handle_wall_change(this.model.get('wall_active'));		
 		if(this.model.get('wall_active'))
-			this.$el.find('.defensive-wall').addClass('active');
+			this.$el.find('.defensive-wall').addClass('active').show();
 		else
-			this.$el.find('.defensive-wall').removeClass('active');
+			this.$el.find('.defensive-wall').fadeOut('fast', function() {
+				$(this).removeClass('active').css('display', 'auto');
+			});
+	},
+	handle_wet_change: function() {
+		var wet = this.model.get('wet');
+		console.log('wet: ' + wet);
+	},
+	handle_frozen_level_change: function() {
+		var frozen_level = this.model.get('frozen_level');
+		console.log('frozen_level: ' + frozen_level);
+	},
+	handle_on_fire_change: function() {
+		var on_fire = this.model.get('on_fire');
+		console.log('on_fire: ' + on_fire);
 	},
 	render: function() {
 		this.$el.html($("#opponent-template").render({ model: this.model }));
@@ -854,7 +1125,7 @@ views.BattlefieldLineEffects = Backbone.View.extend({
 		
 		var end = {
 			x: this.$el.get(0).width / 2,
-			y: 180
+			y: finch.game.opponent.get("wall_active") || finch.game.opponent.get("shield_active") ? 260 : 180
 		};
 		
 		var draw_multipoint_line = function(points, context) {
@@ -969,33 +1240,67 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 		this.proton = new Proton();
 		var renderer =  new Proton.Renderer('webgl', this.proton, canvas);		
 		renderer.blendFunc("SRC_ALPHA_SATURATE", "ONE");	
-		//renderer.blendEquation('FUNC_SUBTRACT');
+
 		renderer.start();
 		this.renderer = renderer;
 		
 		requestAnimationFrame(this.render_loop.bind(this));
 		finch.game.controls.elements.on('cast_start', this.handle_cast_start.bind(this));
 		finch.game.controls.elements.on('cast_stop', this.handle_cast_stop.bind(this));
-		this.repulsion_behavior = new Proton.Repulsion({
+		this.shield_repulsion_behavior = new Proton.Repulsion({
 			x: this.$el.get(0).width / 2,
 			y: 250,
+		}, 10, 90);
+		this.wall_repulsion_behavior = new Proton.Repulsion({
+			x: this.$el.get(0).width / 2,
+			y: 300,
 		}, 10, 90);
 	},
 	cancel_on_stopcast: function(emitter) {
 		this.emitters_queued_to_cancel.push(emitter);
 	},
-	handle_shield_change: function(shield_active) {
+	handle_wall_change: function(wall_active) {
+		for(i=0;i<this.emitters_affected_by_shield.length;/*same group of emitters*/i++) {
+			if(!this.emitters_affected_by_shield[i].alive)
+				continue;
+			
+			try {
+				if(wall_active) {
+					this.emitters_affected_by_shield[i].addBehaviour(this.wall_repulsion_behavior);
+					for(j=0;j<this.emitters_affected_by_shield[i].particles.length;j++) {
+						this.emitters_affected_by_shield[i].particles[j].addBehaviour(this.wall_repulsion_behavior);
+					}
+				}else{
+					this.emitters_affected_by_shield[i].removeBehaviour(this.wall_repulsion_behavior);
+					for(j=0;j<this.emitters_affected_by_shield[i].particles.length;j++) {
+						this.emitters_affected_by_shield[i].particles[j].removeBehaviour(this.wall_repulsion_behavior);
+					}
+				}
+			}catch(exc) {
+				console.log(exc);
+				//who cares, this is because some emitters are stale, they should be removed but i don't care if this gets hit
+			}
+		}
+	},
+	handle_shield_change: function(shield_active) {		
 		for(i=0;i<this.emitters_affected_by_shield.length;i++) {
-			if(shield_active) {
-				this.emitters_affected_by_shield[i].addBehaviour(this.repulsion_behavior);
-				for(j=0;j<this.emitters_affected_by_shield[i].particles.length;j++) {
-					this.emitters_affected_by_shield[i].particles[j].addBehaviour(this.repulsion_behavior);
+			if(!this.emitters_affected_by_shield[i].alive)
+				continue;
+			
+			try {
+				if(shield_active) {
+					this.emitters_affected_by_shield[i].addBehaviour(this.shield_repulsion_behavior);
+					for(j=0;j<this.emitters_affected_by_shield[i].particles.length;j++) {
+						this.emitters_affected_by_shield[i].particles[j].addBehaviour(this.shield_repulsion_behavior);
+					}
+				}else{
+					this.emitters_affected_by_shield[i].removeBehaviour(this.shield_repulsion_behavior);
+					for(j=0;j<this.emitters_affected_by_shield[i].particles.length;j++) {
+						this.emitters_affected_by_shield[i].particles[j].removeBehaviour(this.shield_repulsion_behavior);
+					}
 				}
-			}else{
-				this.emitters_affected_by_shield[i].removeBehaviour(this.repulsion_behavior);
-				for(j=0;j<this.emitters_affected_by_shield[i].particles.length;j++) {
-					this.emitters_affected_by_shield[i].particles[j].removeBehaviour(this.repulsion_behavior);
-				}
+			}catch(exc) {
+				//who cares, this is because some emitters are stale, they should be removed but i don't care if this gets hit
 			}
 		}
 	},
@@ -1016,8 +1321,11 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 				}
 				
 				emitter.emit();
+				emitter.alive = true;
 				if(finch.game.opponent.get('shield_active'))
-					emitter.addBehaviour(this.repulsion_behavior);
+					emitter.addBehaviour(this.shield_repulsion_behavior);
+				if(finch.game.opponent.get('wall_active'))
+					emitter.addBehaviour(this.wall_repulsion_behavior);
 				this.proton.addEmitter(emitter);
 				this.cancel_on_stopcast(emitter);
 				this.emitters_affected_by_shield.push(emitter);
@@ -1027,10 +1335,24 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 				if($.inArray('arcane', elements) !== -1)
 					type = 'arcane';
 				var emitter = this.get_beam_endpoint_emitter(type);
-				this.proton.addEmitter(emitter);
+				this.proton.addEmitter(emitter);				
 				emitter.p.y = -250; 
+				var render_spark = function() {
+					if(emitter.alive) {
+						if(finch.game.opponent.get("wall_active") || finch.game.opponent.get("shield_active")) {
+							emitter.p.y = -170;							
+						}else{
+							emitter.p.y = -250;
+						}
+											
+						emitter.timeout = setTimeout(render_spark, 300);
+					}
+				};
+				emitter.alive = true;
+				render_spark();
 				emitter.emit();
 				this.cancel_on_stopcast(emitter);
+				break;
 			case 'LIGHTNING':
 				var emitter = this.get_lightning_endpoint_emitter();
 				var render_spark = function() {
@@ -1054,6 +1376,7 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 					emitter.p.y = -230;
 				}
 				this.cancel_on_stopcast(emitter);
+				break;
 		}
 	},
 	handle_cast_stop: function() {
@@ -1067,15 +1390,21 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 		var elements = finch.game.controls.elements.get('queued_elements');
 		var collision_emitter_bounds = null;
 		var collision_callback = null;
-		var emitter_movespeed = 0;
-		var emitter_life = 0;
+		
 		var cast_power = finch.game.controls.elements.get('casting_power');
-		console.log(cast_power);
+		var emitter_movespeed = Math.max(1.5*(Math.log(cast_power / 10) * Math.log(cast_power / 10)) / 5.3 /* log(10) * log(10) */, .2);
+		var emitter_life = 350 * emitter_movespeed;
+		
 		switch(combo_parser.get_spell_type()) {
 			case 'ICE_SHARDS':
 				var draws = 0;
+				var shard_collision_callback = (function(emitter) {
+					console.log('explosivo (shard)');
+					finch.game.controls.elements.spell_landed(combo_parser, this.$el.get(0).height + emitter.p.y, cast_power);
+				}).bind(this);
+				
 				for(i=0;i<3;i++) {
-					var emitter = this.get_shard_emitter();
+					var emitter = this.get_shard_emitter(emitter_movespeed, emitter_life, shard_collision_callback);					
 					emitter.emit(1,2);					
 					this.proton.addEmitter(emitter);
 				}
@@ -1102,17 +1431,17 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 					emitter = this.get_rockball_emitter();	
 					explosion_type = 'rock';
 				}
-				
-				collision_emitter = emitter;
-				collision_emitter_bounds = -300; /* i think this is relative from where the emitter starts */
-				if(finch.game.opponent.get("wall_active"))
-					collision_emitter_bounds = -200;
+								
+				collision_emitter = emitter;				
 				emitter.emit();				
-				emitter_movespeed = Math.max(1.5*(Math.log(cast_power / 10) * Math.log(cast_power / 10)) / 5.3 /* log(10) * log(10) */, .2);
-				emitter_life = 350 * emitter_movespeed;
-				console.log(emitter_movespeed);
+				collision_emitter_bounds = -300;
+				
 				this.proton.addEmitter(emitter);				
-				collision_callback = (function() { this.render_explosion_at('center', this.$el.get(0).height + emitter.p.y, explosion_type); }).bind(this);
+				collision_callback = (function(emitter) { 
+					this.render_explosion_at('center', this.$el.get(0).height + emitter.p.y, explosion_type);
+					console.log('explosivo (ball)');
+					finch.game.controls.elements.spell_landed(combo_parser, this.$el.get(0).height + emitter.p.y, cast_power);
+				}).bind(this);
 				
 				var show_rock = function() {
 					finch.game.views.battlefield_line_effects.queue_canvas_clear();
@@ -1123,8 +1452,9 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 					}
 				}
 				show_rock();
+				break;
 		}
-		
+				
 		if(collision_emitter_bounds && emitter_movespeed) {
 			var last_timestamp = null
 			var first_timestamp = null;
@@ -1133,10 +1463,14 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 					if(last_timestamp) {										
 						emitter.p.y = emitter.p.y - (timestamp - last_timestamp)*emitter_movespeed;					
 					}
+					collision_emitter_bounds = -300; /* i think this is relative from where the emitter starts */
+					if(finch.game.opponent.get("wall_active"))
+						collision_emitter_bounds = -200;
+					
 					if(emitter.p.y <= collision_emitter_bounds || timestamp - first_timestamp > emitter_life) {
 						emitter.stopEmit();						
 						if(collision_callback) {
-							collision_callback();
+							collision_callback(emitter);
 						}
 						return;
 					}					
@@ -1160,7 +1494,11 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 			explosion_type = 'uniform';
 		
 		var emitter = new Proton.Emitter();
-		emitter.rate = new Proton.Rate(new Proton.Span(60, 75), .2);
+		if(type == 'shard') {
+			emitter.rate = new Proton.Rate(new Proton.Span(10, 25), .2);
+		}else{
+			emitter.rate = new Proton.Rate(new Proton.Span(60, 75), .2);
+		}
 		emitter.addInitialize(new Proton.Mass(1));
 		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(x, y+50, 1)));		
 		emitter.addInitialize(new Proton.Life((explosion_type == 'ragged' ? .2 : .3), (explosion_type == 'ragged' ? 1 : .3)));
@@ -1171,7 +1509,7 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 			emitter.addBehaviour(new Proton.Alpha(.75, .3));
 		if(type == 'water') {
 			emitter.addBehaviour(new Proton.Color('#005dac', '#FFFFEE'));
-		}else if(type == 'cold'){
+		}else if(type == 'cold' || type == 'shard'){
 			emitter.addBehaviour(new Proton.Color('#FFFFEF', '#FFFFEE'));
 		}else if(type == 'arcane'){
 			emitter.addBehaviour(new Proton.Color('#8e1616', '#FFFFEE'));
@@ -1297,7 +1635,7 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 		
 		return emitter;
 	},
-	get_shard_emitter: function() {		
+	get_shard_emitter: function(speed, life, collision_callback) {		
 		var emitter = new Proton.Emitter();
 		emitter.rate = new Proton.Rate(new Proton.Span(5, 10), .01);
 		emitter.addInitialize(new Proton.Mass(1));
@@ -1311,9 +1649,23 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 		
 		var drift = (Math.floor(Math.random()*8)+1) - 4;
 		var last_timestamp = null
+		var start = null;
+		var _this = this;
 		var move_emitter = function(timestamp) {
+			if(!start && timestamp) start = timestamp;
+			var collision_point = -300;
+			if(finch.game.opponent.get("wall_active")) {
+				collision_point = -200;
+			}			
+			if(emitter.p.y < collision_point || (timestamp && (timestamp - start > life))) {
+				emitter.stopEmit();
+				collision_callback(emitter);
+				_this.render_explosion_at(_this.$el.get(0).width/2 + emitter.p.x, _this.$el.get(0).height + emitter.p.y, 'shard');
+				return;
+			}
+			
 			if(last_timestamp) {
-				emitter.p.y = emitter.p.y - (timestamp - last_timestamp);	
+				emitter.p.y = emitter.p.y - (timestamp - last_timestamp) * speed;	
 				emitter.p.x = emitter.p.x + drift;
 			}
 			requestAnimationFrame(move_emitter);
