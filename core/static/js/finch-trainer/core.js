@@ -871,7 +871,7 @@ views.Opponent = Backbone.View.extend({
 	},
 	handle_wet_change: function() {
 		var wet = this.model.get('wet');
-		console.log('wet: ' + wet);
+		finch.game.views.battlefield_particle_effects.handle_wet_change(wet);		
 	},
 	handle_frozen_level_change: function() {
 		var frozen_level = this.model.get('frozen_level');
@@ -1232,6 +1232,7 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 	renderer: null,	
 	emitters_queued_to_cancel: [],
 	emitters_affected_by_shield: [],
+	wet_status_emitters: [],
 	initialize: function() {
 		finch.game.views.global.on('smart_resize', this.center.bind(this));
 		this.center();
@@ -1247,6 +1248,12 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 		requestAnimationFrame(this.render_loop.bind(this));
 		finch.game.controls.elements.on('cast_start', this.handle_cast_start.bind(this));
 		finch.game.controls.elements.on('cast_stop', this.handle_cast_stop.bind(this));
+		
+		this.wet_status_emitters = this.get_wet_status_emitters();
+		for(i=0;i<this.wet_status_emitters.length;i++){
+			this.proton.addEmitter(this.wet_status_emitters[i]);
+		}
+		
 		this.shield_repulsion_behavior = new Proton.Repulsion({
 			x: this.$el.get(0).width / 2,
 			y: 250,
@@ -1258,6 +1265,14 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 	},
 	cancel_on_stopcast: function(emitter) {
 		this.emitters_queued_to_cancel.push(emitter);
+	},
+	handle_wet_change: function(wet) {
+		if(wet) {
+			$.each(this.wet_status_emitters, function(idx, emitter) { emitter.emit(); })
+		}else{
+			$.each(this.wet_status_emitters, function(idx, emitter) { emitter.stopEmit(); })
+		}
+		console.log(wet);
 	},
 	handle_wall_change: function(wall_active) {
 		for(i=0;i<this.emitters_affected_by_shield.length;/*same group of emitters*/i++) {
@@ -1525,6 +1540,47 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 		emitter.emit('once');
 		
 		this.proton.addEmitter(emitter);		
+	},
+	get_fire_status_emitter: function() {
+		var emitter = new Proton.Emitter();
+		emitter.rate = new Proton.Rate(new Proton.Span(60, 100), 3);
+		emitter.addInitialize(new Proton.Mass(1));
+		emitter.addInitialize(new Proton.ImageTarget('/static/images/finch/droplet-particle.png'));
+		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(this.$el.get(0).width / 2 + 20, 150, 1)));		
+		emitter.addInitialize(new Proton.Life(.5, 1));
+		emitter.addInitialize(new Proton.V(new Proton.Span(1, 1.5), new Proton.Span(80, 30, true), 'polar'));		
+		emitter.addBehaviour(new Proton.Color('#005dac', '#005dac'));		
+		emitter.addBehaviour(new Proton.Scale(.5, 0));
+		emitter.addBehaviour(new Proton.Gravity(4));		
+		
+		return emitter;
+	},
+	get_wet_status_emitters: function() {		
+		var right_emitter = new Proton.Emitter();
+		right_emitter.rate = new Proton.Rate(new Proton.Span(5, 6), 1);
+		right_emitter.addInitialize(new Proton.Mass(1));
+		right_emitter.addInitialize(new Proton.ImageTarget('/static/images/finch/droplet-particle.png'));
+		right_emitter.addInitialize(new Proton.Position(new Proton.CircleZone(this.$el.get(0).width / 2 + 20, 150, 1)));		
+		right_emitter.addInitialize(new Proton.Life(.5, 1));
+		right_emitter.addInitialize(new Proton.V(new Proton.Span(1, 1.5), new Proton.Span(80, 30, true), 'polar'));		
+		right_emitter.addBehaviour(new Proton.Color('#005dac', '#005dac'));		
+		right_emitter.addBehaviour(new Proton.Scale(.5, 0));
+		right_emitter.addBehaviour(new Proton.Gravity(4));
+		right_emitter.addBehaviour(new Proton.Rotate());
+		
+		var left_emitter = new Proton.Emitter();
+		left_emitter.rate = new Proton.Rate(new Proton.Span(5, 6), 1);
+		left_emitter.addInitialize(new Proton.Mass(1));
+		left_emitter.addInitialize(new Proton.ImageTarget('/static/images/finch/droplet-particle.png'));
+		left_emitter.addInitialize(new Proton.Position(new Proton.CircleZone(this.$el.get(0).width / 2 - 20, 150, 1)));		
+		left_emitter.addInitialize(new Proton.Life(.5, 1));
+		left_emitter.addInitialize(new Proton.V(new Proton.Span(1, 1.5), new Proton.Span(280, 30, true), 'polar'));		
+		left_emitter.addBehaviour(new Proton.Color('#005dac', '#005dac'));		
+		left_emitter.addBehaviour(new Proton.Scale(.5, 0));
+		left_emitter.addBehaviour(new Proton.Gravity(4));
+		left_emitter.addBehaviour(new Proton.Rotate());
+		
+		return [right_emitter, left_emitter];
 	},
 	get_beam_endpoint_emitter: function(type) {		
 		var emitter = new Proton.Emitter();

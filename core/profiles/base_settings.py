@@ -211,6 +211,7 @@ PIPELINE_JS = {
             'js/backbone.min.js',
             'js/finch-trainer/core.js',
             'js/proton-1.0.0.min.js',
+            'js/proton-patches.js',
             'js/google-analytics.js'
         ),
         'output_filename': 'js/finch-trainer/core.min.js',
@@ -222,6 +223,7 @@ PIPELINE_JS = {
             'js/underscore.min.js',
             'js/backbone.min.js',            
             'js/proton-1.0.0.min.js',
+            'js/proton-patches.js',
             'js/webgl/particle-effect-builder.js',            
         ),
         'output_filename': 'js/webgl/particle-effect-builder.min.js',

@@ -76,7 +76,7 @@ var models = {
 			});
 			
 			this.set_count(min=5, max=10, interval=.1);
-			this.set_image_target('/static/images/finch/particle.png');
+			this.set_image_target('/static/images/finch/droplet-particle.png');
 			this.set_radius(min=2, max=5);
 			this.set_life(min=4, max=5);
 			this.set_velocity(rpan_min=.5, rpan_max=1.5, thapan_initial=0, thapan_drift=360);
@@ -85,6 +85,7 @@ var models = {
 			this.add_behavior('scale', {initial: .5, end: .1});
 			this.add_behavior('alpha', {initial: 1, end: 0});
 			this.add_behavior('gravity', {gravity: 1});
+			this.add_behavior('rotation');
 		},
 		set_count: function(min, max, interval) {
 			this.set('count', { min: min, max: max, interval: interval });
@@ -109,7 +110,7 @@ var models = {
 			});
 		},
 		add_behavior: function(type, options) {
-			this.get('behaviors')[type] = options;
+			this.get('behaviors')[type] = options || {};
 		},
 		get_behavior: function(type) {
 			return this.get('behaviors')[type];
@@ -127,6 +128,8 @@ var models = {
 			emitter.removeInitializers();
 			emitter.removeAllBehaviours();
 			emitter.removeAllParticles();
+			
+			emitter.addInitialize(new Proton.Mass(1));
 			
 			var count = this.get('count');
 			emitter.rate = new Proton.Rate(new Proton.Span(count.min, count.max), count.interval);
@@ -159,6 +162,9 @@ var models = {
 						break;
 					case 'gravity':
 						emitter.addBehaviour(new Proton.Gravity(value.gravity, value.life, value.initial));
+						break;
+					case 'rotation':
+						emitter.addBehaviour(new Proton.Rotate());
 						break;
 				}
 			}
@@ -285,6 +291,10 @@ var views = {
 				});
 			}
 			
+			if($('#rotation-behavior .behavior-toggle').is(':checked')) {
+				this.model.add_behavior('rotation');
+			}
+			
 			this.model.update_emitter();
 		},
 		set_model: function(model) {
@@ -340,6 +350,11 @@ var views = {
 				$('#gravity-life', this.$el).val(gravity_behavior.life);
 				$('#gravity-easing', this.$el).val(gravity_behavior.easing);
 			}
+			
+			var rotation_behavior = this.model.get_behavior('rotation');
+			if(rotation_behavior) {
+				$('#rotation-behavior .behavior-toggle').prop('checked', true);
+			}
 		}		
 	}),	
 };
@@ -376,7 +391,7 @@ var p = {
 $(function() {
 	var initial_particle = new models.ParticleSettings();
 	particle_tester.views.particle_settings.set_model(initial_particle);
-	initial_particle.update_emitter();
+	initial_particle.update_emitter();	
 });
 
 
