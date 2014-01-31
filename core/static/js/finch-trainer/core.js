@@ -60,6 +60,7 @@ models.controls.Elements = Backbone.Model.extend({
 	ignore_keystrokes: false,
 	casting_interval: null,
 	combo_parser: null,
+	casting_combo_parser: null,
 	initialize: function() {
 		this.set({
 			queued_elements: [],	
@@ -92,7 +93,13 @@ models.controls.Elements = Backbone.Model.extend({
 		})
 	},
 	clear_queued_elements: function() {
-		this.set('queued_elements', []);
+		this.set('queued_elements', []);		
+	},
+	get_casting_elements: function() {
+		if(this.casting_combo_parser)
+			return this.casting_combo_parser.get('elements');
+		else
+			return [];
 	},
 	get_combo_parser: function() {
 		if(!this.combo_parser) {
@@ -170,10 +177,11 @@ models.controls.Elements = Backbone.Model.extend({
 		if(!this.show_cast_bar)
 			return;
 		
-		if(this.get('queued_elements').length) {			
-			var combo_parser = this.get_combo_parser();		
-			combo_parser.determine_spell_type();
-			
+		var combo_parser = this.get_combo_parser();			
+		combo_parser.determine_spell_type();
+		this.casting_combo_parser = combo_parser;
+		
+		if(this.get('queued_elements').length) {
 			this.trigger('cast_start');
 			if(this.combo_is_instant_cast()) {
 				console.log('instant cast - DO SOMETHING');
@@ -184,25 +192,26 @@ models.controls.Elements = Backbone.Model.extend({
 			
 			var casting_interval_function = function() {
 				_this.set('casting', true);
-				if(_this.combo_is_channeled()) {
-					_this.spell_landed(combo_parser, null, _this.get('casting_power'));					
-					_this.trigger('spell_channeling');
-					console.log('channeling');
+				if(_this.casting_combo_parser.is_channeled()) {
+					_this.spell_landed(_this.casting_combo_parser, null, _this.get('casting_power'));
+					_this.trigger('spell_channeling');				
 				}
 				if(_this.get('casting_power') >= 100) {
-					_this.stop_casting();
+					_this.stop_casting();					
 					_this.set('casting_power', 0);
 					return;
-				}
-				_this.set('casting_power', _this.get('casting_power')+combo_parser.get_power_interval());			
+				}				
+				_this.set('casting_power', _this.get('casting_power')+_this.casting_combo_parser.get_power_interval());
 			};
 			
 			if(this.combo_is_channeled() || this.combo_is_charged()) {
-				this.casting_interval = setInterval(casting_interval_function, 200);
+				this.casting_interval = setInterval(casting_interval_function, 150);
 				casting_interval_function.call(_this);
 			}else{
 				this.stop_casting();
 			}
+			
+			finch.game.controls.elements.clear_queued_elements();
 		}
 	},
 	combo_is_instant_cast: function() {
@@ -242,13 +251,17 @@ models.controls.Elements = Backbone.Model.extend({
 		var aoe_limit = 210;
 		var spell_blocked = false;
 		var power_lower_limit = 0; /* anything under this power will not register damage */
-				
+		var dispel_water_wall = false;
+		
 		switch(combo_parser.get_spell_type()) {		
 			case 'ROCK_PROJECTILE':
 				rock_health_subtractor = 2;
 				spell_blocked = finch.game.opponent.get("wall_active");
 				break;
 			case 'SPRAY':
+				//cold spray dispells water wall
+				if(combo_parser.has_element('cold'))
+					dispel_water_wall = true;
 				power_lower_limit = 30;
 				rock_health_subtractor = .5;
 				spell_blocked = finch.game.opponent.get("wall_active") || finch.game.opponent.get("shield_active");
@@ -264,12 +277,14 @@ models.controls.Elements = Backbone.Model.extend({
 				spell_blocked = finch.game.opponent.get("wall_active") || finch.game.opponent.get("shield_active");
 				break;
 			case 'LIGHTNING':
-				rock_health_subtractor = .8;
-				spell_blocked = finch.game.opponent.get("wall_active");
+				rock_health_subtractor = .4;
+				spell_blocked = finch.game.opponent.get("wall_active") || finch.game.opponent.get('water_wall_active');
 				break;				
 		}
 		
-		if(cast_power >= power_lower_limit) {		
+		if(cast_power >= power_lower_limit) {	
+			if(dispel_water_wall)
+				finch.game.opponent.set('water_wall_active', false);
 			if(!y || y < 220 && y > 150)
 				finch.game.opponent.hurt_wall(rock_health_subtractor);
 			
@@ -288,20 +303,17 @@ models.controls.Elements = Backbone.Model.extend({
 			}
 		}
 	},
-	stop_casting: function() {		
+	stop_casting: function() {
 		this.set('casting', false);		
-		this.trigger('cast_stop');
+		this.trigger('cast_stop');		
 		this.set('casting_power', 0);
 		this.casting_interval = clearInterval(this.casting_interval);
-		if(this.get('casting_power') > 0 || this.combo_is_instant_cast() && this.get('queued_elements').length) {
-			console.log('spell cast');
+		if(this.get('casting_power') > 0 || this.casting_combo_parser && this.casting_combo_parser.is_instant_cast() && this.get_casting_elements().length) {			
 			this.trigger('spell_cast', Math.min(100, this.get('casting_power')));			
 		}				
-		this.set('queued_elements', []);
+		this.casting_combo_parser = null;		
 	},
 	handle_keydown: function(key) {
-		if(this.casting_interval)
-			return;
 		var element = this.keybindings[key];
 		var pressed_elements = this.get('pressed_elements');
 		if(element) {
@@ -329,9 +341,7 @@ models.controls.Elements = Backbone.Model.extend({
 			this.trigger('change:queued_elements', this, queued_elements);
 		}
 	},
-	handle_keyup: function(key) {
-		if(this.casting_interval)
-			return;
+	handle_keyup: function(key) {		
 		var element = this.keybindings[key];		
 		if(element) {
 			var pressed_elements = this.get('pressed_elements');
@@ -390,6 +400,9 @@ models.ComboParser = Backbone.Model.extend({
 	set_elements: function(elements) {
 		this.set('elements', elements);
 	},
+	has_element: function(element) {
+		return $.inArray(element, this.get('elements')) != -1; 
+	},
 	set_cast_target: function(target) {
 		this.set('cast_target', target);
 	},
@@ -407,11 +420,11 @@ models.ComboParser = Backbone.Model.extend({
 		return this.get('spell_type');
 	},
 	contains_steam: function() {
-		var elements = this.get('element');
+		var elements = this.get('elements');
 		return $.inArray('water', elements) != -1 && $.inArray('fire', elements) != -1;
 	},
 	contains_ice: function() {
-		var elements = this.get('element');
+		var elements = this.get('elements');
 		return $.inArray('water', elements) != -1 && $.inArray('cold', elements) != -1;
 	},
 	get_status_application_speed: function() {
@@ -441,7 +454,7 @@ models.ComboParser = Backbone.Model.extend({
 			'life': -30,
 			'shield': 0,
 			'cold': 20,
-			'lightning': 30,
+			'lightning': 100,
 			'arcane': 20,
 			'earth': 40,
 			'fire': 20	
@@ -459,7 +472,7 @@ models.ComboParser = Backbone.Model.extend({
 					total_damage = base_damage * power / 100;
 					break;
 				case 'SPRAY':
-					total_damage = base_damage;
+					total_damage = base_damage * .5;
 					break;
 				case 'ICE_SHARDS':
 					aoe = false;
@@ -560,31 +573,39 @@ models.ComboParser = Backbone.Model.extend({
 models.Opponent = Backbone.Model.extend({
 	ai_timeout: null,
 	wall_expire_timeout: null,
+	water_wall_expire_timeout: null,
 	shield_expire_timeout: null,
 	fire_expire_timeout: null,
 	fire_damage_timeout: null,
+	fire_damage_ticks_left: null,
 	wet_expire_timeout: null,
-	frozen_expire_timeout: null,
+	thaw_timer: null,
 	cast_timeout: null,
 	spell_gap: 1700,
 	last_spell_cast: 0,
-	initialize: function() {
-		this.set({
-			'outer_ward': null,
-			'inner_ward': null,
-			'shield_active': false,
-			'wall_active': false,
-			'casting': false,
-			'wet': false,
-			'frozen_level': 0,
-			'on_fire': false,
-		});
+	max_health: 1500,
+	initialize: function() {				
 		var _this = this;
 		this.on('change:wall_active', function() {
 			_this.wall_expire_timeout = clearTimeout(_this.wall_expire_timeout);
 		});
 		this.on('change:shield_active', function() {
 			_this.shield_expire_timeout = clearTimeout(_this.shield_expire_timeout);
+		});
+		this.set_default_values();
+	},
+	set_default_values: function() {
+		this.set({
+			'outer_ward': null,
+			'inner_ward': null,
+			'shield_active': false,
+			'wall_active': false,
+			'water_wall_active': false,
+			'casting': false,
+			'wet': false,
+			'frozen_level': 0,
+			'on_fire': false,
+			'health': 1500			
 		});
 	},
 	ai_step: function() {
@@ -599,13 +620,15 @@ models.Opponent = Backbone.Model.extend({
 			 *  - nothing happening?  change ward, cast wall, heal a bit
 			 */
 			
-			var elements = finch.game.controls.elements.get('queued_elements');
+			var elements = finch.game.controls.elements.get_casting_elements();
 			var casting = finch.game.controls.elements.get('casting');
-			var combo_parser = finch.game.controls.elements.get_combo_parser();
+			var combo_parser = finch.game.controls.elements.casting_combo_parser;
 			
 			var spell = null;
 			var _this = this;
+			var cast_time = 1000;
 			
+			//reactive spells... change wards, put up walls, whatever
 			if(casting) {
 				switch(combo_parser.get_spell_type()) {
 					case 'SPRAY':
@@ -615,36 +638,55 @@ models.Opponent = Backbone.Model.extend({
 						
 						break;
 					case 'ROCK_PROJECTILE':
-					case 'LIGHTNING':
 						if(!this.get('wall_active'))
 							spell = this.cast_wall;
+						break;
+					case 'LIGHTNING':
+						if(!this.get('water_wall_active')) {
+							spell = this.cast_water_wall;
+							cast_time = 500; /* water walls are easier to cast :) */
+						}
 						break;
 				}
 				
 				if(!spell) {
 					//change wards based on what's cast
 					var random_ward_elements = finch.game.controls.elements.get_random_elements(includes=elements, excludes=['life', 'shield']);
-					
+					cast_time = 500;
 					if(random_ward_elements.length == 3) {
-						spell = function() { this.set_wards(random_ward_elements[1], random_ward_elements[2]) };					
+						spell = function() { this.set_wards(random_ward_elements[1], random_ward_elements[2]) };
 					}
 				}
 			}
 			
+			if(!spell) {
+				//downtime... remove debuffs, or heal
+				if(this.get('health') < this.max_health) {
+					spell = this.cast_heal;
+					cast_time = 250;
+				}
+			}
+			
 			if(spell && !this.cast_timeout) {
+				cast_time = cast_time * (1+(this.get('frozen_level')+.01) / 5); /* max freeze */ 
+				console.log(cast_time + ' <- cast time');
 				this.last_spell_cast = time;
-				this.set('casting', true);
+				this.last_cast_time = cast_time;
+				this.set('casting', true);				
 				var _this = this;
 				this.cast_timeout = setTimeout(function() { 
 					spell.call(_this);
 					_this.cast_timeout = clearTimeout(_this.cast_timeout);
 					_this.set('casting', false);
-				}, 1000);			
+				}, cast_time);			
 			}	
 		}
-		this.ai_timeout = setTimeout(this.ai_step.bind(this), 300);		
+		this.ai_timeout = setTimeout(this.ai_step.bind(this), 200);		
 	},
-	cast_shield: function() {				
+	thaw: function() {
+		this.set('frozen_level', Math.max(0, this.get('frozen_level')-.34));
+	},
+	cast_shield: function() {		
 		var _this = this;
 		this.set('shield_active', true);
 		this.shield_expire_timeout = setTimeout(function() {
@@ -660,10 +702,27 @@ models.Opponent = Backbone.Model.extend({
 	cast_wall: function() {		
 		this.wall_health = 2;
 		this.set('wall_active', true);
+		this.set('water_wall_active', false);
+		this.water_wall_expire_timeout = clearTimeout(this.water_wall_expire_timeout);
 		var _this = this;
+		clearTimeout(this.wall_expire_timeout);
 		this.wall_expire_timeout = setTimeout(function() {
 			_this.set('wall_active', false);
 		}, 5000);
+	},
+	cast_water_wall: function() {
+		this.set('wall_active', false);
+		this.set('water_wall_active', true);
+		this.wall_expire_timeout = clearTimeout(this.wall_expire_timeout);
+		var _this = this;
+		clearTimeout(this.water_wall_expire_timeout);
+		this.water_wall_expire_timeout = setTimeout(function() {
+			_this.set('water_wall_active', false);
+		}, 10000);
+	},
+	cast_heal: function() {
+		this.trigger('heal_cast');
+		this.set('health', Math.min(this.get('health')+150, this.max_health));
 	},
 	set_wards: function(inner_ward, outer_ward) {
 		this.set({
@@ -684,6 +743,7 @@ models.Opponent = Backbone.Model.extend({
 		var status_application_func = null;		
 		var physical_damage = 0;
 		var total_damage = 0;
+		var remove_wet = false;
 		
 		for(i=0;i<damage_components.length;i++) {
 			var component = damage_components[i];
@@ -701,38 +761,64 @@ models.Opponent = Backbone.Model.extend({
 					 */
 			
 					case 'water':
+						if(this.ward_coverage('water') > 0) break; 
+						
 						if(!combo_parser.contains_steam() && !combo_parser.contains_ice())
 							status_application_func = this.apply_wet_status;
 						break;
 					case 'cold':
+						if(this.ward_coverage('cold') > 0) break;
+						
 						if(!combo_parser.contains_ice())
 							status_application_func = this.apply_cold_status;
 						break;
 					case 'lightning':
-						if(this.get('wet'))
+						if(this.ward_coverage('lightning') == 1) break;
+						
+						if(this.get('wet')) {
 							component.damage = component.damage * 2;
+							remove_wet = true;
+						}
 						break;
 					case 'earth':
-						physical_damage += component.damage;
+						physical_damage += component.damage * (1-this.ward_coverage('earth'));
 						break;
 					case 'fire':
+						if(this.ward_coverage('fire') > 0) break;
+						
 						if(!combo_parser.contains_steam())
 							status_application_func = this.apply_fire_status;
 						break;					
 				}
 				
-				total_damage += component.damage;
+				total_damage += component.damage * (1-this.ward_coverage(component.element));
 			}
 		}
-		
+				
+		if(remove_wet) {
+			this.set('wet', false);
+		}
 		console.log('total damage: ' + total_damage);
 		
-		if(status_application_func)
-			status_application_func.call(this, combo_parser.get_status_application_speed());
+		if(!finch.game.paused) {
+			this.set('health', this.get('health') - total_damage);
+			if(status_application_func)
+				status_application_func.call(this, combo_parser.get_status_application_speed());
+		}
+	},
+	/* returns 0, .5 or 1 */
+	ward_coverage: function(element) {
+		var coverage = 0;
+		if(this.get('inner_ward') == element)
+			coverage += .5;
+		if(this.get('outer_ward') == element)
+			coverage += .5;
+		
+		return coverage;
 	},
 	apply_wet_status: function(status_application_speed) {
 		/* i don't care for water about application speed */
-		if(this.get('on_fire')) {
+		if(this.get('on_fire')) {			
 			this.set('on_fire', false);		
 		}else{
 			this.set('wet', true);
@@ -753,20 +839,48 @@ models.Opponent = Backbone.Model.extend({
 				this.set('frozen_level', frozen_level);
 			}
 		}
+		
+		this.set('wet', false);
 	},
 	apply_fire_status: function(status_application_speed) {
-		if(this.is_frozen()) {
-			this.set('frozen_level', 0);			
+		if(this.get('frozen_level') > 0) {
+			this.set('frozen_level', this.get('frozen_level') - 1);			
 		}else if(this.get('wet')) {
 			this.set('wet', false);
 		}else{
-			this.set('on_fire', true);
+			this.set('on_fire', true);			
+			this.extend_fire_damage_dot();
 		}
+	},
+	extend_fire_damage_dot: function() {
+		var _this = this;
+		if(!this.fire_damage_timeout) {
+			var do_fire_damage = function() {
+				_this.set('health', _this.get('health') - 30 * (1-_this.ward_coverage('fire'))); //look at wards
+				_this.fire_damage_ticks_left--;
+				if(_this.fire_damage_ticks_left > 0) {
+					_this.fire_damage_timeout = setTimeout(do_fire_damage, 1000);
+				}else{
+					_this.fire_damage_timeout = clearTimeout(_this.fire_damage_timeout);
+					_this.set('on_fire', false);
+				}
+			};
+			this.fire_damage_timeout = setTimeout(do_fire_damage, 1000);
+		}
+		this.fire_damage_ticks_left = 5;
 	},
 	skynet_enabled: function() {
 		this.set_starting_wards();
+		this.thaw_timer = clearInterval(this.thaw_timer);
+		this.thaw_timer = setInterval(this.thaw.bind(this), 1000);
 		if(!this.ai_timeout) this.ai_timeout = setTimeout(this.ai_step.bind(this), 1000);				
-	}
+	},
+	skynet_disabled: function() {
+		this.ai_timeout = clearTimeout(this.ai_timeout);
+		var _this = this;
+		setTimeout(function() { _this.set_default_values(); }, 2000);
+		//everything fades out, don't have to clear any other timers because they will take care of themself in the background.
+	},
 });
 
 models.RoundHistory = Backbone.Model.extend({
@@ -832,22 +946,32 @@ views.Opponent = Backbone.View.extend({
 		this.model.on('change:inner_ward', this.handle_ward_change.bind(this));
 		this.model.on('change:shield_active', this.handle_shield_change.bind(this));
 		this.model.on('change:wall_active', this.handle_wall_change.bind(this));
+		this.model.on('change:water_wall_active', this.handle_water_wall_change.bind(this));
 		this.model.on('change:casting', this.handle_casting_change.bind(this));
+		this.model.on('change:health', this.handle_health_change.bind(this));
 		
+		this.model.on('heal_cast', this.handle_heal_cast.bind(this));
 		this.model.on('change:wet', this.handle_wet_change.bind(this));
 		this.model.on('change:frozen_level', this.handle_frozen_level_change.bind(this));
 		this.model.on('change:on_fire', this.handle_on_fire_change.bind(this));
 	},
 	handle_casting_change: function() {
-		var casting = this.model.get('casting');
+		var casting = this.model.get('casting');		
 		this.$el.find('.cast-bar .inner').stop().css({'width': '0%'});
 		
 		if(casting) {
 			this.$el.find('.cast-bar .inner')				
 				.animate({
 					width: '100%'
-				}, 1000);
+				}, this.model.last_cast_time);
 		}
+	},
+	handle_health_change: function() {
+		var $health_bar = this.$el.find('.health-bar .inner').stop();
+		$health_bar
+			.animate({
+				width: (this.model.get('health') / this.model.max_health)*100 + '%'
+			}, 300);
 	},
 	handle_ward_change: function() {
 		this.$el.find('.outer-ward > div').get(0).className = this.model.get('outer_ward');
@@ -860,6 +984,9 @@ views.Opponent = Backbone.View.extend({
 		else
 			this.$el.find('.shield').removeClass('active');
 	},
+	handle_heal_cast: function() {
+		finch.game.views.battlefield_particle_effects.handle_heal_cast();
+	},
 	handle_wall_change: function() {
 		finch.game.views.battlefield_particle_effects.handle_wall_change(this.model.get('wall_active'));		
 		if(this.model.get('wall_active'))
@@ -869,22 +996,31 @@ views.Opponent = Backbone.View.extend({
 				$(this).removeClass('active').css('display', 'auto');
 			});
 	},
+	handle_water_wall_change: function() {
+		finch.game.views.battlefield_particle_effects.handle_water_wall_change(this.model.get('water_wall_active'));
+	},
 	handle_wet_change: function() {
 		var wet = this.model.get('wet');
 		finch.game.views.battlefield_particle_effects.handle_wet_change(wet);		
 	},
 	handle_frozen_level_change: function() {
 		var frozen_level = this.model.get('frozen_level');
-		console.log('frozen_level: ' + frozen_level);
+		this.$el.find('.frozen-indicator')
+			.removeClass(function(idx, css) { return (css.match(/level-\S+/) || []).join(' '); } )
+			.addClass('level-' + Math.floor(frozen_level));
 	},
 	handle_on_fire_change: function() {
 		var on_fire = this.model.get('on_fire');
+		finch.game.views.battlefield_particle_effects.handle_on_fire_change(on_fire);
 		console.log('on_fire: ' + on_fire);
 	},
 	render: function() {
-		this.$el.html($("#opponent-template").render({ model: this.model }));
+		this.$el.html($("#opponent-template").render({ model: this.model })).show();
 		this.center();
 		return this;
+	},
+	hide: function() {
+		this.$el.fadeOut('fast');
 	},
 	center: function() {		
 		this.$el.css({			
@@ -1075,8 +1211,8 @@ views.BattlefieldLineEffects = Backbone.View.extend({
 		
 	},
 	handle_cast_start: function() {
-		var combo_parser = finch.game.controls.elements.get_combo_parser();
-		var elements = finch.game.controls.elements.get('queued_elements');
+		var combo_parser = finch.game.controls.elements.casting_combo_parser;
+		var elements = combo_parser.get('elements');
 		var _this = this;	
 		
 		switch(combo_parser.get_spell_type()) {
@@ -1162,7 +1298,7 @@ views.BattlefieldLineEffects = Backbone.View.extend({
 		
 		var end = {
 			x: this.$el.get(0).width / 2,
-			y: finch.game.opponent.get("wall_active") ? 260 : 180
+			y: finch.game.opponent.get("wall_active") || finch.game.opponent.get("water_wall_active") ? 260 : 180
 		};
 		
 		var variable_points = [];
@@ -1212,6 +1348,12 @@ views.BattlefieldLineEffects = Backbone.View.extend({
 		this.context.lineWidth = 4;
 		draw_multipoint_line([].concat.apply([], [[origin], variable_points, [end]]), this.context);
 	},
+	show: function() {
+		this.$el.show();
+	},	
+	hide: function() {
+		this.$el.hide();
+	},
 	center: function(animate) {	
 		var height = $('#battlefield').innerHeight();
 		var width = ($('#battlefield').innerWidth()-$('#round-history-slot').outerWidth());
@@ -1233,6 +1375,9 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 	emitters_queued_to_cancel: [],
 	emitters_affected_by_shield: [],
 	wet_status_emitters: [],
+	water_wall_emiters: [],
+	fire_status_emitter: null,
+	heal_status_emitter: null,
 	initialize: function() {
 		finch.game.views.global.on('smart_resize', this.center.bind(this));
 		this.center();
@@ -1248,11 +1393,22 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 		requestAnimationFrame(this.render_loop.bind(this));
 		finch.game.controls.elements.on('cast_start', this.handle_cast_start.bind(this));
 		finch.game.controls.elements.on('cast_stop', this.handle_cast_stop.bind(this));
-		
+				
 		this.wet_status_emitters = this.get_wet_status_emitters();
 		for(i=0;i<this.wet_status_emitters.length;i++){
 			this.proton.addEmitter(this.wet_status_emitters[i]);
 		}
+		
+		this.water_wall_emitters = this.get_water_wall_emitters();
+		for(i=0;i<this.water_wall_emitters.length;i++){
+			this.proton.addEmitter(this.water_wall_emitters[i]);
+		}
+		
+		this.fire_status_emitter = this.get_fire_status_emitter();
+		this.proton.addEmitter(this.fire_status_emitter);
+		
+		this.heal_status_emitter = this.get_heal_status_emitter();
+		this.proton.addEmitter(this.heal_status_emitter);
 		
 		this.shield_repulsion_behavior = new Proton.Repulsion({
 			x: this.$el.get(0).width / 2,
@@ -1261,18 +1417,34 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 		this.wall_repulsion_behavior = new Proton.Repulsion({
 			x: this.$el.get(0).width / 2,
 			y: 300,
-		}, 10, 90);
+		}, 10, 90);				
 	},
 	cancel_on_stopcast: function(emitter) {
 		this.emitters_queued_to_cancel.push(emitter);
 	},
 	handle_wet_change: function(wet) {
 		if(wet) {
-			$.each(this.wet_status_emitters, function(idx, emitter) { emitter.emit(); })
+			$.each(this.wet_status_emitters, function(idx, emitter) { emitter.emit(); });
 		}else{
-			$.each(this.wet_status_emitters, function(idx, emitter) { emitter.stopEmit(); })
+			$.each(this.wet_status_emitters, function(idx, emitter) { emitter.stopEmit(); });
+		}		
+	},
+	handle_on_fire_change: function(on_fire) {
+		if(on_fire) {
+			this.fire_status_emitter.emit();
+		}else{
+			this.fire_status_emitter.stopEmit();
 		}
-		console.log(wet);
+	},
+	handle_heal_cast: function() {
+		this.heal_status_emitter.emit(1);
+	},
+	handle_water_wall_change: function(wall_active) {
+		if(wall_active) {
+			$.each(this.water_wall_emitters, function(idx, emitter) { emitter.emit(); })
+		}else{
+			$.each(this.water_wall_emitters, function(idx, emitter) { emitter.stopEmit(); })
+		}
 	},
 	handle_wall_change: function(wall_active) {
 		for(i=0;i<this.emitters_affected_by_shield.length;/*same group of emitters*/i++) {
@@ -1320,8 +1492,8 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 		}
 	},
 	handle_cast_start: function() {
-		var combo_parser = finch.game.controls.elements.get_combo_parser();
-		var elements = finch.game.controls.elements.get('queued_elements');
+		var combo_parser = finch.game.controls.elements.casting_combo_parser;
+		var elements = combo_parser.get('elements');
 			
 		switch(combo_parser.get_spell_type()) {
 			case 'SPRAY':
@@ -1372,7 +1544,7 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 				var emitter = this.get_lightning_endpoint_emitter();
 				var render_spark = function() {
 					if(emitter.alive) {
-						if(finch.game.opponent.get("wall_active")) {
+						if(finch.game.opponent.get("wall_active") || finch.game.opponent.get("water_wall_active")) {
 							emitter.p.y = -150;							
 						}else{
 							emitter.p.y = -230;
@@ -1385,7 +1557,7 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 				emitter.alive = true;
 				render_spark();
 				this.proton.addEmitter(emitter);
-				if(finch.game.opponent.get("wall_active")) {
+				if(finch.game.opponent.get("wall_active") || finch.game.opponent.get("water_wall_active")) {
 					emitter.p.y = -150;							
 				}else{
 					emitter.p.y = -230;
@@ -1401,8 +1573,14 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 			this.emitters_queued_to_cancel[i].alive = false;			
 		}
 		
-		var combo_parser = finch.game.controls.elements.get_combo_parser();
-		var elements = finch.game.controls.elements.get('queued_elements');
+		var combo_parser = finch.game.controls.elements.casting_combo_parser;
+		
+		if(!combo_parser) {
+			//casting already stopped or we have a pretty big error
+			return;
+		}
+			
+		var elements = combo_parser.get('elements');
 		var collision_emitter_bounds = null;
 		var collision_callback = null;
 		
@@ -1496,6 +1674,14 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 			move_emitter();
 		}
 	},
+	show: function() {
+		this.$el.show();
+		var context = this.$el.get(0).getContext('webgl');
+		context.clear(context.COLOR_BUFFER_BIT|context.DEPTH_BUFFER_BIT)
+	},	
+	hide: function() {
+		this.$el.hide();
+	},
 	render_loop: function() {
 		requestAnimationFrame(this.render_loop.bind(this));
 		this.proton.update();
@@ -1543,15 +1729,16 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 	},
 	get_fire_status_emitter: function() {
 		var emitter = new Proton.Emitter();
-		emitter.rate = new Proton.Rate(new Proton.Span(60, 100), 3);
+		emitter.rate = new Proton.Rate(new Proton.Span(1, 2), .1);
 		emitter.addInitialize(new Proton.Mass(1));
-		emitter.addInitialize(new Proton.ImageTarget('/static/images/finch/droplet-particle.png'));
-		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(this.$el.get(0).width / 2 + 20, 150, 1)));		
-		emitter.addInitialize(new Proton.Life(.5, 1));
-		emitter.addInitialize(new Proton.V(new Proton.Span(1, 1.5), new Proton.Span(80, 30, true), 'polar'));		
-		emitter.addBehaviour(new Proton.Color('#005dac', '#005dac'));		
-		emitter.addBehaviour(new Proton.Scale(.5, 0));
-		emitter.addBehaviour(new Proton.Gravity(4));		
+		emitter.addInitialize(new Proton.ImageTarget('/static/images/finch/particle.png'));
+		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(this.$el.get(0).width / 2, 170, 25)));		
+		emitter.addInitialize(new Proton.Life(1, 4));
+		emitter.addInitialize(new Proton.V(new Proton.Span(.5, 1), new Proton.Span(0, 50, true), 'polar'));		
+		emitter.addBehaviour(new Proton.Color('#cf5f01', '#fff334'));		
+		emitter.addBehaviour(new Proton.Scale(.3, 0));	
+		emitter.addBehaviour(new Proton.Gravity(.2));
+		emitter.addBehaviour(new Proton.Alpha(1, .5));
 		
 		return emitter;
 	},
@@ -1581,6 +1768,42 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 		left_emitter.addBehaviour(new Proton.Rotate());
 		
 		return [right_emitter, left_emitter];
+	},
+	get_water_wall_emitters: function() {
+		var emitters = [];
+		for(i=0;i<3;i++) {
+			var emitter = new Proton.Emitter();
+			emitter.rate = new Proton.Rate(new Proton.Span(5, 10), .1);
+			emitter.addInitialize(new Proton.Mass(1));
+			emitter.addInitialize(new Proton.ImageTarget('/static/images/finch/particle.png'));
+			emitter.addInitialize(new Proton.Position(new Proton.CircleZone(this.$el.get(0).width / 2, 220, 1)));
+			emitter.addInitialize(new Proton.Life(.75, 1.25));
+			emitter.addInitialize(new Proton.V(new Proton.Span(.7, 1), new Proton.Span(180, 35, true), 'polar'));
+			emitter.addBehaviour(new Proton.Color('#005dac', '#ffffee'));		
+			emitter.addBehaviour(new Proton.Scale(.5, 0));
+			emitter.addBehaviour(new Proton.Gravity(-1.5));
+			
+			emitters.push(emitter);
+		}
+		
+		emitters[0].p.x -= 40;
+		emitters[1].p.y += 10;
+		emitters[2].p.x += 40;
+		
+		return emitters;
+	},
+	get_heal_status_emitter: function() {
+		var emitter = new Proton.Emitter();
+		emitter.rate = new Proton.Rate(new Proton.Span(1, 2), .24);
+		emitter.addInitialize(new Proton.Mass(1));
+		emitter.addInitialize(new Proton.ImageTarget('/static/images/finch/plus-particle.png'));
+		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(this.$el.get(0).width / 2, 170, 5)));		
+		emitter.addInitialize(new Proton.Life(2, 4));
+		emitter.addInitialize(new Proton.V(new Proton.Span(.5, 1), new Proton.Span(0, 30, true), 'polar'));		
+		emitter.addBehaviour(new Proton.Color('#99ea56', '#99ea56'));		
+		emitter.addBehaviour(new Proton.Scale(1, 0));
+		
+		return emitter;
 	},
 	get_beam_endpoint_emitter: function(type) {		
 		var emitter = new Proton.Emitter();
@@ -1826,6 +2049,13 @@ views.ModeSelection = Backbone.View.extend({
 			finch.game.views.queued_elements.hide()
 		if(finch.game.views.queued_elements_helper)
 			finch.game.views.queued_elements_helper.hide()
+		if(finch.game.views.opponent)
+			finch.game.views.opponent.hide();
+		if(finch.game.views.battlefield_particle_effects)
+			finch.game.views.battlefield_particle_effects.hide();
+		if(finch.game.views.battlefield_line_effects)
+			finch.game.views.battlefield_line_effects.hide();
+		
 		this.countdown_timer = clearTimeout(this.countdown_timer);
 		$('.countdown').remove();
 	},
@@ -1856,6 +2086,20 @@ views.ModeSelection = Backbone.View.extend({
 		animation_loop();
 	},
 	
+	show_offensive_game_over: function(seconds_to_complete, total_combos) {		
+		var $game_over_window =$($('#offensive-mode-game-over').render().trim());
+		$game_over_window.find('.seconds').text(seconds_to_complete);
+		$game_over_window.find('.combo-count').text(total_combos);
+		$('#battlefield').append($game_over_window);
+		var _this = this;
+		$game_over_window.find('.start-button').click(function() {
+			_this.start_offensive_game.call(_this);
+			_this.view_stack.pop(); /* get rid of this window since it will be re-added at the end of the match */
+		});
+		this.push_window($game_over_window);
+		this.show();
+	},
+	
 	push_window: function(window) {
 		var $current_window = this.view_stack[this.view_stack.length-1];
 		this.view_stack.push(window);
@@ -1874,7 +2118,7 @@ views.ModeSelection = Backbone.View.extend({
 		var $popped_window = this.view_stack.pop();
 		var _this = this;
 		$popped_window.fadeOut(function() {
-			_this.center(animate=true);
+			_this.center(animate=true, show_immediately=true);
 			$popped_window.remove();
 		});
 	},
@@ -1977,8 +2221,10 @@ views.ModeSelection = Backbone.View.extend({
 		this.center();
 	},
 	
-	center: function(animate) {
+	center: function(animate, show_immediately) {
 		var $window = this.view_stack[this.view_stack.length-1];
+		if(show_immediately) $window.show();
+		
 		var css = {			
 				'top': $('#game-title-slot').height()/2 + $('#battlefield').innerHeight()/2 - $window.outerHeight()/2,
 				'left': ($('#battlefield').innerWidth()-$('#round-history-slot').outerWidth())/2 - this.$el.outerWidth()/2			
@@ -2027,13 +2273,17 @@ views.QueuedElements = Backbone.View.extend({
 	
 	handle_casting_power_change: function() {
 		var power = this.model.get('casting_power');
+		var interval = 10; 
 		if(this.model.show_cast_bar) {
 			this.$el.find('.cast-bar').show();
-		}
-		if(power == 0) {
+		}		
+		if(power == 0) {			
 			this.$el.find('.cast-bar').hide();
 		}
-		this.$el.find('.cast-bar div').animate({ width: power + '%' }, 200, 'linear');
+		this.$el.find('.cast-bar div')
+			.stop()
+			.css({ width: Math.max(power-interval, 0) + '%' })
+			.animate({ width: power + '%' }, 150, 'linear');
 	},
 	
 	handle_queued_elements: function(model, queued_elements) {
@@ -2107,8 +2357,14 @@ views.QueuedElements = Backbone.View.extend({
 			}
 		}else{
 			this.$el.show();
-			clearTimeout(this.hide_timeout);
+			this.hide_timeout = clearTimeout(this.hide_timeout);
 		}
+		
+		if(this.model.get('casting')) {
+			this.$el.find('.cast-bar').show();
+			this.handle_casting_power_change();
+		}
+		
 		return this;
 		
 	},
@@ -2169,6 +2425,7 @@ $(document).ajaxSend(function(event, xhr, settings) {
 finch.game = {	
 	round_length: 5,
 	statebag: {},
+	paused: false,
 	set_mode: function(mode) {
 		finch.game.statebag.mode = mode;
 	},		
@@ -2243,6 +2500,31 @@ finch.game = {
 					finch.game.views.queued_elements_helper.hide()
 				}
 			});
+			finch.game.opponent.on('change:health', function(model, health) {
+				if(finch.game.statebag.mode == 'offensive') {
+					if(health <= 0 && !finch.game.paused) {
+						finch.game.opponent.skynet_disabled();
+						finch.game.pause();
+						finch.game.controls.elements.clear_queued_elements();
+						finch.game.views.queued_elements.hide()
+						finch.game.views.queued_elements_helper.hide()
+						finch.game.views.opponent.hide();
+						finch.game.views.battlefield_particle_effects.hide();
+						finch.game.views.battlefield_line_effects.hide();
+						
+						finch.game.views.mode_selection.show_offensive_game_over()
+					}
+				}
+			});
+			finch.game.controls.elements.on('cast_stop', function() {
+				if(finch.game.statebag.mode == 'offensive') {
+					var combo_parser = finch.game.controls.elements.casting_combo_parser;
+					if(combo_parser) {
+						//the user just finished casting some spells at the enemy.  
+						console.log('spells cast: ' + combo_parser.get('elements'));
+					}
+				}
+			});
 		}
 	},
 	pause: function() {
@@ -2283,6 +2565,8 @@ finch.game = {
 	load_offensive_objective: function() {
 		finch.game.views.queued_elements.render();
 		finch.game.views.opponent.render();
+		finch.game.views.battlefield_particle_effects.show();
+		finch.game.views.battlefield_line_effects.show();
 	}
 };
 finch.game.controls = {		
@@ -2297,7 +2581,6 @@ $(function() {
 	finch.game.views.stats_overview.render();
 	finch.game.views.mode_selection.show();
 	finch.game.views.battlefield_particle_effects = new views.BattlefieldParticleEffects();
-	finch.game.views.battlefield_line_effects = new views.BattlefieldLineEffects();	
-	finch.game.views.mode_selection.start_offensive_game();
+	finch.game.views.battlefield_line_effects = new views.BattlefieldLineEffects();
 });
 

@@ -146,15 +146,19 @@
 			<div class='cast-bar'>
 				<div class='inner'></div>
 			</div>
+			<div class='health-bar'>
+				<div class='inner'></div>
+			</div>			
 			<div class='opponent'>
 				<div class='player-icon'></div>
 				<div class='ward-group'>
 					<div class='outer-ward'><div class='{{: model.get('outer_ward') }}'></div></div>
 					<div class='inner-ward'><div class='{{: model.get('inner_ward') }}'></div></div>
 				</div>
+				<div class='frozen-indicator level-{{: model.get('frozen_level') }}'></div> 
 				<div class='shield {{if model.get('shield_active')}}active{{/if}}'></div>								
 				<div class='defensive-wall {{if model.get('wall_active')}}active{{/if}}'></div>				
-			</div>
+			</div>			
 		</script>
 		
 		<script id='round-history-template' type='text/x-jsrender'>			
@@ -227,6 +231,22 @@
 						</div>
 					</div>
 					<div class='start-button'>start game</div>
+				</div>
+			</div>
+		</script>
+		
+		<script id='offensive-mode-game-over' type='text/x-jsrender'>
+			<div class='mode-instructions'>
+				<div class='nav'>
+					<span class='nav-back'>&laquo; back</span>
+				</div>
+				<div class='body'>					
+					<div>
+						You took <span class="seconds"></span> seconds to beat the enemy and cast
+						<span class="combo-count"></span> combos.  For more detailed stats look on the right in the round history window.
+					</div>
+										
+					<div class='start-button' style='margin-top:10px;'>start another game</div>
 				</div>
 			</div>
 		</script>
