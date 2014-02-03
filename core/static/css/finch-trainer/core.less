@@ -808,11 +808,34 @@ html {
 						width:100%;
 						color:#fff;
 						
-						h2 {							
+						h2 {	
+							width:50%;
+							float:left;						
 							font-size:16px;
 							font-weight:normal;
-							padding:7px;
-						}						
+							margin:7px 0px 7px 7px;
+						}	
+						
+						> h2+h2 {
+							width:30%;
+							margin-left:0px;
+						}
+						
+						.rows {
+							width:50%;
+							float:left;
+							
+							&.offensive {
+								box-shadow: -1px 0px #666;
+							}	
+							
+							.elements > div {
+								position:relative;
+								top:-3px;
+								height:25px;
+								width:25px;
+							}												
+						}					
 					}
 				}
 								

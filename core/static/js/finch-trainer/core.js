@@ -7,48 +7,104 @@ window.models = { controls: {} };
 models.StatsOverview = Backbone.Model.extend({
 	initialize: function() {
 		this.set({
-			games_played: 0,
+			games_played: 0,		
 			fumbles: 0,
 			total_objectives: 0,
 			fumble_percentage: 0,
 			best_time: 0,
 			worst_time: 0,
-			average_time: 0
+			average_time: 0,
+			
+			offensive_games_played: 0,
+			offensive_total_spells_cast: 0,
+			offensive_total_kills: 0,
+			offensive_favorite_combo: [],
+			offensive_favorite_element: null,
 		});
 	},
 	update: function() {
 		var round_history = finch.game.round_history.get('history');
 		var games_played = 0;
 		var total_objectives = 0;
-		var best_time = 999999;
+		var best_time = Infinity;
 		var worst_time = 0;
 		var average_time = 0;
 
 		var fumbles = 0;
 		var fumble_percentage = 0;
 		
-		for(var i=0;i<round_history.length;i++) {
-			games_played++;
-						
-			for(var j=0;j<round_history[i].history.length;j++) {				
-				best_time = Math.min(best_time, round_history[i].history[j].time_to_complete);
-				worst_time = Math.max(worst_time, round_history[i].history[j].time_to_complete);
-				average_time = (average_time * total_objectives + round_history[i].history[j].time_to_complete) / (total_objectives+1);
-				if(round_history[i].history[j].fumble) {
-					fumbles++;
+		var offensive_games_played = 0;
+		var offensive_total_spells_cast = 0;		
+		var offensive_combo_counter = [];
+		var offensive_element_counter = [];
+		
+		for(var i=0;i<round_history.length;i++) {			
+			if(round_history[i].label == 'offensive') {
+				offensive_games_played++;
+				offensive_total_spells_cast+=round_history[i].history.length;
+				
+				//gives hashes like fire-fire-life or arcane-earth-earth
+				var combo_hashes = round_history[i].history.map(function(h) { return h.element_queue.sort().join('-') });
+				for(j=0;j<combo_hashes.length;j++) {
+					if(!offensive_combo_counter[combo_hashes[j]])
+						offensive_combo_counter[combo_hashes[j]] = 0;
+					
+					offensive_combo_counter[combo_hashes[j]]++;
 				}
-				total_objectives++;
+				
+				var element_queues = round_history[i].history.map(function(h) { return h.element_queue; });
+				for(j=0;j<element_queues.length;j++) {
+					element_queues[j].map(function(e) { 
+						if(!offensive_element_counter[e])
+							offensive_element_counter[e] = 0;
+						
+						offensive_element_counter[e]++;
+					});					
+				}								
+			}else{
+				games_played++;
+							
+				for(var j=0;j<round_history[i].history.length;j++) {				
+					best_time = Math.min(best_time, round_history[i].history[j].time_to_complete);
+					worst_time = Math.max(worst_time, round_history[i].history[j].time_to_complete);
+					average_time = (average_time * total_objectives + round_history[i].history[j].time_to_complete) / (total_objectives+1);
+					if(round_history[i].history[j].fumble) {
+						fumbles++;
+					}
+					total_objectives++;
+				}
 			}
 		}
+		
+		var get_highest_key = function(array) {			
+			var max = -Infinity;
+			var max_key = null;
+			
+			for(var i in array) {
+				if(array.hasOwnProperty(i)) {
+					if(array[i] > max) {
+						max = array[i];
+						max_key = i;
+					}					
+				}
+			}
+			
+			return max_key;
+		};
 		
 		this.set({
 			games_played: games_played,
 			fumbles: fumbles,
 			total_objectives: total_objectives,
-			fumble_percentage: Math.floor(fumbles/total_objectives*100),
-			best_time: best_time,
+			fumble_percentage: total_objectives == 0 ? 0 : Math.floor(fumbles/total_objectives*100),
+			best_time: total_objectives == 0 ? 0 : best_time,
 			worst_time: worst_time,
-			average_time: Math.floor(average_time)
+			average_time: Math.floor(average_time),
+			
+			offensive_games_played: offensive_games_played,
+			offensive_total_spells_cast: offensive_total_spells_cast,
+			offensive_favorite_combo: get_highest_key(offensive_combo_counter) ? get_highest_key(offensive_combo_counter).split('-') : null,
+			offensive_favorite_element: get_highest_key(offensive_element_counter) ? get_highest_key(offensive_element_counter) : null,
 		});
 		this.trigger('statistics_updated');
 	}
@@ -454,10 +510,10 @@ models.ComboParser = Backbone.Model.extend({
 			'life': -30,
 			'shield': 0,
 			'cold': 20,
-			'lightning': 100,
-			'arcane': 20,
-			'earth': 40,
-			'fire': 20	
+			'lightning': 10,
+			'arcane': 30,
+			'earth': 60,
+			'fire': 30	
 		};
 		
 		for(i=0;i<elements.length;i++) {
@@ -472,17 +528,17 @@ models.ComboParser = Backbone.Model.extend({
 					total_damage = base_damage * power / 100;
 					break;
 				case 'SPRAY':
-					total_damage = base_damage * .5;
+					total_damage = base_damage * .20;
 					break;
 				case 'ICE_SHARDS':
 					aoe = false;
 					total_damage = base_damage * power / 100;
 					break;
 				case 'BEAM':
-					total_damage = base_damage;
+					total_damage = base_damage * .2;
 					break;
 				case 'LIGHTNING':
-					total_damage = base_damage;
+					total_damage = base_damage * .25;
 					break;			 
 				default:
 					total_damage = base_damage * power / 100;
@@ -583,6 +639,7 @@ models.Opponent = Backbone.Model.extend({
 	cast_timeout: null,
 	spell_gap: 1700,
 	last_spell_cast: 0,
+	spell_delay_modifier: 1,
 	max_health: 1500,
 	initialize: function() {				
 		var _this = this;
@@ -605,7 +662,7 @@ models.Opponent = Backbone.Model.extend({
 			'wet': false,
 			'frozen_level': 0,
 			'on_fire': false,
-			'health': 1500			
+			'health': this.max_health			
 		});
 	},
 	ai_step: function() {
@@ -668,7 +725,7 @@ models.Opponent = Backbone.Model.extend({
 			}
 			
 			if(spell && !this.cast_timeout) {
-				cast_time = cast_time * (1+(this.get('frozen_level')+.01) / 5); /* max freeze */ 
+				cast_time = cast_time * (1+2*(this.get('frozen_level')+.01) / 5); /* max freeze */ 
 				console.log(cast_time + ' <- cast time');
 				this.last_spell_cast = time;
 				this.last_cast_time = cast_time;
@@ -678,7 +735,7 @@ models.Opponent = Backbone.Model.extend({
 					spell.call(_this);
 					_this.cast_timeout = clearTimeout(_this.cast_timeout);
 					_this.set('casting', false);
-				}, cast_time);			
+				}, cast_time*this.spell_delay_modifier);			
 			}	
 		}
 		this.ai_timeout = setTimeout(this.ai_step.bind(this), 200);		
@@ -722,7 +779,7 @@ models.Opponent = Backbone.Model.extend({
 	},
 	cast_heal: function() {
 		this.trigger('heal_cast');
-		this.set('health', Math.min(this.get('health')+150, this.max_health));
+		this.set('health', Math.min(this.get('health')+125, this.max_health));
 	},
 	set_wards: function(inner_ward, outer_ward) {
 		this.set({
@@ -889,16 +946,23 @@ models.RoundHistory = Backbone.Model.extend({
 			history: [],
 		});
 	},
-	add_history: function(round_label, round_history) {		
+	add_history: function(round_label, round_history) {
 		var history = this.get('history');
-		var total_time = 0;
-		for(var i=0;i<round_history.length;i++) {
-			total_time += round_history[i].time_to_complete;
+		var  total_time = 0;
+		if(round_label == 'offensive') {
+			total_time = round_history[round_history.length-1].time_to_complete;
+		}else{
+			for(var i=0;i<round_history.length;i++) {
+				total_time += round_history[i].time_to_complete;
+			}
 		}
+		
 		history.push({ 
 			label: round_label,
 			history: round_history,
-			average_time: Math.floor(total_time / round_history.length)
+			average_time: Math.floor(total_time / round_history.length),
+			total_time: total_time,
+			total_time_seconds: Math.floor(total_time/100)/10
 		});
 		this.set('history', history);
 		this.trigger('change:history', this, history);
@@ -921,12 +985,14 @@ models.ObjectiveHistory = Backbone.Model.extend({
 	clear: function() {
 		this.set('history', []);
 	},
-	add_history: function(time_to_complete, element_queue, fumble) {		
+	add_history: function(time_to_complete, element_queue, fumble, is_offensive) {		
 		var history = this.get('history');		
 		history.push({ 
 			time_to_complete: time_to_complete,
+			time_to_complete_seconds: Math.floor(time_to_complete/100)/10,
 			element_queue: element_queue,
-			fumble: fumble
+			fumble: fumble,
+			is_offensive: is_offensive
 		});		
 		this.trigger('change:history', this, history);
 	}
@@ -1085,7 +1151,8 @@ views.ObjectiveHistory = Backbone.View.extend({
 	},
 	
 	handle_history_change: function(model, history) {
-		this.render();		
+		if(finch.game.statebag.mode !== 'offensive')
+			this.render();		
 	},
 	
 	transition_to_round_history: function(callback) {
@@ -1591,8 +1658,7 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 		switch(combo_parser.get_spell_type()) {
 			case 'ICE_SHARDS':
 				var draws = 0;
-				var shard_collision_callback = (function(emitter) {
-					console.log('explosivo (shard)');
+				var shard_collision_callback = (function(emitter) {					
 					finch.game.controls.elements.spell_landed(combo_parser, this.$el.get(0).height + emitter.p.y, cast_power);
 				}).bind(this);
 				
@@ -1631,8 +1697,7 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 				
 				this.proton.addEmitter(emitter);				
 				collision_callback = (function(emitter) { 
-					this.render_explosion_at('center', this.$el.get(0).height + emitter.p.y, explosion_type);
-					console.log('explosivo (ball)');
+					this.render_explosion_at('center', this.$el.get(0).height + emitter.p.y, explosion_type);					
 					finch.game.controls.elements.spell_landed(combo_parser, this.$el.get(0).height + emitter.p.y, cast_power);
 				}).bind(this);
 				
@@ -2061,10 +2126,15 @@ views.ModeSelection = Backbone.View.extend({
 	},
 	
 	show_offensive_instructions: function() {
+		var _this = this;
 		var $instructions =$($('#offensive-mode-instructions').render().trim());
+		
 		$('#battlefield').append($instructions);
-		this.push_window($instructions);		
-		$instructions.find('.start-button').click(this.start_offensive_game.bind(this));
+		this.push_window($instructions);
+		
+		$instructions.find('.start-button').click(function() {			
+			_this.start_offensive_game();			
+		});
 		
 		var $animated_elements = $instructions.find("div[class*='anim-']");
 		$animated_elements.hide();
@@ -2086,10 +2156,10 @@ views.ModeSelection = Backbone.View.extend({
 		animation_loop();
 	},
 	
-	show_offensive_game_over: function(seconds_to_complete, total_combos) {		
+	show_offensive_game_over: function(milliseconds_to_complete, total_combos) {		
 		var $game_over_window =$($('#offensive-mode-game-over').render().trim());
-		$game_over_window.find('.seconds').text(seconds_to_complete);
-		$game_over_window.find('.combo-count').text(total_combos);
+		$game_over_window.find('.seconds').text(Math.floor(milliseconds_to_complete/1000));
+		$game_over_window.find('.combo-count').text(total_combos+1);
 		$('#battlefield').append($game_over_window);
 		var _this = this;
 		$game_over_window.find('.start-button').click(function() {
@@ -2124,12 +2194,16 @@ views.ModeSelection = Backbone.View.extend({
 	},
 	
 	start_offensive_game: function() {
+		var _this = this;
 		var callback = function() {
 			finch.game.set_mode('offensive');
 			finch.game.start();
+			finch.game.opponent.max_health = _this.view_stack[_this.view_stack.length-1].find('.health').val();
+			finch.game.opponent.spell_delay_modifier = _this.view_stack[_this.view_stack.length-1].find('.difficulty').val();
 			finch.game.load_next_objective();
 			finch.game.views.queued_elements.set_top_padding(230);
-			finch.game.views.queued_elements.show()
+			finch.game.views.queued_elements.show()			
+			finch.game.opponent.set_default_values();
 			finch.game.opponent.skynet_enabled();
 			finch.game.controls.elements.show_cast_bar = true;
 		};
@@ -2145,6 +2219,7 @@ views.ModeSelection = Backbone.View.extend({
 			finch.game.set_mode('queue');
 			finch.game.start();
 			finch.game.load_next_objective();
+			finch.game.views.queued_elements.set_top_padding(0);
 			finch.game.views.queued_elements.show()
 		};
 		
@@ -2159,6 +2234,7 @@ views.ModeSelection = Backbone.View.extend({
 			finch.game.set_mode('dequeue');
 			finch.game.start();
 			finch.game.load_next_objective();
+			finch.game.views.queued_elements.set_top_padding(0);
 			finch.game.views.queued_elements.show();
 		};
 		
@@ -2484,20 +2560,22 @@ finch.game = {
 								finch.game.load_next_objective();
 						}
 				}				
-			});
+			});			
 			finch.game.objective_history.on("change:history", function(model, history) {
-				if(history.length === finch.game.round_length) {
-					finch.game.pause();
-					finch.game.controls.elements.clear_queued_elements();				
-					finch.game.views.mode_selection.show();
-					finch.game.views.objective_history.transition_to_round_history(function() {
-						finch.game.round_history.add_history(finch.game.statebag.mode, history);
-						finch.game.round_history.save_history(finch.game.statebag.mode, history);
-						finch.game.stats_overview.update();
-						finch.game.objective_history.clear();
-					});
-					finch.game.views.queued_elements.hide()
-					finch.game.views.queued_elements_helper.hide()
+				if(finch.game.statebag.mode != 'offensive') {
+					if(history.length === finch.game.round_length) {
+						finch.game.pause();
+						finch.game.controls.elements.clear_queued_elements();				
+						finch.game.views.mode_selection.show();
+						finch.game.views.objective_history.transition_to_round_history(function() {
+							finch.game.round_history.add_history(finch.game.statebag.mode, history);
+							finch.game.round_history.save_history(finch.game.statebag.mode, history);
+							finch.game.stats_overview.update();
+							finch.game.objective_history.clear();
+						});
+						finch.game.views.queued_elements.hide()
+						finch.game.views.queued_elements_helper.hide()
+					}
 				}
 			});
 			finch.game.opponent.on('change:health', function(model, health) {
@@ -2512,7 +2590,15 @@ finch.game = {
 						finch.game.views.battlefield_particle_effects.hide();
 						finch.game.views.battlefield_line_effects.hide();
 						
-						finch.game.views.mode_selection.show_offensive_game_over()
+						var history = finch.game.objective_history.get('history');
+						finch.game.views.objective_history.transition_to_round_history(function() {							
+							finch.game.round_history.add_history(finch.game.statebag.mode, history);
+							finch.game.round_history.save_history(finch.game.statebag.mode, history);
+							finch.game.stats_overview.update();
+							finch.game.objective_history.clear();
+						});
+						
+						finch.game.views.mode_selection.show_offensive_game_over(elapsed_time = (new Date()).getTime() - finch.game.last_objective_start_time, combo_count = history.length);
 					}
 				}
 			});
@@ -2520,8 +2606,8 @@ finch.game = {
 				if(finch.game.statebag.mode == 'offensive') {
 					var combo_parser = finch.game.controls.elements.casting_combo_parser;
 					if(combo_parser) {
-						//the user just finished casting some spells at the enemy.  
-						console.log('spells cast: ' + combo_parser.get('elements'));
+						var elapsed_time = (new Date()).getTime() - finch.game.last_objective_start_time;
+						finch.game.objective_history.add_history(elapsed_time, combo_parser.get('elements'), fumble=false, is_offensive=true);						
 					}
 				}
 			});
@@ -2582,5 +2668,24 @@ $(function() {
 	finch.game.views.mode_selection.show();
 	finch.game.views.battlefield_particle_effects = new views.BattlefieldParticleEffects();
 	finch.game.views.battlefield_line_effects = new views.BattlefieldLineEffects();
+	
+	/*(function() {
+		finch.game.views.mode_selection.fadeOut();
+		
+		finch.game.set_mode('offensive');
+		finch.game.start();
+		finch.game.load_next_objective();
+		finch.game.views.queued_elements.set_top_padding(230);
+		finch.game.views.queued_elements.show()
+		finch.game.opponent.skynet_enabled();
+		finch.game.controls.elements.show_cast_bar = true;
+		
+		finch.game.objective_history.add_history(1200, ['water', 'water', 'life'], false);
+		finch.game.objective_history.add_history(2700, ['fire', 'water', 'life'], false);
+		finch.game.objective_history.add_history(3900, ['arcane', 'earth', 'earth'], false);
+		
+		finch.game.opponent.set('health', 0);
+	})();*/
+	
 });
 

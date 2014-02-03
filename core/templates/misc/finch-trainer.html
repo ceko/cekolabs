@@ -164,7 +164,14 @@
 		<script id='round-history-template' type='text/x-jsrender'>			
 			<div class='game'>
 				<div class='header'>
-					<h2>Game #{{:game_number}} ({{:history.label}})</h2><span class='total-time'>{{:history.average_time}} ms avg.
+					<h2>Game #{{:game_number}} ({{:history.label}})</h2>
+						<span class='total-time'>
+							{{if history.label == 'offensive'}}
+								{{:history.total_time_seconds}} sec.
+							{{else}}
+								{{:history.average_time}} ms avg.
+							{{/if}}
+						</span>
 				</div>
 				<div class='rows'>
 					{{for history.history}}
@@ -179,7 +186,11 @@
 							</div>
 							
 							<div class='time'>
-								{{:time_to_complete}} ms
+								{{if ~root.history.label == 'offensive'}}
+									{{:time_to_complete_seconds}} sec.
+								{{else}}
+									{{:time_to_complete}} ms
+								{{/if}}
 							</div>
 							<div style='clear:both;'></div>
 						</div>
@@ -207,26 +218,27 @@
 						<div class='header'>difficulty</div>
 						<div class='value'>
 							<select class='difficulty'>
-								<option value='easy'>easy</option>
-								<option value='normal' selected>normal</option>
-								<option value='hard'>hard</option>
+								<option value='1.5'>easy</option>
+								<option value='1' selected>normal</option>
+								<option value='.75'>hard</option>
 							</select>
 						</div>
 					</div>
 					<div class='sub-option'>
 						<div class='header'>health</div>
 						<div class='value'>
-							<select class='health'>
-								<option value='100'>100</option>
-								<option value='200'>200</option>
-								<option value='300'>300</option>
-								<option value='400'>400</option>
-								<option value='500' selected>500</option>
+							<select class='health'>								
+								<option value='500'>500</option>
 								<option value='600'>600</option>
 								<option value='700'>700</option>
 								<option value='800'>800</option>
 								<option value='900'>900</option>
-								<option value='1000'>1000</option>								
+								<option value='1000' selected>1000</option>
+								<option value='1100'>1100</option>
+								<option value='1200'>1200</option>
+								<option value='1300'>1300</option>
+								<option value='1400'>1400</option>
+								<option value='1500'>1500</option>								
 							</select>
 						</div>
 					</div>
@@ -252,8 +264,9 @@
 		</script>
 		
 		<script id='stats-overview-template' type='text/x-jsrender'>
-			<h2>your stats</h2>
-			<div class='rows'>
+			<h2>queue/dequeue stats</h2>
+			<h2>offensive game stats</h2>
+			<div class='rows simple'>
 				<div class='row'>
 					<div class='label'>games played</div>
 					<div class='value'>{{:model.get('games_played')}}</div>		
@@ -272,6 +285,31 @@
 					<div class='label'>average</div>
 					<div class='value'>{{:model.get('average_time')}} ms</div>
 					<div style='clear:both;'></div>								
+				</div>
+			</div>
+			<div class='rows offensive'>
+				<div class='row'>
+					<div class='label'>games played</div>
+					<div class='value'>{{:model.get('offensive_games_played')}}</div>		
+					<div style='clear:both;'></div>						
+				</div>
+				<div class='row'>
+					<div class='label'>total spells cast</div>
+					<div class='value'>{{:model.get('offensive_total_spells_cast')}}</div>
+					<div style='clear:both;'></div>								
+				</div>				
+				<div class='row'>					
+					<div class='label'>favorite combo</div>
+					<div class='value'>
+						<div class='elements'>
+							{{for model.get('offensive_favorite_combo') }}
+								<div class='{{:#data}}'></div>
+							{{/for}}
+						</div>
+					</div>
+					<div class='label'>favorite element</div>
+					<div class='value'><div class='elements'><div class='{{:model.get('offensive_favorite_element')}}'></div></div>
+					<div class='label'></div>													
 				</div>
 			</div>
 		</script>
