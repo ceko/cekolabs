@@ -19,6 +19,7 @@ class Project(models.Model):
     
 class TrainerRoundHistory(models.Model):
     MODE_CHOICES = (
+        ('O', 'OFFENSIVE'),
         ('Q', 'QUEUE'),
         ('D', 'DEQUEUE')
     )

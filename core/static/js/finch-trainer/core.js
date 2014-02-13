@@ -240,7 +240,29 @@ models.controls.Elements = Backbone.Model.extend({
 		if(this.get('queued_elements').length) {
 			this.trigger('cast_start');
 			if(this.combo_is_instant_cast()) {
-				console.log('instant cast - DO SOMETHING');
+				switch(combo_parser.get_spell_type()) {
+					case 'SHIELD':
+						finch.game.message_box.set_message('shields not supported');
+						finch.game.controls.elements.clear_queued_elements();
+						break;
+					case 'MINES':
+						finch.game.message_box.set_message('mines not supported');
+						finch.game.controls.elements.clear_queued_elements();
+						break;
+					case 'ROCK_WALL':
+						finch.game.message_box.set_message('walls not supported');
+						finch.game.controls.elements.clear_queued_elements();
+						break;
+					case 'STORM':
+						finch.game.message_box.set_message('storms not supported');
+						finch.game.controls.elements.clear_queued_elements();
+						break;
+					case 'ELEMENTAL_BARRIER':
+						finch.game.message_box.set_message('storms not supported');
+						finch.game.controls.elements.clear_queued_elements();
+						break;				
+					
+				}
 				return;
 			}
 			
@@ -510,10 +532,10 @@ models.ComboParser = Backbone.Model.extend({
 			'life': -30,
 			'shield': 0,
 			'cold': 20,
-			'lightning': 10,
+			'lightning': 20,
 			'arcane': 30,
 			'earth': 60,
-			'fire': 30	
+			'fire': 40	
 		};
 		
 		for(i=0;i<elements.length;i++) {
@@ -995,6 +1017,18 @@ models.ObjectiveHistory = Backbone.Model.extend({
 			is_offensive: is_offensive
 		});		
 		this.trigger('change:history', this, history);
+	}
+});
+
+models.MessageBox = Backbone.Model.extend({
+	initialize: function() {
+		this.set({
+			message: null
+		});
+	},
+	set_message: function(message) {
+		this.set('message', message);
+		this.trigger('change:message');
 	}
 });
 
@@ -1741,8 +1775,8 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 	},
 	show: function() {
 		this.$el.show();
-		var context = this.$el.get(0).getContext('webgl');
-		context.clear(context.COLOR_BUFFER_BIT|context.DEPTH_BUFFER_BIT)
+		var gl = this.renderer.renderer.gl;
+		gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT)
 	},	
 	hide: function() {
 		this.$el.hide();
@@ -2127,7 +2161,7 @@ views.ModeSelection = Backbone.View.extend({
 	
 	show_offensive_instructions: function() {
 		var _this = this;
-		var $instructions =$($('#offensive-mode-instructions').render().trim());
+		var $instructions =$($('#offensive-mode-instructions').render({ webgl_supported: !!finch.game.views.battlefield_particle_effects }).trim());
 		
 		$('#battlefield').append($instructions);
 		this.push_window($instructions);
@@ -2455,6 +2489,29 @@ views.QueuedElements = Backbone.View.extend({
 
 
 });
+
+views.MessageBox = Backbone.View.extend({
+	el: $('#message-box'),				
+	initialize: function() {
+		this.model.on("change:message", this.handle_message_change.bind(this));		
+	},
+	
+	handle_message_change: function(model, message) {
+		this.$el.stop().show().css('opacity', 1).html(message);
+		this.center();
+		this.$el.fadeOut(3000);		
+	},
+	
+	center: function() {
+		//position it in the middle of the battlefield by default, it can get moved though
+		this.$el.css({
+			top: $('#battlefield').outerHeight() / 2 - this.$el.outerHeight() / 2,
+			left: ($('#battlefield').innerWidth()-$('#round-history-slot').outerWidth())/2 - this.$el.outerWidth()/2
+		});		
+	}
+	
+});
+
 /** end views **/
 
 /** csrf support **/
@@ -2562,7 +2619,7 @@ finch.game = {
 				}				
 			});			
 			finch.game.objective_history.on("change:history", function(model, history) {
-				if(finch.game.statebag.mode != 'offensive') {
+				if(finch.game.statebag.mode != 'offensive') {					
 					if(history.length === finch.game.round_length) {
 						finch.game.pause();
 						finch.game.controls.elements.clear_queued_elements();				
@@ -2666,26 +2723,19 @@ $(function() {
 	finch.game.views.stats_overview = new views.StatsOverview({ model: finch.game.stats_overview });
 	finch.game.views.stats_overview.render();
 	finch.game.views.mode_selection.show();
-	finch.game.views.battlefield_particle_effects = new views.BattlefieldParticleEffects();
+	
+	//test for webgl support
+	var $canvas = $("<canvas></canvas>");
+	$('body').append($canvas);
+	var webgl_supported = $canvas.get(0).getContext("experimental-webgl");
+	$canvas.remove();
+	if(webgl_supported) {
+		finch.game.views.battlefield_particle_effects = new views.BattlefieldParticleEffects();		
+	}
 	finch.game.views.battlefield_line_effects = new views.BattlefieldLineEffects();
 	
-	/*(function() {
-		finch.game.views.mode_selection.fadeOut();
-		
-		finch.game.set_mode('offensive');
-		finch.game.start();
-		finch.game.load_next_objective();
-		finch.game.views.queued_elements.set_top_padding(230);
-		finch.game.views.queued_elements.show()
-		finch.game.opponent.skynet_enabled();
-		finch.game.controls.elements.show_cast_bar = true;
-		
-		finch.game.objective_history.add_history(1200, ['water', 'water', 'life'], false);
-		finch.game.objective_history.add_history(2700, ['fire', 'water', 'life'], false);
-		finch.game.objective_history.add_history(3900, ['arcane', 'earth', 'earth'], false);
-		
-		finch.game.opponent.set('health', 0);
-	})();*/
+	finch.game.message_box = new models.MessageBox();
+	finch.game.views.message_box = new views.MessageBox({ model: finch.game.message_box });
 	
 });
 

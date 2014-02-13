@@ -185,6 +185,14 @@ html body #main-wrap #playing-field #battlefield {
   height: 400px;
   background: url('../../images/finch/battlefield-background.jpg');
 }
+html body #main-wrap #playing-field #battlefield #message-box {
+  display: none;
+  position: absolute;
+  z-index: 500;
+  font-size: 40px;
+  color: #FFF;
+  text-shadow: -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000, 1px 1px 0 #000000;
+}
 html body #main-wrap #playing-field #battlefield #battlefield-particle-effects,
 html body #main-wrap #playing-field #battlefield #battlefield-line-effects {
   position: absolute;

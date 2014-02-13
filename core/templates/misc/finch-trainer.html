@@ -18,6 +18,7 @@
 			<div id='playing-field'>
 				<div id='status-bar'></div>
 				<div id='battlefield'>
+					<div id='message-box'>Mines not supported!</div>
 					<canvas id='battlefield-line-effects'></canvas>
 					<canvas id='battlefield-particle-effects'></canvas>					
 					<div id='game-title-slot'>
@@ -161,7 +162,7 @@
 			</div>			
 		</script>
 		
-		<script id='round-history-template' type='text/x-jsrender'>			
+		<script id='round-history-template' type='text/x-jsrender'>
 			<div class='game'>
 				<div class='header'>
 					<h2>Game #{{:game_number}} ({{:history.label}})</h2>
@@ -205,44 +206,48 @@
 					<span class='nav-back'>&laquo; back</span>
 				</div>
 				<div class='body'>
-					Defeat your enemy by casting optimal spells:
-					<div class='animated-instructions'>
-						<div class='elements'>
-							<div class='arcane anim-1'></div>
-							<div class='earth anim-2'></div>
-							<div class='fire anim-3'></div>							
+					{{if webgl_supported}}
+						Defeat your enemy by casting optimal spells:
+						<div class='animated-instructions'>
+							<div class='elements'>
+								<div class='arcane anim-1'></div>
+								<div class='earth anim-2'></div>
+								<div class='fire anim-3'></div>							
+							</div>
+							<div class='input anim-4'>right mouse button [hold]</div>
+						</div>					    	
+						<div class='sub-option'>
+							<div class='header'>difficulty</div>
+							<div class='value'>
+								<select class='difficulty'>
+									<option value='2.0'>easy</option>
+									<option value='1.25' selected>normal</option>
+									<option value='.75'>hard</option>
+								</select>
+							</div>
 						</div>
-						<div class='input anim-4'>right mouse button [hold]</div>
-					</div>					    	
-					<div class='sub-option'>
-						<div class='header'>difficulty</div>
-						<div class='value'>
-							<select class='difficulty'>
-								<option value='1.5'>easy</option>
-								<option value='1' selected>normal</option>
-								<option value='.75'>hard</option>
-							</select>
+						<div class='sub-option'>
+							<div class='header'>health</div>
+							<div class='value'>
+								<select class='health'>								
+									<option value='500'>500</option>
+									<option value='600'>600</option>
+									<option value='700'>700</option>
+									<option value='800'>800</option>
+									<option value='900'>900</option>
+									<option value='1000' selected>1000</option>
+									<option value='1100'>1100</option>
+									<option value='1200'>1200</option>
+									<option value='1300'>1300</option>
+									<option value='1400'>1400</option>
+									<option value='1500'>1500</option>								
+								</select>
+							</div>
 						</div>
-					</div>
-					<div class='sub-option'>
-						<div class='header'>health</div>
-						<div class='value'>
-							<select class='health'>								
-								<option value='500'>500</option>
-								<option value='600'>600</option>
-								<option value='700'>700</option>
-								<option value='800'>800</option>
-								<option value='900'>900</option>
-								<option value='1000' selected>1000</option>
-								<option value='1100'>1100</option>
-								<option value='1200'>1200</option>
-								<option value='1300'>1300</option>
-								<option value='1400'>1400</option>
-								<option value='1500'>1500</option>								
-							</select>
-						</div>
-					</div>
-					<div class='start-button'>start game</div>
+						<div class='start-button'>start game</div>
+					{{else}}
+						Sorry, your browser doesn't support <a href='https://en.wikipedia.org/wiki/WebGL'>WebGL</a> :(  You should enable it, it's super cool.
+					{{/if}}
 				</div>
 			</div>
 		</script>
