@@ -28,77 +28,84 @@ html {
 	
 		.ward-group {
 			position:relative;
-			
-			.outer-ward {
-				-webkit-mask-image: url('../../images/finch/ward-outer-mask.png');
-				-o-mask-image: url('../../images/finch/ward-outer-mask.png');
-				mask: url('../../images/finch/ward-outer-mask.png');
-				mask-image: url('../../images/finch/ward-outer-mask.png');
-				-webkit-mask-size: cover;
-				-o-mask-size: cover;
-				-moz-mask-size: cover;
-				mask-size: cover;
-				
+			height:124px;
+			width:124px;			
+						
+			.outer-ward {		
 				height:100%;
-				width:100%;
+				width:100%;				
 				
 				> div {
+					background-image: url('../../images/finch/ward-sprites.png');
 					width:100%;
 					height:100%;
+				}
+				
+				.lightning {
+					background-position:0px 124px;
+				}
+				
+				.water {
+					background-position:-124px 124px;
+				}
+				
+				.earth {
+					background-position:-248px 124px;
+				}
+				
+				.cold {
+					background-position:-372px 124px;
+				}
+				
+				.life {
+					background-position:-495px 124px;
+				}
+				
+				.arcane {
+					background-position:-619px 124px;
+				}
+				
+				.fire {
+					background-position:-743px 124px;
 				}
 			}
 			
 			.inner-ward {
 				position:absolute;	
-				top:0px;			
-				-webkit-mask-image: url('../../images/finch/ward-inner-mask.png');
-				-o-mask-image: url('../../images/finch/ward-inner-mask.png');
-				-moz-mask-image: url('../../images/finch/ward-inner-mask.png');
-				mask-image: url('../../images/finch/ward-inner-mask.png');
-				-webkit-mask-size: cover;
-				-o-mask-size: cover;
-				-moz-mask-size: cover;
-				mask-size: cover;
+				top:0px;
 				
 				height:100%;
 				width:100%;
 				
 				> div {
+					background-image: url('../../images/finch/ward-sprites.png');
 					width:100%;
 					height:100%;
 				}
-			}
-			
-			.water {
-				background-color:blue;
-			}
-			
-			.life {
-				background-color: green;
-			}
-			
-			.shield {
-				background-color: yellow;
-			}
-			
-			.cold {
-				background-color: white;
-			}
-			
-			.lightning {
-				background-color: purple;
-			}
-			
-			.arcane {
-				background-color: darkred;
-			}
-			
-			.earth {
-				background-color: grey;
-			}
-			
-			.fire {
-				background-color: red;
+				
+				.water {
+					background-position:-124px 0px;
+				}
+				
+				.earth {
+					background-position:-248px 0px;
+				}
+				
+				.cold {
+					background-position:-372px 0px;
+				}
+				
+				.life {
+					background-position:-495px 0px;
+				}
+				
+				.arcane {
+					background-position:-619px 0px;
+				}
+				
+				.fire {
+					background-position:-743px 0px;
+				}
 			}
 			
 		}
@@ -293,11 +300,13 @@ html {
 							
 							.ward-group {
 								left:44px;
-								top:44px; 
-								> div {
-									width:124px;
-									height:124px;
-								}							
+								top:44px;
+								width:124px;
+								height:124px;
+								
+								.outer-ward, .inner-ward > div {
+									background-size:868px;
+								}				
 							}
 							
 							.frozen-indicator {
@@ -479,6 +488,22 @@ html {
 							background: #111;
 							color: #FFF;
 							cursor:pointer;
+							.nav-back {
+								float:left;
+							}
+							height:25px;
+						}
+						
+						.options {							
+							background: #111;
+							color: #FFF;
+							float:right;
+							
+							.round-length {
+								select {
+									margin-left:15px;
+								}
+							}
 						}
 						
 						.body {
@@ -494,6 +519,20 @@ html {
 								.value {
 									display:inline-block;
 								}
+							}
+							
+							.opposing-help {	
+								.elements {
+									margin-bottom:5px;
+									&:first-child {
+										margin-top:20px;
+									}
+									> div {										
+										width:25px;
+										height:25px;
+										display:inline-block;
+									}
+								}								
 							}
 							
 							.animated-instructions {
@@ -541,18 +580,6 @@ html {
 						border-radius: 5px;
 						background: #333;
 						box-shadow: 0px 0px 30px 0px rgba(122, 153, 187, 0.51);
-						
-						.options {
-							padding: 10px 15px;
-							background: #111;
-							color: #FFF;
-							
-							.round-length {
-								select {
-									margin-left:15px;
-								}
-							}
-						}
 												
 						.mode {
 							&:hover {
@@ -597,9 +624,10 @@ html {
 									}
 								}
 								
-								&.ward-buster-mode {
+								&.offensive-mode {
 									.image {										
-										
+										background-image:url('../../images/finch/offensive-mode-icon.png');
+										margin-top:-10px;
 									}
 								}
 								

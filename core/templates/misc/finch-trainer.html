@@ -25,26 +25,11 @@
 						<span>Game Mode:</span><span id='game-mode-display'>None selected</span>
 						<div id='cancel-game'>cancel game</div>
 					</div>
-					<div id='opponent-slot'></div>
+					<div id='opponent-slot'>							
+					</div>
 					<div id='mode-selection'>
 						<div class='options'>
-							<div class='round-length'>
-								round length
-								<select id='round-length'>
-									<option>1</option>
-									<option>2</option>
-									<option>3</option>
-									<option>4</option>
-									<option>5</option>
-									<option>6</option>
-									<option>7</option>
-									<option>8</option>
-									<option>9</option>
-									<option>10</option>
-									<option>15</option>
-									<option>20</option>									
-								</select>
-							</div>							
+													
 						</div>						
 						<div class='modes'>
 							<div class='mode'>
@@ -196,6 +181,104 @@
 							<div style='clear:both;'></div>
 						</div>
 					{{/for}}
+				</div>
+			</div>
+		</script>
+		
+		<script id='dequeue-mode-instructions' type='text/x-jsrender'>
+			<div class='mode-instructions'>
+				<div class='nav'>
+					<span class='nav-back'>&laquo; back</span>
+					<div class='options'>
+						<div class='round-length'>
+							round length
+							<select id='dequeue-round-length'>
+								<option>1</option>
+								<option>2</option>
+								<option>3</option>
+								<option>4</option>
+								<option>5</option>
+								<option>6</option>
+								<option>7</option>
+								<option>8</option>
+								<option>9</option>
+								<option>10</option>
+								<option>15</option>
+								<option>20</option>									
+							</select>
+						</div>
+					</div>	
+				</div>
+				<div class='body'>
+					Every round your element queue will fill.  Your goal is to cast the opposing elements.  
+					<br />
+					<br />
+					<h4>Opposing Elements:</h4>
+					<div class='opposing-help'>
+						<div style='width:30%;float:left;margin-left:10px;'>
+							<div class='elements'>
+								<div class='water'></div> &raquo; <div class='lightning'></div>
+							</div>
+							<div class='elements'>
+								<div class='life'></div> &raquo; <div class='arcane'></div>
+							</div>
+							<div class='elements'>
+								<div class='shield'></div> &raquo; <div class='shield'></div>
+							</div>
+							<div class='elements'>
+								<div class='cold'></div> &raquo; <div class='fire'></div>
+							</div>
+						</div>
+						<div style='width:40%;float:left;'>
+							<div class='elements'>
+								<div class='lightning'></div> &raquo; <div class='water'></div>, <div class='earth'></div>
+							</div>
+							<div class='elements'>
+								<div class='arcane'></div> &raquo; <div class='life'></div>
+							</div>
+							<div class='elements'>
+								<div class='earth'></div> &raquo; <div class='lightning'></div>
+							</div>
+							<div class='elements'>
+								<div class='fire'></div> &raquo; <div class='cold'></div>
+							</div>
+						</div>
+						<div style='clear:both;'></div>
+					</div>
+					<div class='start-button'>start game</div>
+				</div>
+			</div>
+		</script>
+		
+		<script id='queue-mode-instructions' type='text/x-jsrender'>
+			<div class='mode-instructions'>
+				<div class='nav'>
+					<span class='nav-back'>&laquo; back</span>
+					<div class='options'>
+						<div class='round-length'>
+							round length
+							<select id='queue-round-length'>
+								<option>1</option>
+								<option>2</option>
+								<option>3</option>
+								<option>4</option>
+								<option>5</option>
+								<option>6</option>
+								<option>7</option>
+								<option>8</option>
+								<option>9</option>
+								<option>10</option>
+								<option>15</option>
+								<option>20</option>									
+							</select>
+						</div>
+					</div>	
+				</div>
+				<div class='body'>
+					Queue the elements appearing above the bar as quickly as possible.  Order doesn't matter.
+					<br />
+					<br />
+					<div class='start-button'>start game</div>
 				</div>
 			</div>
 		</script>

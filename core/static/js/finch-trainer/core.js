@@ -2117,24 +2117,19 @@ views.ModeSelection = Backbone.View.extend({
 	view_stack: [],
 	el: $('#mode-selection'),
 	events: {
-		'click .dequeue-mode': 'start_dequeue_game',
-		'click .queue-mode': 'start_queue_game',
+		'click .dequeue-mode': 'show_dequeue_instructions',
+		'click .queue-mode': 'show_queue_instructions',
 		'click .offensive-mode': 'show_offensive_instructions',
 		'change #round-length': 'change_round_length'		
 	},
 	
-	initialize: function() {
-		$('#round-length').val(finch.game.round_length);
+	initialize: function() {		
 		$('#cancel-game').click(this.cancel_game.bind(this));
 		this.countdown_timer = null;
 		finch.game.views.global.on('smart_resize', this.center.bind(this));
 		this.view_stack.push(this.$el);
 	},
-	
-	change_round_length: function() {
-		finch.game.round_length = parseInt($('#round-length').val());
-	},
-	
+		
 	cancel_game: function() {
 		finch.game.pause();
 		if(finch.game.controls.elements)
@@ -2157,6 +2152,40 @@ views.ModeSelection = Backbone.View.extend({
 		
 		this.countdown_timer = clearTimeout(this.countdown_timer);
 		$('.countdown').remove();
+	},
+	
+	show_dequeue_instructions: function() {
+		var _this = this;
+		var $instructions =$($('#dequeue-mode-instructions').render().trim());
+		
+		$('#battlefield').append($instructions);
+		this.push_window($instructions);
+		
+		$instructions.find('.start-button').click(function() {			
+			_this.start_dequeue_game();			
+		});
+		
+		$('#dequeue-round-length', $instructions).val(finch.game.round_length);
+		$('#dequeue-round-length').on('change', function() {
+			finch.game.round_length = parseInt($(this).val());
+		});
+	},
+	
+	show_queue_instructions: function() {
+		var _this = this;
+		var $instructions =$($('#queue-mode-instructions').render().trim());
+		
+		$('#battlefield').append($instructions);
+		this.push_window($instructions);
+		
+		$instructions.find('.start-button').click(function() {			
+			_this.start_queue_game();			
+		});
+		
+		$('#queue-round-length', $instructions).val(finch.game.round_length);
+		$('#queue-round-length').on('change', function() {
+			finch.game.round_length = parseInt($(this).val());
+		});
 	},
 	
 	show_offensive_instructions: function() {
