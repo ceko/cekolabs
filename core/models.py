@@ -49,4 +49,10 @@ class ComboElement(models.Model):
     ))
     
     combo = models.ForeignKey(TrainerComboHistory)
-    element = models.CharField(max_length=10, choices = ELEMENT_CHOICES)    
+    element = models.CharField(max_length=10, choices = ELEMENT_CHOICES)
+
+class OffensiveModeAttributes(models.Model):
+    round = models.ForeignKey(TrainerRoundHistory)
+    spell_delay_modifier = models.DecimalField(max_digits = 4, decimal_places = 2)
+    enemy_health = models.IntegerField()
+        

@@ -10,6 +10,60 @@ html body {
   background: url('../../images/finch/magicka-background.jpg') no-repeat center #020c12;
   height: 100%;
 }
+html body a {
+  color: #CCCCFF;
+  border-bottom: 1px dashed #CCCCFF;
+  text-decoration: none;
+}
+html body #credits-banner {
+  width: 149px;
+  height: 149px;
+  cursor: pointer;
+  background: url('../../images/finch/credits-banner.png');
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 1000;
+}
+html body #credits-content {
+  display: none;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.75);
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  z-index: 1001;
+}
+html body #credits-content #credits-window {
+  position: fixed;
+  border: 5px solid rgba(0, 0, 0, 0.75);
+  border-radius: 5px;
+  background: #333;
+  box-shadow: 0px 0px 30px 0px rgba(122, 153, 187, 0.51);
+  width: 600px;
+  color: #FFF;
+}
+html body #credits-content #credits-window .nav {
+  padding: 10px 15px;
+  background: #111;
+  color: #FFF;
+  height: 25px;
+}
+html body #credits-content #credits-window .nav .nav-back {
+  float: left;
+  cursor: pointer;
+}
+html body #credits-content #credits-window .body {
+  padding: 10px;
+}
+html body #credits-content #credits-window .body p {
+  margin-top: 10px;
+}
+html body #credits-content #credits-window .body li {
+  margin: 5px 0px 5px 20px;
+  list-style-type: none;
+}
 html body #title-bar {
   padding: 5px;
   color: #FFF;
@@ -314,6 +368,7 @@ html body #main-wrap #playing-field #battlefield #game-title-slot {
   z-index: 50;
   position: relative;
   padding: 5px;
+  padding-right: 326px;
   background: #111;
   color: #FFF;
 }
@@ -323,12 +378,52 @@ html body #main-wrap #playing-field #battlefield #game-title-slot > * {
 }
 html body #main-wrap #playing-field #battlefield #game-title-slot #cancel-game {
   float: right;
-  margin-right: 320px;
-  width: 110px;
+  width: 50px;
   text-align: center;
   background: #DA5E5E;
   display: none;
   cursor: pointer;
+}
+html body #main-wrap #playing-field #battlefield #game-title-slot #music-player {
+  float: right;
+  height: 25px;
+  margin-right: 10px;
+}
+html body #main-wrap #playing-field #battlefield #game-title-slot #music-player .play-pause {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  background-image: url('../../images/finch/play-pause.png');
+}
+html body #main-wrap #playing-field #battlefield #game-title-slot #music-player .play-pause.playing {
+  background-position: -20px;
+}
+html body #main-wrap #playing-field #battlefield #game-title-slot #music-player .play-pause.paused {
+  background-position: 0px 0px;
+}
+html body #main-wrap #playing-field #battlefield #game-title-slot #music-player .volume {
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  position: relative;
+}
+html body #main-wrap #playing-field #battlefield #game-title-slot #music-player .volume .background {
+  position: absolute;
+  top: 9px;
+  height: 2px;
+  width: 100%;
+  background: #999;
+}
+html body #main-wrap #playing-field #battlefield #game-title-slot #music-player .volume a {
+  height: 14px;
+  width: 1px;
+  border-left: 3px solid #FFF;
+  border-right: 3px solid #FFF;
+  background-color: #ffffff;
+  display: inline-block;
+  position: absolute;
+  top: 3px;
 }
 html body #main-wrap #playing-field #battlefield #round-history-slot {
   width: 321px;
@@ -395,11 +490,11 @@ html body #main-wrap #playing-field #battlefield .mode-instructions .nav {
   padding: 10px 15px;
   background: #111;
   color: #FFF;
-  cursor: pointer;
   height: 25px;
 }
 html body #main-wrap #playing-field #battlefield .mode-instructions .nav .nav-back {
   float: left;
+  cursor: pointer;
 }
 html body #main-wrap #playing-field #battlefield .mode-instructions .options {
   background: #111;

@@ -168,10 +168,12 @@ models.controls.Elements = Backbone.Model.extend({
 	get_random_elements: function(includes, excludes) {		
 		excludes = excludes || [];
 		var elements = [];
-		if(includes) {
+		//if includes has excludes in it, remove them
+		includes = _.difference(includes, excludes);
+		if(includes && includes.length) {
 			elements = includes.slice(0);
 		}
-		
+				
 		while(elements.length < 3) {
 			var keybinding_index = Math.floor(Math.random()*8);
 			var cnt = 0;
@@ -989,11 +991,14 @@ models.RoundHistory = Backbone.Model.extend({
 		this.set('history', history);
 		this.trigger('change:history', this, history);
 	},
-	save_history: function(round_label, round_history) {
+	save_history: function(round_label, round_history, additional_attrs) {
+		if(!additional_attrs)
+			additional_attrs = {};
+		
 		$.ajax({
 			url: '/trainer-save-history',
 			type: 'POST',
-			data: { label: JSON.stringify(round_label), history: JSON.stringify(round_history) }
+			data: { label: JSON.stringify(round_label), history: JSON.stringify(round_history), additional_attributes: JSON.stringify(additional_attrs) }
 		});		
 	}
 });
@@ -1321,16 +1326,33 @@ views.BattlefieldLineEffects = Backbone.View.extend({
 				var type = 'life';
 				if($.inArray('arcane', elements) !== -1)
 					type = 'arcane';
+				if($.inArray('fire', elements) !== -1)
+					type = 'fire';
+				if($.inArray('cold', elements) !== -1)
+					type = 'cold';
+				if($.inArray('water', elements) !== -1)
+					type = 'water';
 				
 				this.render_timer = setInterval(function() {
 					_this.draw_beam(type);
 				}, 100);
 				break;
 			case 'LIGHTNING':
-				this.render_timer = setInterval(function() {
-					_this.draw_lightning();
+				var lightning_type = 'lightning';
+				
+				if(combo_parser.has_element('life')) {
+					lightning_type = 'life';
+				}else if(combo_parser.has_element('cold')) {
+					lightning_type = 'cold';
+				}else if(combo_parser.has_element('fire')) {
+					lightning_type = 'fire';
+				}else if(combo_parser.has_element('arcane')) {
+					lightning_type = 'arcane';
+				}
+				this.render_timer = setInterval(function() {					
+					_this.draw_lightning(lightning_type);
 				}, 300);
-				this.draw_lightning();
+				this.draw_lightning(lightning_type);
 				break;
 		}
 	},
@@ -1377,19 +1399,37 @@ views.BattlefieldLineEffects = Backbone.View.extend({
 			context.stroke();
 		}
 		this.context.shadowBlur=30;
-		if(type == 'life') {
-			this.context.shadowColor='#4aaa16';
-			this.context.strokeStyle = '#4aaa16';
-		}else{
-			this.context.shadowColor='#e22d2a';
-			this.context.strokeStyle = '#e22d2a';
+		this.context.shadowColor='#e22d2a';
+		this.context.strokeStyle = '#e22d2a';
+		
+		switch(type) {
+			case 'life':
+				this.context.shadowColor='#4aaa16';
+				this.context.strokeStyle = '#4aaa16';
+				break;
+			case 'water':					
+				this.context.shadowColor='#005dac';
+				this.context.strokeStyle = '#338ECF';
+				break;
+			case 'fire':					
+				this.context.shadowColor='#cf5f01';
+				this.context.strokeStyle = '#cf5f01';
+				break;
+			case 'cold':					
+				this.context.shadowColor='#dafcfc';
+				this.context.strokeStyle = '#dafcfc';
+				break;
 		}
+		
 		this.beam_cnt++;
 		this.context.lineWidth = (this.beam_cnt % 6 > 2 ? 1 : -1) * this.beam_cnt % 3 + 10;
 		console.log(this.context.lineWidth);
 		draw_multipoint_line([origin, end], this.context);
 	},
-	draw_lightning: function() {
+	draw_lightning: function(type) {
+		if(!type)
+			type = 'default';
+		
 		this.clear_canvas();
 		
 		var origin = {
@@ -1437,14 +1477,35 @@ views.BattlefieldLineEffects = Backbone.View.extend({
 			}
 			context.stroke();
 		}
+		
+		var secondary_bolt_color = '#E9C1FC';
+		var shadow_color = "#FF00FF";
+		switch(type) {
+			case 'fire':
+				secondary_bolt_color = '#cf5f01';
+				shadow_color = '#FF3333';
+				break;
+			case 'cold':
+				secondary_bolt_color = '#dafcfc';
+				shadow_color = '#3333FF';
+				break;
+			case 'arcane':
+				secondary_bolt_color = '#8e1616';
+				shadow_color = '#AA0000';
+				break;
+			case 'life':
+				secondary_bolt_color = '#4aaa16';
+				shadow_color = '#33FF33';
+		}
+		
 		this.context.shadowBlur=10;
-		this.context.shadowColor='#FFFFFF';
-		this.context.strokeStyle = '#E9C1FC';
+		this.context.shadowColor=shadow_color;
+		this.context.strokeStyle = secondary_bolt_color;
 		this.context.lineWidth = 2;
 		draw_multipoint_line([].concat.apply([], [[origin], twining_points, [end]]), this.context);
 		draw_multipoint_line([].concat.apply([], [[origin], twining_points2, [end]]), this.context);
 				
-		this.context.shadowColor='#FFFFFF';
+		this.context.shadowColor=shadow_color;
 		this.context.strokeStyle = '#E9C1FC';
 		this.context.lineWidth = 4;
 		draw_multipoint_line([].concat.apply([], [[origin], variable_points, [end]]), this.context);
@@ -1622,7 +1683,7 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 				var type = 'life';
 				if($.inArray('arcane', elements) !== -1)
 					type = 'arcane';
-				var emitter = this.get_beam_endpoint_emitter(type);
+				var emitter = this.get_beam_endpoint_emitter(type /* type is not yet used */);
 				this.proton.addEmitter(emitter);				
 				emitter.p.y = -250; 
 				var render_spark = function() {
@@ -1696,8 +1757,15 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 					finch.game.controls.elements.spell_landed(combo_parser, this.$el.get(0).height + emitter.p.y, cast_power);
 				}).bind(this);
 				
+				var shard_type = 'ice';
+				if(combo_parser.has_element('life')) {
+					shard_type = 'life';
+				}else if(combo_parser.has_element('arcane')) {
+					shard_type = 'arcane';
+				}
+				
 				for(i=0;i<3;i++) {
-					var emitter = this.get_shard_emitter(emitter_movespeed, emitter_life, shard_collision_callback);					
+					var emitter = this.get_shard_emitter(emitter_movespeed, emitter_life, shard_collision_callback, shard_type);					
 					emitter.emit(1,2);					
 					this.proton.addEmitter(emitter);
 				}
@@ -1708,12 +1776,12 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 				
 				if($.inArray('fire', elements) !== -1) {
 					emitter = this.get_fireball_emitter();					
-				}else if($.inArray('water', elements) !== -1) {
-					emitter = this.get_waterball_emitter();
-					explosion_type = 'water';
 				}else if($.inArray('cold', elements) !== -1) {
 					emitter = this.get_frostball_emitter();
 					explosion_type = 'cold';
+				}else if($.inArray('water', elements) !== -1) {
+					emitter = this.get_waterball_emitter();
+					explosion_type = 'water';
 				}else if($.inArray('arcane', elements) !== -1) {
 					emitter = this.get_deathball_emitter();
 					explosion_type = 'arcane';
@@ -1911,11 +1979,8 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 		emitter.addInitialize(new Proton.ImageTarget(['/static/images/finch/particle.png'], 32));
 		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(this.$el.get(0).width / 2, this.$el.get(0).height + 20, 1)));		
 		emitter.addInitialize(new Proton.Life(.2, .3));
-		emitter.addInitialize(new Proton.V(new Proton.Span(2, 3), new Proton.Span(180, 60, true), 'polar'));
-		if(type == 'life')
-			emitter.addBehaviour(new Proton.Color('#4aaa16', '#FFFFFF'));
-		else if(type == 'arcane') 
-			emitter.addBehaviour(new Proton.Color('#e22d2a', '#FFFFFF'));
+		emitter.addInitialize(new Proton.V(new Proton.Span(2, 3), new Proton.Span(180, 60, true), 'polar'));		 
+		emitter.addBehaviour(new Proton.Color('#FFFFFF', '#FFFFFF'));
 		emitter.addBehaviour(new Proton.Scale(.4, 0));
 		
 		return emitter;
@@ -2013,7 +2078,9 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 		
 		return emitter;
 	},
-	get_shard_emitter: function(speed, life, collision_callback) {		
+	get_shard_emitter: function(speed, life, collision_callback, type) {
+		if(!type)
+			type = 'ice';
 		var emitter = new Proton.Emitter();
 		emitter.rate = new Proton.Rate(new Proton.Span(5, 10), .01);
 		emitter.addInitialize(new Proton.Mass(1));
@@ -2021,7 +2088,14 @@ views.BattlefieldParticleEffects = Backbone.View.extend({
 		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(this.$el.get(0).width / 2, this.$el.get(0).height + 20, 0)));
 		emitter.addInitialize(new Proton.Life(1, 1));
 		emitter.addInitialize(new Proton.V(new Proton.Span(1, 3), new Proton.Span(180, .1, true), 'polar'));
-		emitter.addBehaviour(new Proton.Color('#FFFFEF', '#FFFFEE'));
+		var shard_color = '#FFFFEF';
+		if(type == 'life') {
+			shard_color = '#4aaa16';
+		}else if(type == 'arcane'){
+			shard_color = '#8e1616';
+		}
+		
+		emitter.addBehaviour(new Proton.Color(shard_color, '#FFFFEE'));
 		emitter.addBehaviour(new Proton.Scale(.4, .2));
 		emitter.addBehaviour(new Proton.Alpha(1, 0));		
 		
@@ -2541,6 +2615,135 @@ views.MessageBox = Backbone.View.extend({
 	
 });
 
+views.BackgroundMusicPlayer = Backbone.View.extend({
+	el: $('#music-player'),	
+	playing: true,
+	audio: null,
+	volume: .2,
+	is_first_time: true,
+	initialize: function() {
+		var _this = this;
+		this.process_cookie();
+		$('.volume')
+			.slider({
+				slide: function(evt, ui) {
+					_this.set_volume(ui.value/100);
+					_this.fade_up_interval = clearInterval(_this.fade_up_interval);
+				},
+				value: _this.volume*100
+			});
+			
+		$('.play-pause').on('click', this.handle_playpause_click.bind(this));
+		this.audio = new Audio('/static/music/magicka-idle.mp3');
+						
+		this.audio.addEventListener('ended', function() {
+			this.pause();
+			this.load();
+		    this.play();
+		}, false);		
+		if(this.playing)
+			this.play();
+		this.audio.volume = .01		
+				
+		if(this.is_first_time) {
+			//this will happen based on a cookie
+			this.flash_music_first_time();
+		}
+		this.fade_up_interval = setInterval(function() {			
+			_this.audio.volume+=.01;
+			$('.volume').slider({value:_this.audio.volume*100});
+			if(_this.audio.volume > _this.volume)
+				_this.fade_up_interval = clearInterval(_this.fade_up_interval);
+		}, 100);
+	},
+	play: function() {
+		this.playing = false;
+		this.handle_playpause_click();
+	},
+	handle_playpause_click: function() {	
+		this.fade_up_interval = clearInterval(this.fade_up_interval);
+		var $button = this.$el.find('.play-pause');
+		this.playing = !this.playing;
+		this.save_cookie();
+		
+		$button
+			.removeClass('paused')
+			.removeClass('playing');
+		
+		if(this.playing) {	
+			this.audio.play();
+			$button.addClass('playing')
+		}else{
+			this.audio.pause();
+			$button.addClass('paused');
+		}				
+	},
+	set_volume: function(value) {
+		this.audio.volume = value;
+		this.volume = value;
+		this.save_cookie();
+	},
+	process_cookie: function() {
+		var audio_settings = $.cookie('audio-settings');
+		if(audio_settings) {
+			this.is_first_time = false;
+			var settings = JSON.parse(audio_settings);
+			this.volume = settings.volume;
+			this.playing = settings.playing;
+		}else{
+			this.save_cookie();
+		}
+	},
+	save_cookie: function() {
+		$.cookie('audio-settings', JSON.stringify({
+			playing: this.playing,
+			volume: this.volume,
+			is_first_time: this.is_first_time
+		}));
+	},
+	flash_music_first_time: function() {
+		var flash_timer = 4;
+		var _this = this;
+		
+		var flash_it = function() {
+			_this.$el.effect('highlight');
+			if(flash_timer-- > 0)
+				setTimeout(flash_it, 300);
+		};
+		setTimeout(flash_it, 300);
+	}
+});
+
+views.Credits = Backbone.View.extend({
+	el: $('#credits-banner'),
+	events: {
+		'click': 'handle_click'
+	},
+	initialize: function() {
+		finch.game.views.global.on('smart_resize', this.center_credits.bind(this));
+		$('#credits-content, #credits-window .nav-back').on('click', this.hide_credits.bind(this));
+		$('#credits-window').click(function(evt) {
+			evt.stopPropagation();
+		})
+	},
+	handle_click: function() {
+		this.show_credits();
+	},
+	hide_credits: function() {
+		$('#credits-content').fadeOut('fast');
+	},
+	show_credits: function() {
+		$('#credits-content').fadeIn('fast');
+		this.center_credits();
+	},
+	center_credits: function() {		
+		$('#credits-window').css({
+			top: $('#credits-content').innerHeight()/2 - $('#credits-window').outerHeight()/2,
+			left: $('#credits-content').innerWidth()/2 - $('#credits-window').outerWidth()/2
+		});
+	}
+});
+
 /** end views **/
 
 /** csrf support **/
@@ -2587,7 +2790,7 @@ $(document).ajaxSend(function(event, xhr, settings) {
 finch.game = {	
 	round_length: 5,
 	statebag: {},
-	paused: false,
+	paused: true,
 	set_mode: function(mode) {
 		finch.game.statebag.mode = mode;
 	},		
@@ -2679,7 +2882,11 @@ finch.game = {
 						var history = finch.game.objective_history.get('history');
 						finch.game.views.objective_history.transition_to_round_history(function() {							
 							finch.game.round_history.add_history(finch.game.statebag.mode, history);
-							finch.game.round_history.save_history(finch.game.statebag.mode, history);
+							var additional_attrs = {
+								spell_delay_modifier : finch.game.opponent.spell_delay_modifier,
+								enemy_health : finch.game.opponent.max_health
+							}
+							finch.game.round_history.save_history(finch.game.statebag.mode, history, additional_attrs);
 							finch.game.stats_overview.update();
 							finch.game.objective_history.clear();
 						});
@@ -2765,6 +2972,8 @@ $(function() {
 	
 	finch.game.message_box = new models.MessageBox();
 	finch.game.views.message_box = new views.MessageBox({ model: finch.game.message_box });
-	
+	finch.game.views.background_music_player = new views.BackgroundMusicPlayer();
+	finch.game.views.credits = new views.Credits();
+	//finch.game.views.credits.handle_click();
 });
 

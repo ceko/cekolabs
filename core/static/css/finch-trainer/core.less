@@ -8,9 +8,73 @@ html {
 	font-family:Tahoma;
 	height:100%;
 
-	body {
+	body {		
 		background:url('../../images/finch/magicka-background.jpg') no-repeat center #020C12;	
 		height:100%;	
+	
+		a {
+			color: #CCCCFF;
+			border-bottom: 1px dashed #CCCCFF;
+			text-decoration: none;
+		}
+	
+		#credits-banner {
+			width:149px;
+			height:149px;
+			cursor:pointer;
+			background:url('../../images/finch/credits-banner.png');
+			position:fixed;
+			top:0px;
+			left:0px;
+			z-index:1000;
+		}
+	
+		#credits-content {
+			display:none;
+			position:fixed;
+			background-color:rgba(0,0,0,.75);
+			top:0px;
+			right:0px;
+			bottom:0px;
+			left:0px;
+			z-index:1001;
+			
+			#credits-window {
+				position:fixed;
+				border: 5px solid rgba(0,0,0,.75);
+				border-radius: 5px;
+				background: #333;
+				box-shadow: 0px 0px 30px 0px rgba(122, 153, 187, 0.51);
+				width:600px;				
+				color:#FFF;
+
+				.nav {
+					padding: 10px 15px;
+					background: #111;
+					color: #FFF;
+					
+					.nav-back {
+						float:left;
+						cursor:pointer;
+					}
+					height:25px;
+				}
+				
+				.body {
+					padding:10px;
+								
+					p {
+						margin-top:10px;														
+					}
+					
+					li {
+						margin: 5px 0px 5px 20px;
+						list-style-type:none;
+					}					
+				}
+			}
+			
+		}
 	
 		#title-bar {
 			padding:5px;
@@ -381,9 +445,10 @@ html {
 					}
 					
 					#game-title-slot {
-						z-index:50;
+						z-index:50;						
 						position:relative;
 						padding: 5px;
+						padding-right:326px;
 						background: #111;
 						color: #FFF;
 						
@@ -393,14 +458,62 @@ html {
 						}
 						
 						#cancel-game {							
-							float: right;
-							margin-right: 320px;
-							width: 110px;
+							float: right;							
+							width: 50px;
 							text-align: center;							
 							background: #DA5E5E;
 							display:none;	
 							cursor:pointer;						
-						}						
+						}				
+						
+						#music-player {
+							float:right;
+							height:25px;
+							margin-right:10px;
+							
+							.play-pause {
+								display:inline-block;
+								width:20px;
+								height:20px;								
+								cursor:pointer;
+								background-image:url('../../images/finch/play-pause.png');	
+																
+								&.playing {
+									background-position:-20px;
+								}
+								
+								&.paused {
+									background-position:0px 0px;			
+								}					
+							}							
+							
+							.volume {
+								display:inline-block;
+								width:40px;
+								height:20px;
+								position:relative;	
+								
+								.background {
+									position:absolute;
+									top:9px;
+									height:2px;
+									width:100%;
+									background:#999;
+								}
+								
+								a {
+									height: 14px;
+									width: 1px;
+									border-left:3px solid #FFF;
+									border-right:3px solid #FFF;
+									background-color: rgb(255, 255, 255);									
+									display: inline-block;
+									position: absolute;
+									top:3px;									
+								}
+								 
+							}
+						}		
 					}
 					
 					#round-history-slot {
@@ -487,9 +600,10 @@ html {
 							padding: 10px 15px;
 							background: #111;
 							color: #FFF;
-							cursor:pointer;
+							
 							.nav-back {
 								float:left;
+								cursor:pointer;
 							}
 							height:25px;
 						}

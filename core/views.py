@@ -45,9 +45,10 @@ def magicka_trainer(request):
     return { }
 
 @ensure_csrf_cookie
-def magicka_trainer_save_history(request):
+def magicka_trainer_save_history(request):    
     history = json.loads(request.POST.get('history'))
     label = json.loads(request.POST.get('label'))
+    additional_attributes = json.loads(request.POST.get('additional_attributes'))
     
     round_history = core_models.TrainerRoundHistory()
     round_history.mode = label[0].upper()
@@ -66,6 +67,14 @@ def magicka_trainer_save_history(request):
             combo_element.combo = combo
             combo_element.element = element
             combo_element.save()
+     
+    #offensive mode
+    if round_history.mode == 'O':
+        offensive_mode_stats = core_models.OffensiveModeAttributes()
+        offensive_mode_stats.round = round_history
+        offensive_mode_stats.enemy_health = additional_attributes['enemy_health']
+        offensive_mode_stats.spell_delay_modifier = additional_attributes['spell_delay_modifier']
+        offensive_mode_stats.save()    
             
     return HttpResponse(json.dumps({ 'status' : 'success' }))   
 

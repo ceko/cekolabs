@@ -32,5 +32,6 @@ class TrainerRoundHistoryAdmin(admin.ModelAdmin):
 admin.site.register(models.Feature)
 admin.site.register(models.Project)
 admin.site.register(models.ComboElement)
+admin.site.register(models.OffensiveModeAttributes)
 admin.site.register(models.TrainerComboHistory)
 admin.site.register(models.TrainerRoundHistory, TrainerRoundHistoryAdmin)

@@ -212,6 +212,7 @@ PIPELINE_JS = {
             'js/finch-trainer/core.js',
             'js/proton-1.0.0.min.js',
             'js/proton-patches.js',
+            'js/jquery.cookie.js',
             'js/google-analytics.js'
         ),
         'output_filename': 'js/finch-trainer/core.min.js',

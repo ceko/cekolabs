@@ -8,10 +8,38 @@
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>			
 		{% compressed_css 'finch-trainer' %}
 	</head>
-	<body>
+	<body>		
+		<div id='credits-banner'></div>
+		<div id='credits-content'>
+			<div id='credits-window'>
+				<div class="nav">
+					<span class="nav-back">&laquo; back</span>					
+				</div>
+				<div class='body'>
+					<p>
+						Thanks to the wonderful people at <a href='http://www.paradoxplaza.com/'>Paradox</a> for letting me
+						use all of their art and music assets and for being cool enough to feature me in a newsletter.  
+						Thanks to Devil's Advocate at <a href='http://www.magickawizardwars.com'>http://www.magickawizardwars.com</a> 
+						for letting me use the apps subdomain.
+					</p>
+					<p>
+						Also a special thanks to you!  Thank you for using this app and all the positive feedback that's been left on the wizard wars forum.
+					</p>				  
+					<p>				
+						<b>Technologies Used:</b>
+						<ul>
+							<li><a href='https://www.djangoproject.com/'>Django</a></li>
+							<li><a href='https://www.jquery.com/'>jQuery</a></li>
+							<li><a href='http://backbonejs.org/'>Backbone.js</a></li>
+							<li><a href='http://a-jie.github.io/Proton/'>Proton.js</a></li>
+						</ul>
+					</p>
+				</div>
+			</div>
+		</div>
 		<div id='title-bar'>
 			<div>
-				<a href='http://magickawizardwars.com'>Visit magickawizardwars.com, the best unofficial site for the game!</a>
+				<a href='http://magickawizardwars.com'>Visit magickawizardwars.com, the best unofficial site for the game!</a>				
 			</div>
 		</div>
 		<div id='main-wrap'>		
@@ -23,7 +51,13 @@
 					<canvas id='battlefield-particle-effects'></canvas>					
 					<div id='game-title-slot'>
 						<span>Game Mode:</span><span id='game-mode-display'>None selected</span>
-						<div id='cancel-game'>cancel game</div>
+						<div id='cancel-game'>cancel</div>						
+						<div id='music-player'>
+							<div class='paused play-pause'></div>
+							<div class='volume'>
+								<div class='background'></div>
+							</div>
+						</div>												
 					</div>
 					<div id='opponent-slot'>							
 					</div>
@@ -192,7 +226,7 @@
 					<div class='options'>
 						<div class='round-length'>
 							round length
-							<select id='dequeue-round-length'>
+							<select name='dequeue-round-length' id='dequeue-round-length'>
 								<option>1</option>
 								<option>2</option>
 								<option>3</option>
@@ -257,7 +291,7 @@
 					<div class='options'>
 						<div class='round-length'>
 							round length
-							<select id='queue-round-length'>
+							<select name='queue-round-length' id='queue-round-length'>
 								<option>1</option>
 								<option>2</option>
 								<option>3</option>
