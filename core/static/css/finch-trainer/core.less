@@ -869,11 +869,124 @@ html {
 					overflow:hidden;
 					display:table;
 															
-					#player-controls {																		
+					#player-controls {
+						position:relative;																		
 						padding:10px;
 						width:280px;
 						border-right:1px solid #5F5F5F;
 						box-shadow:inset -1px 0px #000;
+											
+						#edit-keybindings {
+							position:absolute;
+							top:0px;
+							right:0px;
+							width:58px;
+							height:58px;
+							background:url('../../images/finch/settings.png');
+							cursor:pointer;
+						}					
+											
+						#keybindings {
+							position:absolute;
+							top:0px;
+							right:0px;
+							bottom:0px;
+							left:0px;
+							background:rgba(0,0,0,.85);
+							display:none;
+							color:#FFF;
+							z-index:50;
+							
+							> div {
+								width:50%;
+								float:left;
+									
+								> div {									
+									margin:20px;
+									
+									> * {
+										margin-bottom:5px;
+									}
+									
+									span {
+										display:block;
+										float:left;
+										clear:both;
+										width:70px;										
+									}
+									
+									input{
+										display:block;
+										float:left;
+										width:20px;		
+										text-align:center;
+										border:none;
+										height:18px;							
+									}
+								}
+							}
+							
+							.cast-button {
+								margin:5px 0px 0px 20px;
+								span {
+									display:block;
+								}
+								
+								#cast-left-click, #cast-right-click {
+									background-image:url('../../images/finch/mouse-buttons.png');
+									width:23px;
+									height:35px;
+									display:inline-block;
+									opacity:.4;
+									cursor:pointer;
+									
+									&.selected {
+										opacity:1;
+									}
+								}
+								
+								#cast-left-click {									
+									margin:4px 10px 0px 8px;									
+								}
+								
+								#cast-right-click {									
+									background-position: -37px;									
+									margin:4px 10px 0px 0px;									
+								}
+							}
+							
+							.buttons {
+								position:absolute;
+								right:10px;
+								bottom:10px;
+							}
+							
+							#save-keybindings {	
+								float:right;	
+								margin:0px 10px 0px 0px;						
+								display:inline-block;								
+								text-align: center;
+								background: #299125;
+								border: 1px solid #0A1B09;
+								cursor: pointer;								
+								padding: 10px;
+								border-radius: 5px;
+								color: #FFF;							
+							}
+							
+							#cancel-keybindings {	
+								float:right;
+								margin:0px;							
+								display:inline-block;
+								text-align: center;
+								background: #DA5E5E;
+								border: 1px solid #0A1B09;
+								cursor: pointer;								
+								padding: 10px;
+								border-radius: 5px;
+								color: #FFF;							
+							}
+						}
 												
 						#elements-controls {
 							> div {
@@ -958,26 +1071,33 @@ html {
 						display:table-cell;
 						width:100%;
 						color:#fff;
+						background:#333;
 						
-						h2 {	
-							width:50%;
-							float:left;						
-							font-size:16px;
-							font-weight:normal;
-							margin:7px 0px 7px 7px;
-						}	
-						
-						> h2+h2 {
-							width:30%;
-							margin-left:0px;
+						.row-header {
+							background:#111;
+							
+							h2 {								
+								width:50%;
+								float:left;						
+								font-size:16px;
+								font-weight:normal;
+								margin:7px 0px 7px 7px;
+							}	
+							
+							> h2+h2 {
+								width:30%;
+								margin-left:0px;
+							}
 						}
 						
 						.rows {
 							width:50%;
 							float:left;
 							
-							&.offensive {
-								box-shadow: -1px 0px #666;
+							&.simple {
+								.row {
+									box-shadow: -1px 0px #666 inset;
+								}
 							}	
 							
 							.elements > div {

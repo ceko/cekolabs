@@ -707,10 +707,110 @@ html body #main-wrap #playing-field #player-information {
   display: table;
 }
 html body #main-wrap #playing-field #player-information #player-controls {
+  position: relative;
   padding: 10px;
   width: 280px;
   border-right: 1px solid #5F5F5F;
   box-shadow: inset -1px 0px #000000;
+}
+html body #main-wrap #playing-field #player-information #player-controls #edit-keybindings {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 58px;
+  height: 58px;
+  background: url('../../images/finch/settings.png');
+  cursor: pointer;
+}
+html body #main-wrap #playing-field #player-information #player-controls #keybindings {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  background: rgba(0, 0, 0, 0.85);
+  display: none;
+  color: #FFF;
+  z-index: 50;
+}
+html body #main-wrap #playing-field #player-information #player-controls #keybindings > div {
+  width: 50%;
+  float: left;
+}
+html body #main-wrap #playing-field #player-information #player-controls #keybindings > div > div {
+  margin: 20px;
+}
+html body #main-wrap #playing-field #player-information #player-controls #keybindings > div > div > * {
+  margin-bottom: 5px;
+}
+html body #main-wrap #playing-field #player-information #player-controls #keybindings > div > div span {
+  display: block;
+  float: left;
+  clear: both;
+  width: 70px;
+}
+html body #main-wrap #playing-field #player-information #player-controls #keybindings > div > div input {
+  display: block;
+  float: left;
+  width: 20px;
+  text-align: center;
+  border: none;
+  height: 18px;
+}
+html body #main-wrap #playing-field #player-information #player-controls #keybindings .cast-button {
+  margin: 5px 0px 0px 20px;
+}
+html body #main-wrap #playing-field #player-information #player-controls #keybindings .cast-button span {
+  display: block;
+}
+html body #main-wrap #playing-field #player-information #player-controls #keybindings .cast-button #cast-left-click,
+html body #main-wrap #playing-field #player-information #player-controls #keybindings .cast-button #cast-right-click {
+  background-image: url('../../images/finch/mouse-buttons.png');
+  width: 23px;
+  height: 35px;
+  display: inline-block;
+  opacity: .4;
+  cursor: pointer;
+}
+html body #main-wrap #playing-field #player-information #player-controls #keybindings .cast-button #cast-left-click.selected,
+html body #main-wrap #playing-field #player-information #player-controls #keybindings .cast-button #cast-right-click.selected {
+  opacity: 1;
+}
+html body #main-wrap #playing-field #player-information #player-controls #keybindings .cast-button #cast-left-click {
+  margin: 4px 10px 0px 8px;
+}
+html body #main-wrap #playing-field #player-information #player-controls #keybindings .cast-button #cast-right-click {
+  background-position: -37px;
+  margin: 4px 10px 0px 0px;
+}
+html body #main-wrap #playing-field #player-information #player-controls #keybindings .buttons {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+html body #main-wrap #playing-field #player-information #player-controls #keybindings #save-keybindings {
+  float: right;
+  margin: 0px 10px 0px 0px;
+  display: inline-block;
+  text-align: center;
+  background: #299125;
+  border: 1px solid #0A1B09;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 5px;
+  color: #FFF;
+}
+html body #main-wrap #playing-field #player-information #player-controls #keybindings #cancel-keybindings {
+  float: right;
+  margin: 0px;
+  display: inline-block;
+  text-align: center;
+  background: #DA5E5E;
+  border: 1px solid #0A1B09;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 5px;
+  color: #FFF;
 }
 html body #main-wrap #playing-field #player-information #player-controls #elements-controls > div.row1 {
   margin-top: 10px;
@@ -773,15 +873,19 @@ html body #main-wrap #playing-field #player-information #stats-overview-slot {
   display: table-cell;
   width: 100%;
   color: #fff;
+  background: #333;
 }
-html body #main-wrap #playing-field #player-information #stats-overview-slot h2 {
+html body #main-wrap #playing-field #player-information #stats-overview-slot .row-header {
+  background: #111;
+}
+html body #main-wrap #playing-field #player-information #stats-overview-slot .row-header h2 {
   width: 50%;
   float: left;
   font-size: 16px;
   font-weight: normal;
   margin: 7px 0px 7px 7px;
 }
-html body #main-wrap #playing-field #player-information #stats-overview-slot > h2 + h2 {
+html body #main-wrap #playing-field #player-information #stats-overview-slot .row-header > h2 + h2 {
   width: 30%;
   margin-left: 0px;
 }
@@ -789,8 +893,8 @@ html body #main-wrap #playing-field #player-information #stats-overview-slot .ro
   width: 50%;
   float: left;
 }
-html body #main-wrap #playing-field #player-information #stats-overview-slot .rows.offensive {
-  box-shadow: -1px 0px #666666;
+html body #main-wrap #playing-field #player-information #stats-overview-slot .rows.simple .row {
+  box-shadow: -1px 0px #666666 inset;
 }
 html body #main-wrap #playing-field #player-information #stats-overview-slot .rows .elements > div {
   position: relative;

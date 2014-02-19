@@ -91,40 +91,9 @@
 					</div>
 				</div>
 				<div id='player-information'>
-					<div id='player-controls'>						
-						<div id='elements-controls'>
-							<div class='row1'>
-								<div class='water'>
-									<span>Q</span>								
-								</div>
-								<div class='life'>
-									<span>W</span>								
-								</div>
-								<div class='shield'>
-									<span>E</span>								
-								</div>
-								<div class='cold'>
-									<span>R</span>								
-								</div>
-							</div>
-							<div class='row2'>
-								<div class='lightning'>
-									<span>A</span>								
-								</div>
-								<div class='arcane'>
-									<span>S</span>								
-								</div>
-								<div class='earth'>
-									<span>D</span>								
-								</div>
-								<div class='fire'>
-									<span>F</span>								
-								</div>
-							</div>							
-						</div>
-					</div>	
-					<div id='stats-overview-slot'>
-												
+					<div id='player-controls-slot'>
+					</div>
+					<div id='stats-overview-slot'>												
 					</div>														
 				</div>				
 			</div>			
@@ -160,6 +129,77 @@
 				</div>
 			{{/for}}
 			<div class='history-shadow'></div>		
+		</script>
+		
+		<script id='player-controls-template' type='text/x-jsrender'>
+			<div id='player-controls'>
+				<div id='edit-keybindings'></div>
+				<div id='keybindings'>
+					<div>
+						<div>
+							<span>water</span>
+							<input type='textbox' id='water-keybinding' />
+							<span>life</span>
+							<input type='textbox' id='life-keybinding' />
+							<span>shield</span>
+							<input type='textbox' id='shield-keybinding' />
+							<span>cold</span>
+							<input type='textbox' id='cold-keybinding' />
+						</div>
+					</div>
+					<div>
+						<div>
+							<span>lightning</span>
+							<input type='textbox' id='lightning-keybinding' />
+							<span>arcane</span>
+							<input type='textbox' id='arcane-keybinding' />
+							<span>earth</span>
+							<input type='textbox' id='earth-keybinding' />
+							<span>fire</span>
+							<input type='textbox' id='fire-keybinding' />
+						</div>
+					</div>
+					<div class='cast-button'>
+						<span>cast button</span>
+						<div id='cast-left-click'></div>
+						<div id='cast-right-click'></div>
+					</div>
+					<div class='buttons'>
+						<div id='cancel-keybindings'>cancel</div>
+						<div id='save-keybindings'>save</div>
+					</div>
+				</div>						
+				<div id='elements-controls'>
+					<div class='row1'>
+						<div class='water'>
+							<span>Q</span>								
+						</div>
+						<div class='life'>
+							<span>W</span>								
+						</div>
+						<div class='shield'>
+							<span>E</span>								
+						</div>
+						<div class='cold'>
+							<span>R</span>								
+						</div>
+					</div>
+					<div class='row2'>
+						<div class='lightning'>
+							<span>A</span>								
+						</div>
+						<div class='arcane'>
+							<span>S</span>								
+						</div>
+						<div class='earth'>
+							<span>D</span>								
+						</div>
+						<div class='fire'>
+							<span>F</span>								
+						</div>
+					</div>							
+				</div>
+			</div>	
 		</script>
 		
 		<script id='opponent-template' type='text/x-jsrender'>
@@ -386,8 +426,11 @@
 		</script>
 		
 		<script id='stats-overview-template' type='text/x-jsrender'>
-			<h2>queue/dequeue stats</h2>
-			<h2>offensive game stats</h2>
+			<div class='row-header'>
+				<h2>queue/dequeue stats</h2>
+				<h2>offensive game stats</h2>
+				<div style='clear:both;'></div>
+			</div>
 			<div class='rows simple'>
 				<div class='row'>
 					<div class='label'>games played</div>
@@ -430,8 +473,7 @@
 						</div>
 					</div>
 					<div class='label'>favorite element</div>
-					<div class='value'><div class='elements'><div class='{{:model.get('offensive_favorite_element')}}'></div></div>
-					<div class='label'></div>													
+					<div class='value'><div class='elements'><div class='{{:model.get('offensive_favorite_element')}}'></div></div></div>					
 				</div>
 			</div>
 		</script>
