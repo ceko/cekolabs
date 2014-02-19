@@ -116,24 +116,14 @@ models.controls.Elements = Backbone.Model.extend({
 	ignore_keystrokes: false,
 	casting_interval: null,
 	combo_parser: null,
-	casting_combo_parser: null,
+	casting_combo_parser: null,	
 	initialize: function() {
 		this.set({
 			queued_elements: [],	
 			pressed_elements: [],
 			casting_power: 0,
 			casting: false,
-		});
-		this.keybindings = {
-			'q': 'water',
-			'w': 'life',
-			'e': 'shield',
-			'r': 'cold',
-			'a': 'lightning',
-			's': 'arcane',
-			'd': 'earth',
-			'f': 'fire'
-		};
+		});		
 		this.incompatibility_list = [			
 			['life', 'arcane'],
 			['shield', 'shield'],
@@ -143,10 +133,61 @@ models.controls.Elements = Backbone.Model.extend({
 		];
 		finch.game.views.global.on('right_mouse_press', this.handle_right_mouse_press.bind(this));
 		finch.game.views.global.on('right_mouse_release', this.handle_right_mouse_release.bind(this));
+		finch.game.views.global.on('left_mouse_press', this.handle_left_mouse_press.bind(this));
+		finch.game.views.global.on('left_mouse_release', this.handle_left_mouse_release.bind(this));
+				
 		var _this = this;
 		this.on('change:queued_elements', function() {
 			_this.combo_parser = null;
-		})
+		});
+		
+		$(function() { _this.load_keybindings(); });
+	},
+	persist_keybindings: function() {		
+		$.cookie('keybindings', JSON.stringify({
+			elements: this.keybindings,
+			mouse_cast_button: this.mouse_cast_button,
+		}));
+	},
+	load_keybindings: function() {
+		var keybindings = $.cookie('keybindings');
+		if(keybindings) {
+			keybindings = JSON.parse(keybindings);
+			this.keybindings = keybindings.elements;
+			this.mouse_cast_button = keybindings.mouse_cast_button;
+		}else{
+			this.keybindings = {
+				'Q': 'water',
+				'W': 'life',
+				'E': 'shield',
+				'R': 'cold',
+				'A': 'lightning',
+				'S': 'arcane',
+				'D': 'earth',
+				'F': 'fire'
+			};
+			this.mouse_cast_button = 'right';
+		}
+		
+		this.trigger('change:keybindings');
+	},
+	process_cookie: function() {
+		var audio_settings = $.cookie('audio-settings');
+		if(audio_settings) {
+			this.is_first_time = false;
+			var settings = JSON.parse(audio_settings);
+			this.volume = settings.volume;
+			this.playing = settings.playing;
+		}else{
+			this.save_cookie();
+		}
+	},
+	save_cookie: function() {
+		$.cookie('audio-settings', JSON.stringify({
+			playing: this.playing,
+			volume: this.volume,
+			is_first_time: this.is_first_time
+		}));
 	},
 	clear_queued_elements: function() {
 		this.set('queued_elements', []);		
@@ -231,7 +272,17 @@ models.controls.Elements = Backbone.Model.extend({
 		
 		return element_arr1.length == 0 & element_arr2.length == 0;
 	},
+	handle_left_mouse_press: function() {
+		if(this.mouse_cast_button == 'left') {
+			this.bound_mouse_press();
+		}
+	},
 	handle_right_mouse_press: function() {
+		if(this.mouse_cast_button == 'right') {
+			this.bound_mouse_press();
+		}
+	},
+	bound_mouse_press: function() {
 		if(!this.show_cast_bar)
 			return;
 		
@@ -303,7 +354,17 @@ models.controls.Elements = Backbone.Model.extend({
 	combo_is_charged: function() {
 		return this.get_combo_parser().is_charged();
 	},
+	handle_left_mouse_release: function() {
+		if(this.mouse_cast_button == 'left') {
+			this.bound_mouse_release();
+		}
+	},
 	handle_right_mouse_release: function() {
+		if(this.mouse_cast_button == 'right') {
+			this.bound_mouse_release();
+		}
+	},
+	bound_mouse_release: function() {
 		if(!this.show_cast_bar)
 			return;		
 		this.stop_casting();		
@@ -1263,19 +1324,20 @@ views.Global = Backbone.View.extend({
 	handle_keydown: function(evt) {
 		if(finch.game.paused) return;
 		
-		var key = String.fromCharCode(evt.which).toLowerCase();
+		var key = String.fromCharCode(evt.which).toUpperCase();
 		if(finch.game.controls.elements)
 			finch.game.controls.elements.handle_keydown(key);				
 	},	
 	handle_keyup: function(evt) {
-		if(finch.game.paused) return;
-		
-		var key = String.fromCharCode(evt.which).toLowerCase();
+		var key = String.fromCharCode(evt.which).toUpperCase();
 		if(finch.game.controls.elements)
 			finch.game.controls.elements.handle_keyup(key);
 	},
-	handle_mousedown: function(evt) {		
+	handle_mousedown: function(evt) {
 		switch(evt.which) {
+			case 1:
+				this.trigger('left_mouse_press');
+				break;
 			case 3:
 				evt.preventDefault();				
 				this.trigger('right_mouse_press');
@@ -1284,6 +1346,9 @@ views.Global = Backbone.View.extend({
 	},
 	handle_mouseup: function(evt) {
 		switch(evt.which) {
+			case 1:
+				this.trigger('left_mouse_release');
+				break;
 			case 3:
 				evt.preventDefault();				
 				this.trigger('right_mouse_release');
@@ -2451,19 +2516,102 @@ views.ModeSelection = Backbone.View.extend({
 });
 
 views.Elements = Backbone.View.extend({
-	el: $('#elements-controls'),
-				
-	initialize: function() {
-		this.model.on("change:pressed_elements", this.handle_pressed_elements.bind(this));		
+	el: $('#player-controls-slot'),
+	events: {
+		'click #edit-keybindings': 'edit_keybindings',
+		'keydown #keybindings > div > div input': 'set_keybinding',
+		'click #cancel-keybindings': 'hide_keybindings',
+		'click #save-keybindings': 'save_keybindings',
+		'click .cast-button > div': 'change_cast_button',
 	},
-	
+	initialize: function() {
+		this.model.on("change:pressed_elements", this.handle_pressed_elements.bind(this));
+		this.model.on("change:keybindings", this.render.bind(this));
+		
+	},	
 	handle_pressed_elements: function(model, pressed_elements) {		
 		this.$el.find('.pressed').removeClass('pressed');
 		var _this = this;
 		for(var element in pressed_elements) {		
 			this.$el.find('.' + element).addClass('pressed');
 		}
+	},	
+	edit_keybindings: function() {
+		$('#keybindings').fadeIn();
+		//set keybindings to current
+		for(key in this.model.keybindings) {
+			if(this.model.keybindings.hasOwnProperty(key)) {
+				var element = this.model.keybindings[key];
+				$('#' + element + '-keybinding').val(key.toUpperCase());
+			}
+		}
+		
+		$('.cast-button > div', this.$el).removeClass('selected');
+		$('#cast-' + this.model.mouse_cast_button + '-click').addClass('selected');
 	},
+	set_keybinding: function(evt) {
+		$(evt.target).val(String.fromCharCode(evt.which).toUpperCase());	
+		evt.preventDefault();
+		
+		//find another one that has this setting and unset it
+		this.$el.find("input[id$='keybinding']").not(evt.target).each(function() {
+			if($.trim($(this).val()) == $.trim($(evt.target).val())) {
+				$(this).val('');
+			}
+		});
+	},
+	hide_keybindings: function() {
+		$('#keybindings').fadeOut();		
+	},
+	change_cast_button: function(evt) {
+		$('.cast-button > div', this.$el).removeClass('selected');
+		$(evt.target).addClass('selected');
+	},
+	save_keybindings: function() {
+		//create keybinding array, checking for blanks
+		var keybindings = [];
+		this.$el.find("input[id$='keybinding']").each(function() {
+			var val = $.trim($(this).val());
+			if(val.length) {
+				keybindings.push({
+					key: $.trim(val),
+					element: $(this).attr('id').split('-')[0]
+				});
+			}else{
+				$(this).effect('shake', {distance: 5})
+			}
+		});
+		
+		if(keybindings.length == 8) {
+			this.model.keybindings = {};
+			for(i=0;i<keybindings.length;i++) {
+				this.model.keybindings[keybindings[i].key] = keybindings[i].element;
+			}
+			
+			if($('#cast-right-click').hasClass('selected')) {
+				this.model.mouse_cast_button = 'right';
+			}else{
+				this.model.mouse_cast_button = 'left';
+			}
+			
+			this.update_interface_keybindings();
+			this.model.persist_keybindings();
+			this.hide_keybindings();
+		}		
+	},
+	update_interface_keybindings: function() {
+		for(key in this.model.keybindings) {
+			if(this.model.keybindings.hasOwnProperty(key)) {
+				var element = this.model.keybindings[key];
+				$('#elements-controls .' + element + ' span').text(key.toUpperCase());
+			}
+		}
+	},
+	render: function() {
+		var controls = this.$el.html($("#player-controls-template").render(this.model.attributes));
+		this.update_interface_keybindings();
+		return controls;
+	}
 	
 });
 
@@ -2803,8 +2951,7 @@ finch.game = {
 			finch.game.opponent = new models.Opponent();
 			finch.game.objective_history = new models.ObjectiveHistory();
 			finch.game.round_history = new models.RoundHistory();
-						
-			finch.game.views.elements = new views.Elements({ suppress_fizzle: true, model:finch.game.controls.elements });
+			
 			finch.game.views.queued_elements = new views.QueuedElements({ model:finch.game.controls.elements });
 			finch.game.views.queued_elements.auto_fadeout = false;
 			
@@ -2953,6 +3100,8 @@ finch.game.controls = {
 	elements_helper: new models.controls.Elements({ ignore_keystrokes: true }),		
 }
 
+finch.game.views.elements = new views.Elements({ suppress_fizzle: true, model:finch.game.controls.elements });
+
 $(function() {
 	finch.game.views.mode_selection = new views.ModeSelection();
 	finch.game.stats_overview = new models.StatsOverview();
@@ -2974,6 +3123,5 @@ $(function() {
 	finch.game.views.message_box = new views.MessageBox({ model: finch.game.message_box });
 	finch.game.views.background_music_player = new views.BackgroundMusicPlayer();
 	finch.game.views.credits = new views.Credits();
-	//finch.game.views.credits.handle_click();
 });
 
