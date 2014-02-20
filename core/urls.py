@@ -15,6 +15,7 @@ urlpatterns = patterns('cekolabs.core.views',
     url(r'^card-game$', 'finch', name='finch'),
     url(r'^trainer$', 'magicka_trainer', name='magicka_trainer'),
     url(r'^trainer-save-history$', 'magicka_trainer_save_history', name='magicka_trainer_save_history'),
+    url(r'^trainer-leaderboard/(?P<mode>.*)/(?P<round_id>\d+?)$', 'magicka_trainer_leaderboard', name='magicka_trainer_leaderboard'),
     url(r'^webgl/particle-effect-builder$', 'particle_effect_builder', name='particle_effect_builder'),
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

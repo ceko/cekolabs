@@ -23,9 +23,10 @@ class TrainerRoundHistory(models.Model):
         ('Q', 'QUEUE'),
         ('D', 'DEQUEUE')
     )
-    
+        
     submitted_on = models.DateTimeField(auto_now_add=True)
     submitted_by = models.GenericIPAddressField()
+    leaderboard_name = models.CharField(max_length=30, null=True, blank=True)
     mode = models.CharField(max_length=1, choices=MODE_CHOICES)
 
 class TrainerComboHistory(models.Model):        
