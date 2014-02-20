@@ -92,9 +92,9 @@
 									<div class='image'></div>																	
 								</div>
 							</div>
-							<div class='mode'>
-								<div class='mode-inner marathon-mode'>
-									<h3>Marathon</h3>
+							<div class='mode' style='display:none;'>
+								<div class='mode-inner olympic-mode'>
+									<h3>Wizard Olympics</h3>
 									<div class='image'></div>									
 								</div>
 							</div>
@@ -246,7 +246,7 @@
 				<div class='header'>
 					<h2>Game #{{:game_number}} ({{:history.label}})</h2>
 						<span class='total-time'>
-							{{if history.label == 'offensive'}}
+							{{if history.label == 'offensive' || history.label == 'olympic'}}
 								{{:history.total_time_seconds}} sec.
 							{{else}}
 								{{:history.average_time}} ms avg.
@@ -260,6 +260,11 @@
 				{{/if}}				
 				<div class='rows'>
 					{{for history.history}}
+						{{if segment_marker}}
+							<div class='segment-marker'>	
+								{{:segment_marker}} mode
+							</div>
+						{{/if}}
 						<div class='row'>
 							<div class='elements'>
 								{{for element_queue}}								
@@ -452,6 +457,31 @@
 			</div>
 		</script>
 		
+		<script id='olympic-mode-instructions' type='text/x-jsrender'>
+			<div class='mode-instructions'>
+				<div class='nav'>
+					<span class='nav-back'>&laquo; back</span>
+				</div>
+				<div class='body'>
+					{{if webgl_supported}}
+						<div>
+							Compete for your country in the first and only Wizard Wars App Trainer Olympics!  You will play the following game modes:
+							<ol>
+								<li>Queue (10 rounds)</li>
+								<li>DeQueue (10 rounds)</li>
+								<li>Offensive (1000 health, normal difficulty)</li>
+							</ol>
+							The user that finishes first will receive a prize.
+						</div>
+						<br />
+						<div class='start-button'>start game</div>
+					{{else}}
+						Sorry, your browser doesn't support <a href='https://en.wikipedia.org/wiki/WebGL'>WebGL</a> :(  You should enable it, it's super cool.
+					{{/if}}
+				</div>
+			</div>
+		</script>
+		
 		<script id='leaderboards' type='text/x-jsrender'>
 			<div class='mode-instructions'>
 				<div class='nav'>
@@ -461,7 +491,10 @@
 						<select id='leaderboard-view-mode' disabled='disabled'>
 							<option value='queue' selected>Queue</option>
 							<option value='dequeue'>Dequeue</option>
-							<option value='offensive'>Offensive</option>
+							<option value='offensive-easy'>Offensive (easy)</option>
+							<option value='offensive-normal'>Offensive (normal)</option>
+							<option value='offensive-hard'>Offensive (hard)</option>
+							<option value='olympic'>Olympic</option>
 						</select>
 					</div>
 				</div>
@@ -475,8 +508,16 @@
 			<div class='leaderboard-pane rows'>
 				<div class='headers'>
 					<div class='position'>rank</div>
-					<div class='name'>name</div>
-					<div class='time'>avg. round (seconds)</div>
+					<div class='name'>name</div>					
+					<div class='time'>
+						{{if mode == 'olympic'}}
+							total time
+						{{else mode == 'offensive-easy' || mode == 'offensive-normal' || mode == 'offensive-hard'}}
+							hp/s
+						{{else}}
+							avg. round (seconds)
+						{{/if}}
+					</div>
 					<div class='rounds'>total rounds</div>
 				</div>
 				{{for history}}
@@ -495,12 +536,20 @@
 								anonymous
 							{{/if}}
 						</div>
-						<div class='time'>{{:(average_time_to_complete/1000).toFixed(2)}}</div>
+						<div class='time'>
+							{{if ~root.mode == 'olympic'}}
+								{{:(total_time_to_complete/1000).toFixed(2)}}
+							{{else ~root.mode == 'offensive-easy' || ~root.mode == 'offensive-normal' || ~root.mode == 'offensive-hard'}}
+								{{:hps}}
+							{{else}}
+								{{:(average_time_to_complete/1000).toFixed(2)}}
+							{{/if}}							
+						</div>
 						<div class='rounds'>{{:total_rounds}}</div>
 					</div>
 				{{/for}}
 				<div class='totals'>
-					{{:total}} leaderboard rounds
+					{{:total}} total leaderboard rounds
 				</div>				
 			</div>			
 		</script>
@@ -515,7 +564,23 @@
 						You took <span class="seconds"></span> seconds to beat the enemy and cast
 						<span class="combo-count"></span> combos.  For more detailed stats look on the right in the round history window.
 					</div>
-										
+					<br />					
+					<div class='start-button' style='margin-top:10px;'>start another game</div>
+				</div>
+			</div>
+		</script>
+		
+		<script id='olympic-mode-game-over' type='text/x-jsrender'>
+			<div class='mode-instructions'>
+				<div class='nav'>
+					<span class='nav-back'>&laquo; back</span>
+				</div>
+				<div class='body'>					
+					<div>
+						You took <span class="seconds"></span> seconds to beat olympic mode.
+						For more detailed stats look on the right in the round history window.
+					</div>
+					<br />					
 					<div class='start-button' style='margin-top:10px;'>start another game</div>
 				</div>
 			</div>
