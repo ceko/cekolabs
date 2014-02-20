@@ -159,7 +159,7 @@ def magicka_trainer_leaderboard(request, mode, round_id):
                 'id': my_history[0].id,
                 'place': better_rounds+1,
                 'average_time_to_complete': my_history[0].average_time_to_complete,
-                'total_time_to_complete': my_history[0].normliazed_time_to_complete(),
+                'total_time_to_complete': my_history[0].normalized_time_to_complete(),
                 'total_rounds': my_history[0].total_rounds,
                 'name': my_history[0].leaderboard_name
             })
