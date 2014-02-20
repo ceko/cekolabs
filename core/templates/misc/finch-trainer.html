@@ -61,9 +61,17 @@
 					</div>
 					<div id='opponent-slot'>							
 					</div>
+					<div id='leaderboard-modal-background'></div>
+					<div id='leaderboard-name-window'>	
+						Submit your name to the high score list!					
+						<input id='leaderboard-name' type='text' maxlength='15' placeholder='scoreboard name...' />
+						
+						<div id='save-score-no-name'>don't save my name</div>
+						<div id='save-score-yes-name'>save with name</div>
+					</div>
 					<div id='mode-selection'>
 						<div class='options'>
-													
+									
 						</div>						
 						<div class='modes'>
 							<div class='mode'>
@@ -82,6 +90,18 @@
 								<div class='mode-inner offensive-mode'>
 									<h3>Break enemy defenses</h3>
 									<div class='image'></div>																	
+								</div>
+							</div>
+							<div class='mode'>
+								<div class='mode-inner marathon-mode'>
+									<h3>Marathon</h3>
+									<div class='image'></div>									
+								</div>
+							</div>
+							<div class='mode'>
+								<div class='mode-inner leaderboard-mode'>
+									<h3>View the Leaderboard</h3>
+									<div class='image'></div>									
 								</div>
 							</div>
 						</div>
@@ -222,7 +242,7 @@
 		</script>
 		
 		<script id='round-history-template' type='text/x-jsrender'>
-			<div class='game'>
+			<div id='game-{{:game_number}}' class='game'>
 				<div class='header'>
 					<h2>Game #{{:game_number}} ({{:history.label}})</h2>
 						<span class='total-time'>
@@ -233,11 +253,16 @@
 							{{/if}}
 						</span>
 				</div>
+				{{if history.on_leaderboard}}
+					<div class='leaderboard-link'>
+						view leaderboard position
+					</div>
+				{{/if}}				
 				<div class='rows'>
 					{{for history.history}}
 						<div class='row'>
 							<div class='elements'>
-								{{for element_queue}}
+								{{for element_queue}}								
 									<div class='{{:#data}}'></div>
 								{{/for}}
 								{{if fumble}}
@@ -255,7 +280,7 @@
 							<div style='clear:both;'></div>
 						</div>
 					{{/for}}
-				</div>
+				</div>				
 			</div>
 		</script>
 		
@@ -325,6 +350,9 @@
 						</div>
 						<div style='clear:both;'></div>
 					</div>
+					<div class='leaderboard-warning'>
+						increase round length to use leaderboard!
+					</div>
 					<div class='start-button'>start game</div>
 				</div>
 			</div>
@@ -364,6 +392,9 @@
 					Queue the elements appearing above the bar as quickly as possible.  Order doesn't matter.
 					<br />
 					<br />
+					<div class='leaderboard-warning'>
+						increase round length to use leaderboard!
+					</div>
 					<div class='start-button'>start game</div>
 				</div>
 			</div>
@@ -419,6 +450,59 @@
 					{{/if}}
 				</div>
 			</div>
+		</script>
+		
+		<script id='leaderboards' type='text/x-jsrender'>
+			<div class='mode-instructions'>
+				<div class='nav'>
+					<span class='nav-back'>&laquo; back</span>
+					<div class='options'>
+						leaderboard
+						<select id='leaderboard-view-mode' disabled='disabled'>
+							<option value='queue' selected>Queue</option>
+							<option value='dequeue'>Dequeue</option>
+							<option value='offensive'>Offensive</option>
+						</select>
+					</div>
+				</div>
+				<div class='body leaderboard-results-slot'>										
+					<div class='leaderboard-waiter'></div>
+				</div>
+			</div>
+		</script>
+		
+		<script id='leaderboard-pane' type='text/x-jsrender'>
+			<div class='leaderboard-pane rows'>
+				<div class='headers'>
+					<div class='position'>rank</div>
+					<div class='name'>name</div>
+					<div class='time'>avg. round (seconds)</div>
+					<div class='rounds'>total rounds</div>
+				</div>
+				{{for history}}
+					<div class='row {{if id == ~root.highlighted_id}}highlighted{{/if}}'>
+						<div class='position'>
+							{{if place}}
+								{{:place}}
+							{{else}}
+								{{:#getIndex()+1}}
+							{{/if}}
+						</div>
+						<div class='name'>
+							{{if name}}
+								{{:name}}
+							{{else}}
+								anonymous
+							{{/if}}
+						</div>
+						<div class='time'>{{:(average_time_to_complete/1000).toFixed(2)}}</div>
+						<div class='rounds'>{{:total_rounds}}</div>
+					</div>
+				{{/for}}
+				<div class='totals'>
+					{{:total}} leaderboard rounds
+				</div>				
+			</div>			
 		</script>
 		
 		<script id='offensive-mode-game-over' type='text/x-jsrender'>

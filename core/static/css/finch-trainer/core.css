@@ -459,6 +459,15 @@ html body #main-wrap #playing-field #battlefield #round-history-slot .game .head
   position: relative;
   top: 10px;
 }
+html body #main-wrap #playing-field #battlefield #round-history-slot .game .leaderboard-link {
+  padding: 2px 5px;
+  background: #111;
+  cursor: pointer;
+  color: #999;
+}
+html body #main-wrap #playing-field #battlefield #round-history-slot .game .leaderboard-link:hover {
+  color: #FFF;
+}
 html body #main-wrap #playing-field #battlefield #round-history-slot .game .elements {
   float: left;
   width: 145px;
@@ -501,12 +510,92 @@ html body #main-wrap #playing-field #battlefield .mode-instructions .options {
   color: #FFF;
   float: right;
 }
+html body #main-wrap #playing-field #battlefield .mode-instructions .options #leaderboard-view-mode {
+  margin-left: 15px;
+}
 html body #main-wrap #playing-field #battlefield .mode-instructions .options .round-length select {
   margin-left: 15px;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .leaderboard-waiter {
+  position: absolute;
+  top: 45%;
+  width: 100%;
+  height: 30px;
+  background: url('../../images/icons/ajax-loader-darkbg.gif');
+  background-repeat: no-repeat;
+  background-position: center center;
+  text-align: center;
 }
 html body #main-wrap #playing-field #battlefield .mode-instructions .body {
   padding: 10px;
   color: #FFF;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .body .leaderboard-warning {
+  float: left;
+  width: 300px;
+  background: #FADE70;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #CAB668;
+  color: #333;
+  display: none;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot {
+  padding: 0px;
+  height: 280px;
+  position: relative;
+  overflow-y: scroll;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .error {
+  cursor: pointer;
+  width: 100%;
+  top: 45%;
+  position: absolute;
+  text-align: center;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .totals {
+  padding: 5px;
+  font-size: 12px;
+  color: #999;
+  text-align: center;
+  border-top: 1px solid #666;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane {
+  display: none;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane .headers > div {
+  padding: 3px 0px 3px 7px;
+  color: #999;
+  font-size: 12px;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane .headers.highlighted,
+html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane .row.highlighted {
+  background-color: #467C96;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane .headers > div,
+html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane .row > div {
+  display: inline-block;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane .headers .position,
+html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane .row .position {
+  width: 40px;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane .headers .name,
+html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane .row .name {
+  width: 100px;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane .headers .time,
+html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane .row .time {
+  width: 150px;
+  text-align: right;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane .headers .rounds,
+html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane .row .rounds {
+  float: right;
+  margin-right: 10px;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane .row {
+  font-size: 12px;
 }
 html body #main-wrap #playing-field #battlefield .mode-instructions .body .sub-option {
   margin: 10px 10px 10px 0px;
@@ -551,6 +640,54 @@ html body #main-wrap #playing-field #battlefield .mode-instructions .body .start
   border: 1px solid #0A1B09;
   cursor: pointer;
   margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  color: #FFF;
+}
+html body #main-wrap #playing-field #battlefield #leaderboard-modal-background {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 140;
+  display: none;
+}
+html body #main-wrap #playing-field #battlefield #leaderboard-name-window {
+  width: 400px;
+  z-index: 150;
+  position: absolute;
+  display: none;
+  border: 5px solid rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  background: #333;
+  box-shadow: 0px 0px 30px 0px rgba(122, 153, 187, 0.51);
+  padding: 20px;
+  color: #FFF;
+}
+html body #main-wrap #playing-field #battlefield #leaderboard-name-window #leaderboard-name {
+  width: 100%;
+  font-size: 25px;
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+html body #main-wrap #playing-field #battlefield #leaderboard-name-window #save-score-yes-name {
+  float: left;
+  text-align: center;
+  background: #299125;
+  border: 1px solid #0A1B09;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 5px;
+  color: #FFF;
+}
+html body #main-wrap #playing-field #battlefield #leaderboard-name-window #save-score-no-name {
+  float: right;
+  text-align: center;
+  background: #DA5E5E;
+  border: 1px solid #0A1B09;
+  cursor: pointer;
   padding: 10px;
   border-radius: 5px;
   color: #FFF;
@@ -709,6 +846,7 @@ html body #main-wrap #playing-field #player-information {
 html body #main-wrap #playing-field #player-information #player-controls {
   position: relative;
   padding: 10px;
+  height: 178px;
   width: 280px;
   border-right: 1px solid #5F5F5F;
   box-shadow: inset -1px 0px #000000;
