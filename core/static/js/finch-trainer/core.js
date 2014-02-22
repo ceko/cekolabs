@@ -3379,8 +3379,7 @@ finch.game = {
 	views: {
 		global: new views.Global()
 	},	
-	load_next_objective: function() {
-		finch.game.objective_history.clear();
+	load_next_objective: function() {		
 		finch.game.loading_next_objective = true;
 		finch.game.statebag.objective_keypresses = 0;
 		finch.game.last_objective_start_time = (new Date()).getTime();
