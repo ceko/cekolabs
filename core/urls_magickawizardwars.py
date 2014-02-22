@@ -10,7 +10,7 @@ urlpatterns = patterns('cekolabs.core.views',
     url(r'^$', 'magicka_trainer_redirect', name='magicka_trainer_redirect'),
     url(r'^trainer$', 'magicka_trainer', name='magicka_trainer'),
     url(r'^trainer-save-history$', 'magicka_trainer_save_history', name='magicka_trainer_save_history'),
-    url(r'^trainer-leaderboard/(?P<mode>.*)/(?P<round_id>\d+?)$', 'magicka_trainer_leaderboard', name='magicka_trainer_leaderboard'),
+    url(r'^trainer-leaderboard/(?P<mode>.*)/(?P<timeframe>.*)/(?P<round_id>\d+?)$', 'magicka_trainer_leaderboard', name='magicka_trainer_leaderboard'),
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

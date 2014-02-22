@@ -4,6 +4,7 @@
 		{% load compressed %}
 		<title>Magicka: Wizard Wars skill trainer</title>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta charset="UTF-8">
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>			
 		{% compressed_css 'finch-trainer' %}
@@ -63,11 +64,14 @@
 					</div>
 					<div id='leaderboard-modal-background'></div>
 					<div id='leaderboard-name-window'>	
-						Submit your name to the high score list!					
-						<input id='leaderboard-name' type='text' maxlength='15' placeholder='scoreboard name...' />
-						
-						<div id='save-score-no-name'>don't save my name</div>
-						<div id='save-score-yes-name'>save with name</div>
+						Submit your name & country to the high score list!					
+						<input id='leaderboard-name' type='text' maxlength='15' placeholder='scoreboard name...' />						
+						<select id='leaderboard-country'>
+							<option value=''>--</option>
+						</select>
+						<br />
+						<div id='save-score-no-name'>don't save name/country</div>
+						<div id='save-score-yes-name'>save with name/country</div>
 					</div>
 					<div id='mode-selection'>
 						<div class='options'>
@@ -488,6 +492,11 @@
 					<span class='nav-back'>&laquo; back</span>
 					<div class='options'>
 						leaderboard
+						<select id='leaderboard-view-span' disabled='disabled'>
+							<option value='weekly' selected>Weekly</option>
+							<option value='monthly'>Monthly</option>
+							<option value='all-time'>All-Time</option>
+						</select>
 						<select id='leaderboard-view-mode' disabled='disabled'>
 							<option value='queue' selected>Queue</option>
 							<option value='dequeue'>Dequeue</option>
@@ -508,6 +517,7 @@
 			<div class='leaderboard-pane rows'>
 				<div class='headers'>
 					<div class='position'>rank</div>
+					<div class='country'>country</div>
 					<div class='name'>name</div>					
 					<div class='time'>
 						{{if mode == 'olympic'}}
@@ -527,6 +537,13 @@
 								{{:place}}
 							{{else}}
 								{{:#getIndex()+1}}
+							{{/if}}
+						</div>
+						<div class='position'>
+							{{if country}}
+								{{:country}}
+							{{else}}
+								
 							{{/if}}
 						</div>
 						<div class='name'>

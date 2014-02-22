@@ -517,6 +517,9 @@ html body #main-wrap #playing-field #battlefield .mode-instructions .options {
   float: right;
 }
 html body #main-wrap #playing-field #battlefield .mode-instructions .options #leaderboard-view-mode {
+  margin-left: 3px;
+}
+html body #main-wrap #playing-field #battlefield .mode-instructions .options #leaderboard-view-span {
   margin-left: 15px;
 }
 html body #main-wrap #playing-field #battlefield .mode-instructions .options .round-length select {
@@ -595,7 +598,7 @@ html body #main-wrap #playing-field #battlefield .mode-instructions .body.leader
 }
 html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane .headers .time,
 html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane .row .time {
-  width: 150px;
+  width: 120px;
   text-align: right;
 }
 html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane .headers .rounds,
@@ -676,7 +679,11 @@ html body #main-wrap #playing-field #battlefield #leaderboard-name-window {
   color: #FFF;
 }
 html body #main-wrap #playing-field #battlefield #leaderboard-name-window #leaderboard-name {
-  width: 100%;
+  width: 75%;
+  font-size: 25px;
+  margin-top: 10px;
+}
+html body #main-wrap #playing-field #battlefield #leaderboard-name-window #leaderboard-country {
   font-size: 25px;
   margin-top: 10px;
   margin-bottom: 30px;
@@ -751,6 +758,10 @@ html body #main-wrap #playing-field #battlefield #mode-selection .mode .mode-inn
 }
 html body #main-wrap #playing-field #battlefield #mode-selection .mode .mode-inner.offensive-mode .image {
   background-image: url('../../images/finch/offensive-mode-icon.png');
+  margin-top: -10px;
+}
+html body #main-wrap #playing-field #battlefield #mode-selection .mode .mode-inner.olympic-mode .image {
+  background-image: url('../../images/finch/olympic-mode-icon.png');
   margin-top: -10px;
 }
 html body #main-wrap #playing-field #battlefield #mode-selection a {

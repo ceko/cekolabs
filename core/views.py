@@ -7,6 +7,7 @@ import json
 from cekolabs.core import models as core_models
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Count, Sum, Avg, Max
+from datetime import date, timedelta
 
 
 @render_to('home.html')
@@ -47,14 +48,18 @@ def magicka_trainer(request):
     return { }
 
 @ensure_csrf_cookie
-def magicka_trainer_save_history(request):    
+def magicka_trainer_save_history(request):
     history = json.loads(request.POST.get('history'))
     label = json.loads(request.POST.get('label'))
     additional_attributes = json.loads(request.POST.get('additional_attributes'))
     leaderboard_name = request.POST.get('leaderboard_name')
+    leaderboard_country = request.POST.get("leaderboard_country")
+    if leaderboard_country and len(leaderboard_country) == 0:
+        leaderboard_country = None
     
     round_history = core_models.TrainerRoundHistory()
     round_history.leaderboard_name = leaderboard_name
+    round_history.country_code = leaderboard_country
     #oops
     if label == 'olympic':
         round_history.mode = 'M'
@@ -83,28 +88,38 @@ def magicka_trainer_save_history(request):
         offensive_mode_stats.enemy_health = int(additional_attributes['enemy_health'])
         offensive_mode_stats.spell_delay_modifier = float(additional_attributes['spell_delay_modifier'])
         offensive_mode_stats.save()    
+    elif round_history.mode == 'M':
+        olympic_mode_stats = core_models.OlympicModeAttributes()
+        olympic_mode_stats.round = round_history
+        olympic_mode_stats.round_length = round_history.normalized_time_to_complete()
+        olympic_mode_stats.save()
             
     return HttpResponse(json.dumps({ 'status': 'success', 'id': round_history.id }))   
 
-def get_leaderboard_query(mode):
+def get_leaderboard_query(mode, timeframe):
     history = core_models.TrainerRoundHistory.objects \
             .annotate(total_rounds = Count('trainercombohistories')) \
             .annotate(average_time_to_complete = Avg('trainercombohistories__time_to_complete')) \
-            .annotate(total_time_to_complete = Sum('trainercombohistories__time_to_complete'))             
         
     submode = None    
     if "-" in mode:
         mode, submode = mode.split('-')
             
     if mode == 'queue':
-        history = history.filter(total_rounds__gte = 10, mode = 'Q').order_by('average_time_to_complete')
+        history = history \
+            .filter(total_rounds__gte = 10, mode = 'Q') \
+            .annotate(total_time_to_complete = Sum('trainercombohistories__time_to_complete')) \
+            .order_by('average_time_to_complete')
     elif mode == 'dequeue':
-        history = history.filter(total_rounds__gte = 10, mode = 'D').order_by('average_time_to_complete')
+        history = history \
+            .filter(total_rounds__gte = 10, mode = 'D') \
+            .order_by('average_time_to_complete')
     elif mode == 'offensive':        
         history = history.filter(mode = 'O') \
             .annotate(hps=Max('offensivemodeattributes__health_per_second')) \
             .annotate(null_hps=Count('offensivemodeattributes__id', distinct=True)) \
             .annotate(spell_delay_modifier=Max('offensivemodeattributes__spell_delay_modifier')) \
+            .annotate(total_time_to_complete = Sum('trainercombohistories__time_to_complete')) \
             .order_by('-null_hps', '-hps')
                     
         if submode == 'easy':
@@ -115,13 +130,21 @@ def get_leaderboard_query(mode):
             history = history.filter(spell_delay_modifier = .75)
             
     elif mode == 'olympic':
-        history = history.filter(mode = 'M').order_by('total_time_to_complete')        
+        history = history \
+            .filter(mode = 'M') \
+            .annotate(total_time_to_complete = Max('olympicmodeattributes__round_length')) \
+            .order_by('total_time_to_complete')        
+
+    if timeframe == 'weekly':
+        history = history.filter(submitted_on__gte = date.today()-timedelta(days=7))
+    elif timeframe == 'monthly':
+        history = history.filter(submitted_on__gte = date.today()-timedelta(days=30))
 
     history = history.prefetch_related('trainercombohistories')
     return history
 
 @render_to('home.html')
-def magicka_trainer_leaderboard(request, mode, round_id):
+def magicka_trainer_leaderboard(request, mode, timeframe, round_id):
     if not round_id:
         round_id = 0        
     round_id = int(round_id)
@@ -130,7 +153,7 @@ def magicka_trainer_leaderboard(request, mode, round_id):
         'rounds': [],
         'total': 0
     }
-    history = get_leaderboard_query(mode)
+    history = get_leaderboard_query(mode, timeframe)
         
     round_id_found = True if round_id == 0 else False  
     for round in history[:50]:
@@ -142,7 +165,8 @@ def magicka_trainer_leaderboard(request, mode, round_id):
             'average_time_to_complete': round.average_time_to_complete,
             'total_time_to_complete': round.normalized_time_to_complete(),
             'total_rounds': round.total_rounds,
-            'name': round.leaderboard_name
+            'name': round.leaderboard_name,
+            'country': round.country_code,
         }
         
         if round.mode == 'O':            
@@ -152,25 +176,32 @@ def magicka_trainer_leaderboard(request, mode, round_id):
         
         
     if not round_id_found:
-        my_history = get_leaderboard_query(mode).filter(id=round_id);
+        my_history = get_leaderboard_query(mode, timeframe).filter(id=round_id);
         if len(my_history) == 1:
             #this is only good for queue and dequeue mode
             if mode.startswith('offensive'):
-                better_rounds = get_leaderboard_query(mode).filter(hps__lt = my_history[0].hps)
+                better_rounds = get_leaderboard_query(mode, timeframe).filter(hps__gt = my_history[0].hps)                
+            elif mode == 'olympic':
+                better_rounds = get_leaderboard_query(mode, timeframe).filter(total_time_to_complete__lt = my_history[0].normalized_time_to_complete())
             else:
-                better_rounds = get_leaderboard_query(mode).filter(average_time_to_complete__lt = my_history[0].average_time_to_complete)
+                better_rounds = get_leaderboard_query(mode, timeframe).filter(average_time_to_complete__lt = my_history[0].average_time_to_complete)
             
             better_rounds = better_rounds.count()
-            response['rounds'].append({
+            round_dict = {
                 'id': my_history[0].id,
                 'place': better_rounds+1,
                 'average_time_to_complete': my_history[0].average_time_to_complete,
                 'total_time_to_complete': my_history[0].normalized_time_to_complete(),
                 'total_rounds': my_history[0].total_rounds,
-                'name': my_history[0].leaderboard_name
-            })
+                'name': my_history[0].leaderboard_name,
+                'country': my_history[0].country_code
+            }
+            if round.mode == 'O':            
+                round_dict['hps'] = my_history[0].hps
+            response['rounds'].append(round_dict)
+                        
     
-    all_history_count = get_leaderboard_query(mode).count()
+    all_history_count = get_leaderboard_query(mode, timeframe).count()
     response['total'] = all_history_count
     #return {}    
     return HttpResponse(json.dumps(response, cls=DjangoJSONEncoder))

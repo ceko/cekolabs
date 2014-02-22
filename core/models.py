@@ -28,6 +28,7 @@ class TrainerRoundHistory(models.Model):
     submitted_on = models.DateTimeField(auto_now_add=True)
     submitted_by = models.GenericIPAddressField()
     leaderboard_name = models.CharField(max_length=30, null=True, blank=True)
+    country_code = models.CharField(max_length=2, null=True, blank=True)
     mode = models.CharField(max_length=1, choices=MODE_CHOICES)
 
     def normalized_time_to_complete(self):        
@@ -76,6 +77,10 @@ class ComboElement(models.Model):
     
     combo = models.ForeignKey(TrainerComboHistory)
     element = models.CharField(max_length=10, choices = ELEMENT_CHOICES)
+
+class OlympicModeAttributes(models.Model):
+    round = models.ForeignKey(TrainerRoundHistory)
+    round_length = models.IntegerField()
 
 class OffensiveModeAttributes(models.Model):
     round = models.ForeignKey(TrainerRoundHistory)
