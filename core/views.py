@@ -120,6 +120,7 @@ def get_leaderboard_query(mode):
     history = history.prefetch_related('trainercombohistories')
     return history
 
+@render_to('home.html')
 def magicka_trainer_leaderboard(request, mode, round_id):
     if not round_id:
         round_id = 0        
@@ -154,7 +155,12 @@ def magicka_trainer_leaderboard(request, mode, round_id):
         my_history = get_leaderboard_query(mode).filter(id=round_id);
         if len(my_history) == 1:
             #this is only good for queue and dequeue mode
-            better_rounds = get_leaderboard_query(mode).filter(average_time_to_complete__lt = my_history[0].average_time_to_complete).count()
+            if mode.startswith('offensive'):
+                better_rounds = get_leaderboard_query(mode).filter(hps__lt = my_history[0].hps)
+            else:
+                better_rounds = get_leaderboard_query(mode).filter(average_time_to_complete__lt = my_history[0].average_time_to_complete)
+            
+            better_rounds = better_rounds.count()
             response['rounds'].append({
                 'id': my_history[0].id,
                 'place': better_rounds+1,
@@ -166,7 +172,7 @@ def magicka_trainer_leaderboard(request, mode, round_id):
     
     all_history_count = get_leaderboard_query(mode).count()
     response['total'] = all_history_count
-            
+    #return {}    
     return HttpResponse(json.dumps(response, cls=DjangoJSONEncoder))
 
 def get_client_ip(request):

@@ -836,8 +836,8 @@ models.Opponent = Backbone.Model.extend({
 			}
 			
 			if(spell && !this.cast_timeout) {
-				cast_time = cast_time * (1+2*(this.get('frozen_level')+.01) / 5); /* max freeze */ 
-				console.log(cast_time + ' <- cast time');
+				cast_time = cast_time * (1+2*(this.get('frozen_level')+.01) / 5); /* max freeze */
+				
 				this.last_spell_cast = time;
 				this.last_cast_time = cast_time;
 				this.set('casting', true);				
@@ -966,8 +966,7 @@ models.Opponent = Backbone.Model.extend({
 		if(remove_wet) {
 			this.set('wet', false);
 		}
-		console.log('total damage: ' + total_damage);
-		
+				
 		if(!finch.game.paused) {
 			this.set('health', this.get('health') - total_damage);
 			if(status_application_func)
@@ -1237,8 +1236,7 @@ views.Opponent = Backbone.View.extend({
 	},
 	handle_on_fire_change: function() {
 		var on_fire = this.model.get('on_fire');
-		finch.game.views.battlefield_particle_effects.handle_on_fire_change(on_fire);
-		console.log('on_fire: ' + on_fire);
+		finch.game.views.battlefield_particle_effects.handle_on_fire_change(on_fire);		
 	},
 	render: function() {
 		this.$el.html($("#opponent-template").render({ model: this.model })).show();
@@ -1569,8 +1567,7 @@ views.BattlefieldLineEffects = Backbone.View.extend({
 		}
 		
 		this.beam_cnt++;
-		this.context.lineWidth = (this.beam_cnt % 6 > 2 ? 1 : -1) * this.beam_cnt % 3 + 10;
-		console.log(this.context.lineWidth);
+		this.context.lineWidth = (this.beam_cnt % 6 > 2 ? 1 : -1) * this.beam_cnt % 3 + 10;		
 		draw_multipoint_line([origin, end], this.context);
 	},
 	draw_lightning: function(type) {
@@ -2353,9 +2350,11 @@ views.ModeSelection = Backbone.View.extend({
 	},
 		
 	cancel_game: function() {
-		finch.game.pause();
-		if(finch.game.controls.elements)
-			finch.game.controls.elements.clear_queued_elements();				
+		finch.game.pause();		
+		if(finch.game.controls.elements) {
+			finch.game.controls.elements.clear_queued_elements();
+			finch.game.controls.elements.show_cast_bar = false;
+		}
 		finch.game.views.mode_selection.show();	
 		if(finch.game.objective_history) {
 			finch.game.objective_history.clear();
@@ -3317,9 +3316,10 @@ finch.game = {
 				}
 			});
 			finch.game.opponent.on('change:health', function(model, health) {
-				if(finch.game.statebag.mode == 'offensive' || finch.game.statebag.mode == 'olympic' && finch.game.statebag.olympic_stage == 'offensive') {
+				if(finch.game.statebag.mode == 'offensive' || (finch.game.statebag.mode == 'olympic' && finch.game.statebag.olympic_stage == 'offensive')) {
 					if(health <= 0 && !finch.game.paused) {
 						finch.game.opponent.skynet_disabled();
+						finch.game.controls.elements.show_cast_bar = false;
 						finch.game.pause();
 						finch.game.controls.elements.clear_queued_elements();
 						finch.game.views.queued_elements.hide()
@@ -3329,9 +3329,15 @@ finch.game = {
 						finch.game.views.battlefield_line_effects.hide();
 						
 						var history = finch.game.objective_history.get('history');
+						var combo_parser = finch.game.controls.elements.casting_combo_parser;
+						if(combo_parser) {
+							var elapsed_time = (new Date()).getTime() - finch.game.last_objective_start_time;
+							finch.game.objective_history.add_history(elapsed_time, combo_parser.get('elements'), fumble=false, is_offensive=true);						
+						}
 						if(finch.game.statebag.mode == 'olympic') {
 							history = finch.game.statebag.olympic_history.concat(history);
 						}
+						
 						finch.game.views.objective_history.transition_to_round_history(function() {							
 							finch.game.round_history.add_history(finch.game.statebag.mode, history);
 							var additional_attrs = {
@@ -3352,11 +3358,13 @@ finch.game = {
 				}
 			});
 			finch.game.controls.elements.on('cast_stop', function() {
-				if(finch.game.statebag.mode == 'offensive' || finch.game.statebag.mode == 'olympic' && finch.game.statebag.olympic_stage == 'offensive') {					
-					var combo_parser = finch.game.controls.elements.casting_combo_parser;
-					if(combo_parser) {
-						var elapsed_time = (new Date()).getTime() - finch.game.last_objective_start_time;
-						finch.game.objective_history.add_history(elapsed_time, combo_parser.get('elements'), fumble=false, is_offensive=true);						
+				if(!finch.game.paused) {
+					if(finch.game.statebag.mode == 'offensive' || (finch.game.statebag.mode == 'olympic' && finch.game.statebag.olympic_stage == 'offensive')) {					
+						var combo_parser = finch.game.controls.elements.casting_combo_parser;
+						if(combo_parser) {
+							var elapsed_time = (new Date()).getTime() - finch.game.last_objective_start_time;
+							finch.game.objective_history.add_history(elapsed_time, combo_parser.get('elements'), fumble=false, is_offensive=true);						
+						}
 					}
 				}
 			});
@@ -3371,7 +3379,8 @@ finch.game = {
 	views: {
 		global: new views.Global()
 	},	
-	load_next_objective: function() {		
+	load_next_objective: function() {
+		finch.game.objective_history.clear();
 		finch.game.loading_next_objective = true;
 		finch.game.statebag.objective_keypresses = 0;
 		finch.game.last_objective_start_time = (new Date()).getTime();

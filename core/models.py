@@ -33,15 +33,15 @@ class TrainerRoundHistory(models.Model):
     def normalized_time_to_complete(self):        
         if self.mode == 'O':            
             length = len(self.trainercombohistories.all())
-            
+                        
             if length:
                 return self.trainercombohistories.all()[length-1].time_to_complete
             else:
                 return -1
         elif self.mode == 'M':
             total_time = 0
-            try:
-                for i in range(0,20):                
+            try:                
+                for i in range(0,20):                    
                     total_time += self.trainercombohistories.all()[i].time_to_complete
                 total_time += self.trainercombohistories.all()[len(self.trainercombohistories.all())-1].time_to_complete
             except Exception as e:
