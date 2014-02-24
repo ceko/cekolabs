@@ -2528,7 +2528,9 @@ views.ModeSelection = Backbone.View.extend({
 			$('#battlefield').append($leaderboards);		
 			this.push_window($leaderboards);
 		}
-				
+		
+		if(mode == 'olympic')
+			$('#leaderboard-view-span').val('olympic');
 		$('#leaderboard-view-mode').val(mode);
 		show_leaderboard_pane(mode, $('#leaderboard-view-span').val(), round_id);		
 	},	

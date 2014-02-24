@@ -96,7 +96,7 @@
 									<div class='image'></div>																	
 								</div>
 							</div>
-							<div class='mode' style='display:none;'>
+							<div class='mode'>
 								<div class='mode-inner olympic-mode'>
 									<h3>Wizard Olympics</h3>
 									<div class='image'></div>									
@@ -469,13 +469,14 @@
 				<div class='body'>
 					{{if webgl_supported}}
 						<div>
-							Compete for your country in the first and only Wizard Wars App Trainer Olympics!  You will play the following game modes:
+							Compete in the first and only Wizard Wars App Trainer Olympics!  You will play the following game modes:
 							<ol>
 								<li>Queue (10 rounds)</li>
 								<li>DeQueue (10 rounds)</li>
 								<li>Offensive (1000 health, normal difficulty)</li>
 							</ol>
-							The user that finishes first will receive a prize.
+							The top 3 users (not scores) will each receive prizes.  Please use your Wizard Wars forum display name when registering
+							your high score.  Fore more information <a href='http://forum.paradoxplaza.com/forum/showthread.php?758095-Competition-Wizard-Wars-Olympics-Win-Prizes!'>go here.</a>     
 						</div>
 						<br />
 						<div class='start-button'>start game</div>
@@ -490,9 +491,9 @@
 			<div class='mode-instructions'>
 				<div class='nav'>
 					<span class='nav-back'>&laquo; back</span>
-					<div class='options'>
-						leaderboard
+					<div class='options'>						
 						<select id='leaderboard-view-span' disabled='disabled'>
+							<option value='olympic'>Olympic Competition</option>
 							<option value='weekly' selected>Weekly</option>
 							<option value='monthly'>Monthly</option>
 							<option value='all-time'>All-Time</option>

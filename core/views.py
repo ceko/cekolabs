@@ -7,7 +7,7 @@ import json
 from cekolabs.core import models as core_models
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Count, Sum, Avg, Max
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 
 @render_to('home.html')
@@ -139,6 +139,8 @@ def get_leaderboard_query(mode, timeframe):
         history = history.filter(submitted_on__gte = date.today()-timedelta(days=7))
     elif timeframe == 'monthly':
         history = history.filter(submitted_on__gte = date.today()-timedelta(days=30))
+    elif timeframe == 'olympic':
+        history = history.filter(submitted_on__gte = datetime(2014, 2, 23), submitted_on__lte = datetime(2014, 3, 1))
 
     history = history.prefetch_related('trainercombohistories')
     return history
