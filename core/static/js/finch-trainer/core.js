@@ -1398,8 +1398,7 @@ views.Global = Backbone.View.extend({
 		'mousedown': 'handle_mousedown',
 		'mouseup': 'handle_mouseup',
 	},
-	initialize: function() {		
-		this.$el.disableSelection();		
+	initialize: function() {					
 		$(window).resize(this.handle_resize.bind(this));
 		document.oncontextmenu = this.handle_oncontextmenu.bind(this);
 	},
@@ -2528,7 +2527,7 @@ views.ModeSelection = Backbone.View.extend({
 			$('#battlefield').append($leaderboards);		
 			this.push_window($leaderboards);
 		}
-		
+						
 		if(mode == 'olympic')
 			$('#leaderboard-view-span').val('olympic');
 		$('#leaderboard-view-mode').val(mode);
@@ -3107,7 +3106,7 @@ views.LeaderboardSubmit = Backbone.View.extend({
 	save_triggered: false,
 	events: {
 		'click #save-score-no-name': 'save_score_without_name',
-		'click #save-score-yes-name': 'save_score_with_name',
+		'click #save-score-yes-name': 'save_score_with_name',		
 	},
 	initialize: function() {
 		if($('#leaderboard-country option').length <= 1) {
@@ -3115,7 +3114,7 @@ views.LeaderboardSubmit = Backbone.View.extend({
 				$('#leaderboard-country').append($("<option value=\"" + CountryCodes[i].code +"\">" + CountryCodes[i].name + "</option>"));
 			}
 		}
-	},
+	},	
 	save_score_without_name: function() {
 		if(!this.save_triggered) {
 			this.save_triggered = true;
@@ -3139,6 +3138,7 @@ views.LeaderboardSubmit = Backbone.View.extend({
 		this.center();
 		$('#leaderboard-modal-background').fadeIn('fast');
 		this.$el.fadeIn('fast');
+		$('#leaderboard-name').focus();
 	},
 	fadeOut: function() {
 		$('#leaderboard-modal-background').fadeOut('fast');
