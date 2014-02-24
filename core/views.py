@@ -6,7 +6,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 import json
 from cekolabs.core import models as core_models
 from django.core.serializers.json import DjangoJSONEncoder
-from django.db.models import Count, Sum, Avg, Max
+from django.db.models import Count, Sum, Avg, Max, Min, F
 from datetime import date, datetime, timedelta
 import time
 from cekolabs.core import utils
@@ -116,9 +116,17 @@ def magicka_trainer_save_history(request):
     return HttpResponse(json.dumps({ 'status': 'success', 'id': round_history.id }))   
 
 def get_leaderboard_query(mode, timeframe):
-    history = core_models.TrainerRoundHistory.objects \
-            .annotate(total_rounds = Count('trainercombohistories')) \
-            .annotate(average_time_to_complete = Avg('trainercombohistories__time_to_complete')) \
+    history = core_models.TrainerRoundHistory.objects 
+    
+    if timeframe == 'weekly':
+        history = history.filter(submitted_on__gte = date.today()-timedelta(days=7))
+    elif timeframe == 'monthly':
+        history = history.filter(submitted_on__gte = date.today()-timedelta(days=30))
+    elif timeframe == 'olympic':
+        history = history.filter(submitted_on__gte = datetime(2014, 2, 23), submitted_on__lte = datetime(2014, 3, 1))
+    
+    history = history.annotate(total_rounds = Count('trainercombohistories')) \
+        .annotate(average_time_to_complete = Avg('trainercombohistories__time_to_complete')) 
         
     submode = None    
     if "-" in mode:
@@ -148,20 +156,27 @@ def get_leaderboard_query(mode, timeframe):
         elif submode == 'hard':
             history = history.filter(spell_delay_modifier = .75)
             
-    elif mode == 'olympic':
+    elif mode == 'olympic':        
         history = history \
-            .filter(mode = 'M') \
+            .filter(mode = 'M') 
+        
+        #roll up users so people don't end up dominating the boards.
+        grouped_users = history.all() \
+            .values('leaderboard_name') \
+            .annotate(total_time_to_complete = Min('olympicmodeattributes__round_length'))            
+        
+                        
+                        
+        import pdb;pdb.set_trace()
+        print [g['id'] for g in grouped_users]            
+                    
+        history = history.filter(id__in = [g['id'] for g in grouped_users]) \
             .annotate(total_time_to_complete = Max('olympicmodeattributes__round_length')) \
-            .order_by('total_time_to_complete')        
-
-    if timeframe == 'weekly':
-        history = history.filter(submitted_on__gte = date.today()-timedelta(days=7))
-    elif timeframe == 'monthly':
-        history = history.filter(submitted_on__gte = date.today()-timedelta(days=30))
-    elif timeframe == 'olympic':
-        history = history.filter(submitted_on__gte = datetime(2014, 2, 23), submitted_on__lte = datetime(2014, 3, 1))
-
-    history = history.prefetch_related('trainercombohistories')
+            .order_by('total_time_to_complete')    
+            
+    history = history.prefetch_related('trainercombohistories')    
+    #history = history.filter(id__in=history)
+    
     return history
 
 @render_to('home.html')
