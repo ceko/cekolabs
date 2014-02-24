@@ -163,8 +163,12 @@ def get_leaderboard_query(mode, timeframe):
         #roll up users so people don't end up dominating the boards.
         grouped_users = history.all() \
             .values('leaderboard_name') \
-            .annotate(total_time_to_complete = Min('olympicmodeattributes__round_length'))            
-        
+            .annotate(total_time_to_complete = Min('olympicmodeattributes__round_length')) \
+            .extra(
+                select={
+                    'round_id': 'SELECT MAX(round_id) FROM "core_olympicmodeattributes" ai LEFT JOIN "core_trainerroundhistory" hi ON ai.round_id = hi.id WHERE hi.leaderboard_name = "core_trainerroundhistory"."leaderboard_name" AND ai.round_length = MIN("core_olympicmodeattributes"."round_length")"',
+                }
+            )
                         
                         
         import pdb;pdb.set_trace()
