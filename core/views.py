@@ -8,7 +8,8 @@ from cekolabs.core import models as core_models
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Count, Sum, Avg, Max
 from datetime import date, datetime, timedelta
-
+import time
+from cekolabs.core import utils
 
 @render_to('home.html')
 def home(request):
@@ -48,11 +49,13 @@ def magicka_trainer(request):
     return { }
 
 @ensure_csrf_cookie
-def magicka_trainer_save_history(request):
+def magicka_trainer_save_history(request):    
     history = json.loads(request.POST.get('history'))
     label = json.loads(request.POST.get('label'))
     additional_attributes = json.loads(request.POST.get('additional_attributes'))
     leaderboard_name = request.POST.get('leaderboard_name')
+    sec_tokens = json.loads(request.POST.get('tokens'))
+    
     leaderboard_country = request.POST.get("leaderboard_country")
     if leaderboard_country and len(leaderboard_country) == 0:
         leaderboard_country = None
@@ -60,6 +63,15 @@ def magicka_trainer_save_history(request):
     round_history = core_models.TrainerRoundHistory()
     round_history.leaderboard_name = leaderboard_name
     round_history.country_code = leaderboard_country
+    try:
+        round_history.round_check_start = float(utils.vigenere('my_pasta', sec_tokens[0], 'decrypt')) / 10000.0
+        if len(sec_tokens) > 1:
+            round_history.round_check_end = float(utils.vigenere('my_pasta', sec_tokens[1], 'decrypt')) / 10000.0
+        else:
+            round_history.round_check_end = time.time()
+    except Exception as e:
+        round_history.flag_for_review = True
+        
     #oops
     if label == 'olympic':
         round_history.mode = 'M'
@@ -93,6 +105,13 @@ def magicka_trainer_save_history(request):
         olympic_mode_stats.round = round_history
         olympic_mode_stats.round_length = round_history.normalized_time_to_complete()
         olympic_mode_stats.save()
+     
+    if round_history.round_check_end and round_history.round_check_start:
+        #simple check to see if they're cheating, obviously not foolproof
+        check_diff_ms = (round_history.round_check_end - round_history.round_check_start) * 1000    
+        if  abs(check_diff_ms - round_history.normalized_time_to_complete()) / float(check_diff_ms) > .05:
+            round_history.flag_for_review = True
+            round_history.save()
             
     return HttpResponse(json.dumps({ 'status': 'success', 'id': round_history.id }))   
 
@@ -207,6 +226,9 @@ def magicka_trainer_leaderboard(request, mode, timeframe, round_id):
     response['total'] = all_history_count
     #return {}    
     return HttpResponse(json.dumps(response, cls=DjangoJSONEncoder))
+
+def get_encoded_server_time(request):
+    return HttpResponse(json.dumps({ 'token': utils.vigenere('my_pasta', str(int(time.time()*10000)), 'encrypt') }))
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')

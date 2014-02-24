@@ -24,7 +24,10 @@ class TrainerRoundHistory(models.Model):
         ('D', 'DEQUEUE'),
         ('M', 'MARATHON'),
     )
-        
+    
+    flag_for_review = models.BooleanField(default=False)
+    round_check_start = models.IntegerField(null=True)
+    round_check_end = models.IntegerField(null=True)
     submitted_on = models.DateTimeField(auto_now_add=True)
     submitted_by = models.GenericIPAddressField()
     leaderboard_name = models.CharField(max_length=30, null=True, blank=True)

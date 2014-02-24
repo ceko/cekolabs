@@ -1090,13 +1090,16 @@ models.RoundHistory = Backbone.Model.extend({
 			additional_attrs = {};
 		
 		var leaderboard_name = null;
-		var leaderboard_country = null;
+		var leaderboard_country = null;		
+		$.getJSON('/trainer-token/', function(result) {
+			finch.game.statebag.tokens[1] = result.token;
+		});
 		var post_score_to_server = function() {
 			$.ajax({
 				url: '/trainer-save-history',
 				type: 'POST',
 				dataType: 'json',
-				data: { leaderboard_name: leaderboard_name, leaderboard_country: leaderboard_country, label: JSON.stringify(round_label), history: JSON.stringify(round_history), additional_attributes: JSON.stringify(additional_attrs) }
+				data: { tokens: JSON.stringify(finch.game.statebag.tokens), leaderboard_name: leaderboard_name, leaderboard_country: leaderboard_country, label: JSON.stringify(round_label), history: JSON.stringify(round_history), additional_attributes: JSON.stringify(additional_attrs) }
 			}).done(function(result) {				
 				var all_history = _this.get("history");
 				var last_history = all_history[all_history.length-1];
@@ -3394,6 +3397,12 @@ finch.game = {
 		finch.game.loading_next_objective = true;
 		finch.game.statebag.objective_keypresses = 0;
 		finch.game.last_objective_start_time = (new Date()).getTime();
+		if(!finch.game.statebag.tokens) {
+			finch.game.statebag.tokens = [];
+			$.getJSON('/trainer-token/', function(result) {
+				finch.game.statebag.tokens[0] = result.token;
+			});
+		}
 		
 		switch(finch.game.statebag.mode) {
 			case 'dequeue': 
