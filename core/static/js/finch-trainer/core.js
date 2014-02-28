@@ -336,6 +336,7 @@ models.controls.Elements = Backbone.Model.extend({
 			};
 			
 			if(this.combo_is_channeled() || this.combo_is_charged()) {
+				clearInterval(this.casting_interval);
 				this.casting_interval = setInterval(casting_interval_function, 150);
 				casting_interval_function.call(_this);
 			}else{
@@ -1046,6 +1047,7 @@ models.Opponent = Backbone.Model.extend({
 		this.ai_timeout = clearTimeout(this.ai_timeout);
 		var _this = this;
 		setTimeout(function() { _this.set_default_values(); }, 2000);
+		
 		//everything fades out, don't have to clear any other timers because they will take care of themself in the background.
 	},
 });
@@ -1482,6 +1484,7 @@ views.BattlefieldLineEffects = Backbone.View.extend({
 				if($.inArray('water', elements) !== -1)
 					type = 'water';
 				
+				clearInterval(this.render_timer);
 				this.render_timer = setInterval(function() {
 					_this.draw_beam(type);
 				}, 100);
@@ -1498,6 +1501,7 @@ views.BattlefieldLineEffects = Backbone.View.extend({
 				}else if(combo_parser.has_element('arcane')) {
 					lightning_type = 'arcane';
 				}
+				clearInterval(this.render_timer);
 				this.render_timer = setInterval(function() {					
 					_this.draw_lightning(lightning_type);
 				}, 300);
@@ -2592,6 +2596,7 @@ views.ModeSelection = Backbone.View.extend({
 		var _this = this;
 		var callback = function() {
 			finch.game.statebag = {};
+			finch.game.controls.elements.stop_casting();
 			finch.game.set_mode('offensive');
 			finch.game.start();
 			finch.game.opponent.max_health = _this.view_stack[_this.view_stack.length-1].find('.health').val();
@@ -2645,6 +2650,7 @@ views.ModeSelection = Backbone.View.extend({
 	start_olympic_game: function() {
 		var callback = function() {
 			finch.game.statebag = {};
+			finch.game.controls.elements.stop_casting();
 			finch.game.set_mode('olympic');
 			finch.game.start();
 			finch.game.load_next_objective();

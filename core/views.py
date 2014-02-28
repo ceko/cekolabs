@@ -10,6 +10,8 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 import cekolabs_empanada
 import json
 import time
+from cekolabs.core import utils
+from django.db import connection
 
 
 @render_to('home.html')
@@ -176,35 +178,53 @@ def get_leaderboard_query(mode, timeframe):
             
     elif mode == 'olympic':        
         history = history \
-            .filter(mode = 'M') 
+            .filter(mode = 'M')
         
         #roll up users so people don't end up dominating the boards.
-        grouped_users = history.all() \
-            .values('leaderboard_name') \
-            .annotate(total_time_to_complete = Min('olympicmodeattributes__round_length')) \
+        """grouped_users = history.all() \
             .extra(
                 select={
-                    'round_id': 'SELECT MAX(round_id) FROM "core_olympicmodeattributes" ai LEFT JOIN "core_trainerroundhistory" hi ON ai.round_id = hi.id WHERE hi.leaderboard_name = "core_trainerroundhistory"."leaderboard_name" AND ai.round_length = MIN("core_olympicmodeattributes"."round_length")"',
+                    'round_id': 'SELECT MAX(round_id) FROM (SELECT round_id FROM "core_olympicmodeattributes" ai INNER JOIN "core_trainerroundhistory" hi ON ai.round_id = hi.id WHERE hi.leaderboard_name = "core_trainerroundhistory"."leaderboard_name" AND hi.submitted_by = "core_trainerroundhistory"."submitted_by" ORDER BY ai.round_length ASC LIMIT 1) as rli',
                 }
-            )
-                        
-                        
-        import pdb;pdb.set_trace()
-        print [g['id'] for g in grouped_users]            
-                    
-        history = history.filter(id__in = [g['id'] for g in grouped_users]) \
+            ) \
+            .values('leaderboard_name', 'submitted_by', 'round_id') \
+            .annotate(total_time_to_complete = Min('olympicmodeattributes__round_length'))
+        """
+        cursor = connection.cursor()
+        grouped_users = cursor.execute("""
+    WITH submissions as (
+  SELECT    
+     count(*) as "total_rounds",
+     coalesce(leaderboard_name, '') as "leaderboard_name",
+     submitted_by
+  FROM 
+     core_trainerroundhistory trh 
+  INNER JOIN core_olympicmodeattributes oma ON trh.id = oma.round_id 
+  GROUP BY leaderboard_name, submitted_by
+)
+
+SELECT   
+  (SELECT MAX(round_id) FROM (SELECT round_id FROM core_trainerroundhistory trh INNER JOIN core_olympicmodeattributes oma ON oma.round_id = trh.id WHERE trh.mode = 'M' AND coalesce(trh.leaderboard_name,'') = submissions.leaderboard_name AND trh.submitted_by = submissions.submitted_by ORDER BY oma.round_length ASC LIMIT 1) as ri) as "round_id" FROM submissions
+""")
+        round_ids = cursor.fetchall()
+        
+        history = history.filter(id__in = [r[0] for r in round_ids if r[0]]) \
             .annotate(total_time_to_complete = Max('olympicmodeattributes__round_length')) \
-            .order_by('total_time_to_complete')    
-            
-    history = history.prefetch_related('trainercombohistories')    
-    #history = history.filter(id__in=history)
-    
+            .extra(
+                select={
+                    'total_submissions': 'SELECT COUNT(*) FROM "core_trainerroundhistory" cth INNER JOIN "core_olympicmodeattributes" ai ON cth.id = ai.round_id WHERE cth.leaderboard_name = "core_trainerroundhistory"."leaderboard_name" AND cth.submitted_by = "core_trainerroundhistory"."submitted_by"'
+                }
+            ) \
+            .order_by('total_time_to_complete')
+        
+    history = history.prefetch_related('trainercombohistories')
+        
     return history
 
 @render_to('home.html')
 def magicka_trainer_leaderboard(request, mode, timeframe, round_id):
     if not round_id:
-        round_id = 0        
+        round_id = 0
     round_id = int(round_id)
         
     response = {
@@ -229,6 +249,8 @@ def magicka_trainer_leaderboard(request, mode, timeframe, round_id):
         
         if round.mode == 'O':            
             round_dict['hps'] = round.hps
+        elif round.mode == 'M':
+            round_dict['total_submissions'] = round.total_submissions
         
         response['rounds'].append(round_dict)
         
@@ -256,6 +278,9 @@ def magicka_trainer_leaderboard(request, mode, timeframe, round_id):
             }
             if round.mode == 'O':            
                 round_dict['hps'] = my_history[0].hps
+            elif round.mode == 'M':
+                round_dict['total_submissions'] = my_history[0].total_submissions
+                
             response['rounds'].append(round_dict)
                         
     

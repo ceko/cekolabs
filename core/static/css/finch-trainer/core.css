@@ -596,6 +596,10 @@ html body #main-wrap #playing-field #battlefield .mode-instructions .body.leader
 html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane .row .name {
   width: 100px;
 }
+html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane .headers .name .ss,
+html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane .row .name .ss {
+  vertical-align: super;
+}
 html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane .headers .time,
 html body #main-wrap #playing-field #battlefield .mode-instructions .body.leaderboard-results-slot .leaderboard-pane .row .time {
   width: 120px;

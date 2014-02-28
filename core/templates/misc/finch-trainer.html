@@ -519,7 +519,9 @@
 				<div class='headers'>
 					<div class='position'>rank</div>
 					<div class='country'>country</div>
-					<div class='name'>name</div>					
+					<div class='name'>
+						name						
+					</div>					
 					<div class='time'>
 						{{if mode == 'olympic'}}
 							total time
@@ -552,6 +554,9 @@
 								{{:name}}
 							{{else}}
 								anonymous
+							{{/if}}
+							{{if total_submissions}}
+								<sup>{{:total_submissions}}</sup>
 							{{/if}}
 						</div>
 						<div class='time'>
