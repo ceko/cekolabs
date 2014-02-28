@@ -1,21 +1,21 @@
 from __future__ import absolute_import, unicode_literals
-from django.http import HttpResponse, HttpResponseRedirect
 from annoying.decorators import render_to
 from cekolabs.blog import models as blog_models
-from django.views.decorators.csrf import ensure_csrf_cookie
-import json
-from cekolabs.core import models as core_models
+from cekolabs.core import models as core_models, utils
+from datetime import date, datetime, timedelta
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Count, Sum, Avg, Max, Min, F
-from datetime import date, datetime, timedelta
+from django.http import HttpResponse, HttpResponseRedirect
+from django.views.decorators.csrf import ensure_csrf_cookie
+import cekolabs_empanada
+import json
 import time
-from cekolabs.core import utils
+
 
 @render_to('home.html')
 def home(request):
     latest_posts = blog_models.Post.objects.filter(published=True).order_by('-last_modified').all()[:5]
     return locals()
-
 
 @render_to('django-form-architect/index.html')
 def django_form_architect(request):
@@ -35,6 +35,24 @@ def error_500(request):
 @render_to('misc/particle-effect-builder.html')
 def particle_effect_builder(request):
     return { }
+
+def empanada(request):
+    template = """
+    This is some unaffected text "it is also quoted."
+    
+    User: {{:user}} <br />
+    User first name: {{:user.first_name}} <br />
+    {{>user.first_name user.second_name}}
+    to_upper called on user.first_name: {{render user.first_name}}    
+    {{if something}}
+        add some stuff here
+    {{/if}}
+"""
+    
+    tokenizer = cekolabs_empanada.Tokenizer()
+    renderer = cekolabs_empanada.TokenRenderer()
+    
+    return HttpResponse(renderer.render(tokenizer.yield_tokens(template)))        
 
 @render_to('misc/finch.html')
 def finch(request):
