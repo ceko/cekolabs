@@ -44,6 +44,12 @@ def empanada(request):
     
     User: {{:user}} <br />
     User first name: {{:user.first_name}} <br />
+    {{if user.is_authenticated}}
+        {{:name}}
+        {{if 1 > 2}}
+            {{:different_name}}
+        {{/if}}
+    {{/if}}
     {{>user.first_name user.second_name}}
     to_upper called on user.first_name: {{render user.first_name}}    
     {{if something}}
@@ -52,9 +58,21 @@ def empanada(request):
 """
     
     tokenizer = cekolabs_empanada.Tokenizer()
-    renderer = cekolabs_empanada.TokenRenderer()
+    tag_graph = cekolabs_empanada.TagGraph(tokenizer.yield_tokens(template))
+    tags = tag_graph.get_tags()
     
-    return HttpResponse(renderer.render(tokenizer.yield_tokens(template)))        
+    def print_children(tag, indent=0):
+        print (' '*indent) + str(type(tag)) 
+        if hasattr(tag, 'children'):
+            for ctag in tag.children:
+                print_children(ctag,indent+3)
+        
+    print_children(tags[0])
+        
+    renderer = cekolabs_empanada.TagRenderer()
+    content = renderer.render(tags)
+    
+    return HttpResponse(content)        
 
 @render_to('misc/finch.html')
 def finch(request):
