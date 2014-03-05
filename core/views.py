@@ -1,17 +1,19 @@
 from __future__ import absolute_import, unicode_literals
 from annoying.decorators import render_to
 from cekolabs.blog import models as blog_models
-from cekolabs.core import models as core_models, utils
+from cekolabs.core import models as core_models, utils, utils
 from datetime import date, datetime, timedelta
+from django.conf import settings
 from django.core.serializers.json import DjangoJSONEncoder
+from django.db import connection
 from django.db.models import Count, Sum, Avg, Max, Min, F
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import ensure_csrf_cookie
 import cekolabs_empanada
 import json
+import os
+import random
 import time
-from cekolabs.core import utils
-from django.db import connection
 
 
 @render_to('home.html')
@@ -39,39 +41,12 @@ def particle_effect_builder(request):
     return { }
 
 def empanada(request):
-    template = """
-    This is some unaffected text "it is also quoted."
-    
-    User: {{:user}} <br />
-    User first name: {{:user.first_name}} <br />
-    {{if user.is_authenticated}}
-        {{:name}}
-        {{if 1 > 2}}
-            {{:different_name}}
-        {{/if}}
-    {{/if}}
-    {{>user.first_name user.second_name}}
-    to_upper called on user.first_name: {{render user.first_name}}    
-    {{if something}}
-        add some stuff here
-    {{/if}}
-"""
-    
-    tokenizer = cekolabs_empanada.Tokenizer()
-    tag_graph = cekolabs_empanada.TagGraph(tokenizer.yield_tokens(template))
-    tags = tag_graph.get_tags()
-    
-    def print_children(tag, indent=0):
-        print (' '*indent) + str(type(tag)) 
-        if hasattr(tag, 'children'):
-            for ctag in tag.children:
-                print_children(ctag,indent+3)
+    template_path = os.path.join(settings.PROJECT_ROOT, 'core/templates/empanada/test.html')
+    content = cekolabs_empanada.render(template_path, {
+        'request': request,
+        'settings': settings
+    })
         
-    print_children(tags[0])
-        
-    renderer = cekolabs_empanada.TagRenderer()
-    content = renderer.render(tags)
-    
     return HttpResponse(content)        
 
 @render_to('misc/finch.html')
