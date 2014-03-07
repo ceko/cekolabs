@@ -11,91 +11,102 @@
 				<div class='banner-strip'></div>
 			</div>
 			<div class='content'>
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
-				this is where the content will go!
-				<br />
+				{{>"<b>not bolded</b>"}}			
+				<h2>What is Empanada?</h2>
+				<p>
+					Empanada is a simple templating engine built as a learning exercise.  
+					It supports a small number of easily-extensible tags and is modeled after templating engines like JSRender and the default engine included in Django.
+				</p>
+				<p>
+					Empanada is not a drop-in replacement for any templating engine and is not meant to be used in production code.  It is an excercise to explore
+					the concepts of tokenizing and parsing.  Of course Empanada is released under the MIT License, so if you want to use it or change it feel free.
+				</p>
+				<h2>Capabilities</h2>
+				<p>
+					Empanada supports two control flow tags, {{verbatim}}<b>{{if}}</b>, and <b>{{for}}</b>, a <b>{{verbatim}}</b> tag, and <b>{{>escaped}}</b> and <b>{{:unescaped}}</b> variable substitution.{{/verbatim}}  
+					Here's an example of it in action inside a Django view.
+				</p>
+				<pre><code class='prettyprint linenums'>import cekolabs_empanada
+from django.conf import settings
+from django.http import HttpResponse
+
+
+def empanada(request):
+    template_path = os.path.join(settings.PROJECT_ROOT, 'core/templates/empanada/index.html')
+    content = cekolabs_empanada.render(template_path, {
+        'request': request,
+        'settings': settings
+    })
+	    
+    return HttpResponse(content)</code></pre>
+				<p>
+					That's not why it was designed, though.  Empanada is totally decoupled from Django and could be used to in Flask, to create configuration files from settings, or as a lightweight e-mail templating engine.					
+				</p>
+				<h2>Tag: If</h2>
+				<p>
+					The if tag supports complex expressions, filters (more described below) and will do variable lookup and substitution automatically for you.  Given a user object with the attributes name, join_date, and the method is_superuser, the following expressions are all valid:					
+				</p>
+				{{verbatim}}
+					<ul>
+						<li>{{if user}}</li>
+						<li>{{if user.name == 'Dave' or user.is_superuser}}</li>
+						<li>{{if user.name == admin_username or user.join_date < '2014-03-01'}}</li>
+					</ul>
+					<p>
+						If also supports the {{else}} and {{elif}} sub-tags.  Since elif is an alias to else, they can both have expressions or be left blank.  Empanada also doesn't care how many
+						blank elif or else tags you have, it's not your mother. 
+					</p>
+					<p>
+						Here's a more complex example to showcase the range of the tag.
+					</p>
+					<pre><code class='prettyprint'>{{if user.is_superuser}}
+    You are a superuser!
+{{elif 'admin' in user.groups}}
+    You are an admin!		
+{{elif user.logincount > 100 or user.firstname + ' ' + user.lastname == 'Super Bob'}}
+    Welcome Super Bob?
+{{elif weekday|toupper == 'WEDNESDAY'}}
+	This is not very useful...
+{{else}}
+    You have no power here.
+{{/if}}</code></pre>
+				{{/verbatim}}
+				
+				<h2>Tag: For</h2>
+				<p>
+					The for tag is very simple and limited.  You provide a variable name for each iteration and an iterable.  You may only use context variables, string literals or numbers as the iterable.
+				</p>
+				{{verbatim}}				
+				<pre><code class='prettyprint'>{{for color in colors}}
+    The color is: {{>color}}
+{{/for}}</code></pre>
+				<p>
+					Similar to the if tag, the for tag also supports an else sub-tag.  If the loop is empty or the iterable evaluates to none, this tag's children will be rendered.  One more notable feature is the ability to reference the #index variable, a 0-based loop counter. 
+				</p>
+				<pre><code class='prettyprint'>{{for color in colors}}
+    {{>#index+1}}: {{>color}}&lt;br /&gt;
+{{else}}
+    This is not very colorful
+{{/for}}</code></pre>
+				{{/verbatim}}
+				
+				<h2>Template Variables</h2>
+				<p>
+					Empanada supports variables and simple filters.  The two current variable renderers will output {{verbatim}}{{:escaped}} and {{>unescaped}}{{/verbatim}} content.  You can include complex expressions 
+					within this tag, for example, if you're unsure if a variable exists you could write this:
+				</p>
+				<pre><code class='prettyprint'>{{verbatim}}{{:username or user.name}}{{/verbatim}}</code></pre>
+				<p>
+					If username does not exist the template engine will attempt to print out user.name.  Filters are applied with a vertical pipe, are chainable, and they do not accept parameters.  This is by design.  An
+					example of how to reverse a string and convert it to uppercase follows.					
+				</p>
+				<pre><code class='prettyprint'>{{verbatim}}{{:user.name|toupper|reverse}}{{/verbatim}}</code></pre>
+				<p>
+					Remember you can also print out string literals.  The following is a strange but valid expression, and would print out &lt;not bolded&gt; instead of the valid tags:					
+				</p>
+				<pre><code class='prettyprint'>{{>"<b>not bolded</b>"}}</code></pre>
 			</div>
-		</div>	
+		</div>
+		<script src="//google-code-prettify.googlecode.com/svn/loader/run_prettify.js?autoload=true&callback=prettify_complete"></script>			
 	</body>
 </html>

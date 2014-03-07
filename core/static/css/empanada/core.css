@@ -9,7 +9,32 @@ html {
 }
 
 body {
+	font-size: 14px;
+	line-height: 21px;
+	color: #333;	
+	font-family: "Helvetica Neue", "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, sans-serif !important;
 	background:#FEFEFE;	
+}
+
+h2 {
+	margin: 10px 0px 15px 0px;
+	border-bottom: 1px dashed #999;
+	padding-bottom: 10px;
+}
+
+p {
+	margin-bottom:15px;
+	
+}
+
+ul {
+	list-style-type:none;
+	margin-left:15px;
+	margin-bottom:15px;		
+}
+
+ul li {
+	margin-bottom:5px;
 }
 
 .main {
@@ -34,4 +59,146 @@ body {
 
 .content {
 	padding:20px;
+}
+
+/* Hemisu Light */
+/* Original theme - http://noahfrederick.com/vim-color-scheme-hemisu/ */
+.prettyprint {  
+  font-family: Menlo, 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', Monaco, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.5;  
+  padding: 10px;
+  background:#F7F7F7;
+  display:block;
+  overflow-x:auto;
+  border-radius:3px;
+  border:1px solid #CCC;
+  margin-bottom:15px;
+}
+
+.pln {
+  color: #111111;
+}
+
+@media screen {
+  .str {
+    color: #739200;
+  }
+
+  .kwd {
+    color: #739200;
+  }
+
+  .com {
+    color: #999999;
+  }
+
+  .typ {
+    color: #ff0055;
+  }
+
+  .lit {
+    color: #538192;
+  }
+
+  .pun {
+    color: #111111;
+  }
+
+  .opn {
+    color: #111111;
+  }
+
+  .clo {
+    color: #111111;
+  }
+
+  .tag {
+    color: #111111;
+  }
+
+  .atn {
+    color: #739200;
+  }
+
+  .atv {
+    color: #ff0055;
+  }
+
+  .dec {
+    color: #111111;
+  }
+
+  .var {
+    color: #111111;
+  }
+
+  .fun {
+    color: #538192;
+  }
+}
+@media print, projection {
+  .str {
+    color: #006600;
+  }
+
+  .kwd {
+    color: #006;
+    font-weight: bold;
+  }
+
+  .com {
+    color: #600;
+    font-style: italic;
+  }
+
+  .typ {
+    color: #404;
+    font-weight: bold;
+  }
+
+  .lit {
+    color: #004444;
+  }
+
+  .pun, .opn, .clo {
+    color: #444400;
+  }
+
+  .tag {
+    color: #006;
+    font-weight: bold;
+  }
+
+  .atn {
+    color: #440044;
+  }
+
+  .atv {
+    color: #006600;
+  }
+}
+/* Specify class=linenums on a pre to get line numbering */
+ol.linenums {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* IE indents via margin-left */
+li.L0,
+li.L1,
+li.L2,
+li.L3,
+li.L4,
+li.L5,
+li.L6,
+li.L7,
+li.L8,
+li.L9 {
+  /* */
+}
+
+/* Alternate shading for lines */
+.prettyprint li {
+  background:#F7F7F7 !important;
 }

@@ -38,20 +38,23 @@ def error_500(request):
 
 @render_to('misc/particle-effect-builder.html')
 def particle_effect_builder(request):
-    return { }
+    return {}
 
 def empanada(request):
     template_path = os.path.join(settings.PROJECT_ROOT, 'core/templates/empanada/test.html')
     content = cekolabs_empanada.render(template_path, {
         'request': request,
-        'settings': settings
+        'settings': settings,
+        'colors': ['red', 'green', 'blue'],
+        'empty_list': [],
+        'upper_color': 'RED',
     })
         
-    return HttpResponse(content)        
+    return HttpResponse(content)
 
 @render_to('misc/finch.html')
 def finch(request):
-    return { }
+    return {}
 
 def magicka_trainer_redirect(request):
     return HttpResponseRedirect('/trainer')
@@ -59,7 +62,7 @@ def magicka_trainer_redirect(request):
 @ensure_csrf_cookie
 @render_to('misc/finch-trainer.html')
 def magicka_trainer(request):
-    return { }
+    return {}
 
 @ensure_csrf_cookie
 def magicka_trainer_save_history(request):    
