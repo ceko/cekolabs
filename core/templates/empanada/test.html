@@ -10,8 +10,7 @@
 				<div class='logo'></div>
 				<div class='banner-strip'></div>
 			</div>
-			<div class='content'>
-				{{>"<b>not bolded</b>"}}			
+			<div class='content'>							
 				<h2>What is Empanada?</h2>
 				<p>
 					Empanada is a simple templating engine built as a learning exercise.  
@@ -23,7 +22,7 @@
 				</p>
 				<h2>Capabilities</h2>
 				<p>
-					Empanada supports two control flow tags, {{verbatim}}<b>{{if}}</b>, and <b>{{for}}</b>, a <b>{{verbatim}}</b> tag, and <b>{{>escaped}}</b> and <b>{{:unescaped}}</b> variable substitution.{{/verbatim}}  
+					Empanada supports two control flow tags, {{verbatim}}<b>{{if}}</b>, and <b>{{for}}</b>, a <b>{{verbatim}}</b> tag, a <b>{{#comment}}</b> tag, and <b>{{>escaped}}</b> and <b>{{:unescaped}}</b> variable substitution.{{/verbatim}}  
 					Here's an example of it in action inside a Django view.
 				</p>
 				<pre><code class='prettyprint linenums'>import cekolabs_empanada
@@ -88,8 +87,27 @@ def empanada(request):
 {{else}}
     This is not very colorful
 {{/for}}</code></pre>
-				{{/verbatim}}
-				
+				{{/verbatim}}				
+				<h2>Tag: Verbatim</h2>
+				{{verbatim}}
+					<p>					
+						The verbatim tag allows you to use reserved tokens like {{ or /}}.  It is used mainly when embedding other templating languages or when describing 
+						templating languages.  You can use it like so:						 
+					</p>
+					<pre><code class='prettyprint'>{{verbatim}}
+    Now you can safely output {{ and }}.  
+    You can even show tags like:
+        {{if user.loggedin}}You're logged in!{{/if}}.{{/verbatim}}
+{{:"{{/"}}verbatim}} {{#"oh my god what a hack"}}
+</code></pre>	
+				<h2>Tag: Comment</h2>
+				{{verbatim}}
+					<p>					
+						The comment tag renders nothing to the output buffer.  This is used for sensitive information you'd rather not put in an HTML comment.						 
+					</p>
+					<pre><code class='prettyprint'>{{#this will not be output to the screen}}
+{{#"if it makes you feel better you can use quotes"}}
+</code></pre>	
 				<h2>Template Variables</h2>
 				<p>
 					Empanada supports variables and simple filters.  The two current variable renderers will output {{verbatim}}{{:escaped}} and {{>unescaped}}{{/verbatim}} content.  You can include complex expressions 
@@ -102,9 +120,9 @@ def empanada(request):
 				</p>
 				<pre><code class='prettyprint'>{{verbatim}}{{:user.name|toupper|reverse}}{{/verbatim}}</code></pre>
 				<p>
-					Remember you can also print out string literals.  The following is a strange but valid expression, and would print out &lt;not bolded&gt; instead of the valid tags:					
+					Remember you can also print out string literals.  The following is a strange but valid expression, and would print out &lt;b&gt;not bolded&lt;/b&gt; instead of the valid tags, escaping the angle brackets:					
 				</p>
-				<pre><code class='prettyprint'>{{>"<b>not bolded</b>"}}</code></pre>
+				<pre><code class='prettyprint'>{{verbatim}}{{:"&lt;b&gt;not bolded&lt;/b&gt;"}}{{/verbatim}}</code></pre>				
 			</div>
 		</div>
 		<script src="//google-code-prettify.googlecode.com/svn/loader/run_prettify.js?autoload=true&callback=prettify_complete"></script>			
