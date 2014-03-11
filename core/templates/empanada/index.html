@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html>
-	<head>			
+	<head>		
 		<title>Empanada, an Instructional Templating Language</title>
 		<link rel="stylesheet" type="text/css" href='{{:settings.STATIC_URL}}css/empanada/core.css' />
 	</head>
 	<body>		
 		<div class='main'>
 			<div class='banner'>
+				<div class='menu'>
+					<a href='/'>Back to the Main Site</a>
+					<a href='https://github.com/ceko/cekolabs_empanada'>empanada@github</a>
+					<div style='clear:both;'></div>
+				</div>
 				<div class='logo'></div>
 				<div class='banner-strip'></div>
 			</div>
-			<div class='content'>							
+			<div class='content'>
+				<a href='https://github.com/ceko/cekolabs_empanada' class='github-link'>Check it out on GitHub</a>
 				<h2>What is Empanada?</h2>
 				<p>
 					Empanada is a simple templating engine built as a learning exercise.  
@@ -105,9 +111,10 @@ def empanada(request):
 					<p>					
 						The comment tag renders nothing to the output buffer.  This is used for sensitive information you'd rather not put in an HTML comment.						 
 					</p>
+				
 					<pre><code class='prettyprint'>{{#this will not be output to the screen}}
 {{#"if it makes you feel better you can use quotes"}}
-</code></pre>	
+</code></pre>{{/verbatim}}	
 				<h2>Template Variables</h2>
 				<p>
 					Empanada supports variables and simple filters.  The two current variable renderers will output {{verbatim}}{{:escaped}} and {{>unescaped}}{{/verbatim}} content.  You can include complex expressions 
@@ -122,7 +129,44 @@ def empanada(request):
 				<p>
 					Remember you can also print out string literals.  The following is a strange but valid expression, and would print out &lt;b&gt;not bolded&lt;/b&gt; instead of the valid tags, escaping the angle brackets:					
 				</p>
-				<pre><code class='prettyprint'>{{verbatim}}{{:"&lt;b&gt;not bolded&lt;/b&gt;"}}{{/verbatim}}</code></pre>				
+				<pre><code class='prettyprint'>{{verbatim}}{{:"&lt;b&gt;not bolded&lt;/b&gt;"}}{{/verbatim}}</code></pre>
+				
+				<h2>Extending Empanada</h2>
+				<p>
+					Empanada is easily extensible.  Tags and filters are both added by manipulating a dictionary and mapping the appropriate type.  Here's an example of how you'd create a new tag that outputs the
+					contents of a file to the page.
+				</p>				
+				<pre><code class='prettyprint'>import cekolabs_empanada
+
+
+class OutputFileTag(cekolabs_empanada.tags.SingleLineTag):    
+    def render(self, context):
+        ct = cekolabs_empanada.tokenizer.ExpressionTokenizer()
+        parser = cekolabs_empanada.parsers.TopDownParser(ct.yield_tokens(' '.join(self.args)))
+        file_path = parser.parse().eval(context)
+        
+        with open(file_path) as f:
+            retval = f.read()
+            
+        return retval
+    
+cekolabs_empanada.tags.TagMap['outputfile'] = OutputFileTag</code></pre>
+			<p>This tag could be called on the page like this:</p>
+			<pre><code class='prettyprint'>{{verbatim}}{{outputfile settings.PROJECT_PATH + 'includes/cupcake-flavors.html'}}{{/verbatim}}</code></pre>
+			<p>
+				This is about as complicated as it gets.  You'll see here that the expression tokenizer and parser are used to combine settings.PROJECT_PATH with the string literal.  This is
+				the same expression engine that evaluates if statements, so it's rather robust and should be capable enough for simple usage.  
+			</p>
+			<p>Creating a filter is a similar process.  With this filter we'll capitalize the first letter of every word.</p>
+			<pre><code class='prettyprint'>import cekolabs_empanada
+
+
+def capall(literal):
+    return ' '.join([w.capitalize() for w in literal.split(' ')])
+                                             
+cekolabs_empanada.filters.FilterMap['capall'] = capall</code></pre>
+			<p>Now you can freely use this tag wherever you want</p>
+			<pre><code class='prettyprint'>{{verbatim}}{{:'we\'re gonna need a bigger boat'|capall}}{{/verbatim}}</code></pre>
 			</div>
 		</div>
 		<script src="//google-code-prettify.googlecode.com/svn/loader/run_prettify.js?autoload=true&callback=prettify_complete"></script>			

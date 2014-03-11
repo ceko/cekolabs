@@ -9,6 +9,7 @@ from django.db import connection
 from django.db.models import Count, Sum, Avg, Max, Min, F
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import ensure_csrf_cookie
+import cekolabs.core.empanada
 import cekolabs_empanada
 import json
 import os
@@ -41,13 +42,12 @@ def particle_effect_builder(request):
     return {}
 
 def empanada(request):
-    template_path = os.path.join(settings.PROJECT_ROOT, 'core/templates/empanada/test.html')
+    template_path = os.path.join(settings.PROJECT_ROOT, 'core/templates/empanada/index.html')
     content = cekolabs_empanada.render(template_path, {
         'request': request,
         'settings': settings,
-        'colors': ['red', 'green', 'blue'],
-        'empty_list': [],
-        'upper_color': 'RED',
+        'second' : False,
+        'third' : 'You got it'        
     })
         
     return HttpResponse(content)
