@@ -3,14 +3,13 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 import cekolabs.blog.urls
 from django.conf import settings
-
+import ww_api.urls
 
 admin.autodiscover()
 
 urlpatterns = patterns('cekolabs.core.views',
     url(r'^$', 'home', name='home'),
-    url(r'^django-form-architect$', 'django_form_architect', name='django_form_architect'),
-    url(r'^resume$', 'resume', name='resume'),
+    url(r'^django-form-architect$', 'django_form_architect', name='django_form_architect'),    
     url(r'^ksp-mods', 'ksp_mods', name='ksp_mods'),
     url(r'^card-game$', 'finch', name='finch'),
     url(r'^trainer$', 'magicka_trainer', name='magicka_trainer'),
@@ -26,6 +25,8 @@ urlpatterns = patterns('cekolabs.core.views',
 )
 
 urlpatterns += cekolabs.blog.urls.urlpatterns
+urlpatterns += patterns('', url('^ww_api/', include(ww_api.urls.urlpatterns)))
+
 handler500 = 'cekolabs.core.views.error_500'
 
 if settings.DEBUG:
