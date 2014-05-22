@@ -6,3 +6,4 @@ uploads/*
 static/*
 !static/.gitignore
 .*
+logfile.log
