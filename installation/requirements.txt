@@ -12,3 +12,4 @@ psycopg2==2.4.5
 slimit==0.7.4
 wsgiref==0.1.2
 -e git+https://github.com/ceko/cekolabs_empanada.git#egg=cekolabs_empanada
+-e git+https://github.com/ceko/ww_api.git#egg=ww_api

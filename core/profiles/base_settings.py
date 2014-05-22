@@ -108,6 +108,7 @@ INSTALLED_APPS = (
     'cekolabs.core',
     'cekolabs.blog',
     'cekolabs_django_widgets',
+    'ww_api',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 ) 

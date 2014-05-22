@@ -3,7 +3,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 import cekolabs.blog.urls
 from django.conf import settings
-
+import ww_api.urls
 
 admin.autodiscover()
 
@@ -26,6 +26,8 @@ urlpatterns = patterns('cekolabs.core.views',
 )
 
 urlpatterns += cekolabs.blog.urls.urlpatterns
+urlpatterns += patterns('', url('^ww_api/', include(ww_api.urls.urlpatterns)))
+
 handler500 = 'cekolabs.core.views.error_500'
 
 if settings.DEBUG:
