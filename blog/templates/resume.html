@@ -1,0 +1,273 @@
+{% extends 'masters/main.html' %}
+{% load compressed %}
+
+{% block header %}
+	{{ block.super }}
+	{% compressed_css 'blog' %}	
+{% endblock %}
+
+{% block footer %}
+	{{ block.super }}
+	<script src="//google-code-prettify.googlecode.com/svn/loader/run_prettify.js?autoload=true"></script>
+{% endblock %}
+
+{% block main_content %}
+
+	<div id='blogpost' class='resume'>
+		<div class='leftcol-content'>
+			<div class='blog-top'>
+				<h1>Generic Web Developer JobHunt v4E</h1>								
+			</div>
+			<div class='post'>				
+				<div id='character-stats'>
+					<div class='stat-group name'>
+						<div class='stat'>Dave Lafferty</div>
+						<div class='definition'>Character Name</div>
+					</div>	
+					<div class='stat-group age'>
+						<div class='stat'>29</div>
+						<div class='definition'>Level</div>
+					</div>						
+					<div class='stat-group class'>
+						<div class='stat'>Web Dev</div>
+						<div class='definition'>Class</div>
+					</div>						
+					<div class='stat-group'>
+						<div class='stat'>Dynamic Languages</div>
+						<div class='definition'>Specialty (2d6)</div>
+					</div>						
+				</div>				
+				<div id='picture'></div>
+				<div id='character-attributes'>
+					<div class='attribute-group'>
+						<div class='left'>
+							<div class='title'><span>Passion</span></div>
+							<div class='stat-group horizontal'>
+								<div class='stat'>+4</div>
+								<div class='definition'>Modifier</div>
+							</div>
+						</div>
+						<div class='right'>
+							<div class='attribute-value'><span>18</span></div>
+							<div class='save'>
+								<div class='total'><span>8</span></div>
+								<div class='definition'><span>Burn Save</span></div>
+							</div>
+						</div>						
+					</div>
+					<div class='attribute-group'>
+						<div class='left'>
+							<div class='title'><span>Adaptability</span></div>
+							<div class='stat-group horizontal'>
+								<div class='stat'>+4</div>
+								<div class='definition'>Modifier</div>
+							</div>
+						</div>
+						<div class='right'>
+							<div class='attribute-value'><span>19</span></div>
+							<div class='save'>
+								<div class='total'><span>9</span></div>
+								<div class='definition'><span>Will Save</span></div>
+							</div>
+						</div>						
+					</div>
+					<div class='attribute-group'>
+						<div class='left'>
+							<div class='title'><span>Innovation</span></div>
+							<div class='stat-group horizontal'>
+								<div class='stat'>+3</div>
+								<div class='definition'>Modifier</div>
+							</div>
+						</div>
+						<div class='right'>
+							<div class='attribute-value'><span>16</span></div>
+							<div class='save'>
+								<div class='total'><span>6</span></div>
+								<div class='definition'><span>Idle Save</span></div>
+							</div>
+						</div>						
+					</div>
+				</div>
+				<div id='adventure-log'>
+					<h2>Adventure Log</h2>
+					
+					<div class='adventure'>
+						<div class='company-info'>
+							<div class='stat-group'>
+								<div class='stat'>Gorbel Inc.</div>
+								<div class='definition'>Troupe</div>
+							</div>
+							<div class='stat-group'>
+								<div class='stat'>2007-2012</div>
+								<div class='definition'>Years of Service</div>
+							</div>
+							<div class='stat-group'>
+								<div class='stat'>Software Engineer</div>
+								<div class='definition'>Position</div>
+							</div>
+						</div>
+						
+						<div class='notebox'>
+							<h3>Notes</h3>
+							<ul>
+								<li>Created and maintained online order entry system.</li>
+								<li>Integrated website with various backend products such as SyteLine (ERP), SolidWorks and Autocad.</li>
+								<li>Gathered requirements for and implemented various internal tools.</li>
+								<li>Re-architected and migrated aging systems from classic ASP to .NET.</li>							
+							</ul>
+						</div>
+						
+						<div class='notebox'>
+							<h3>Experience and Loot</h3>
+							<div class='xp-bar'>
+								<div class='title'>Microsoft SQL</div>
+								<div class='bar'>
+									<div class='background'></div>
+									<div class='filled-amount' style='width:70%'></div>
+									<div class='segments'>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+									</div>
+								</div>
+							</div>
+							<div class='xp-bar'>
+								<div class='title'>.NET and IIS</div>
+								<div class='bar'>
+									<div class='background'></div>
+									<div class='filled-amount' style='width:60%'></div>
+									<div class='segments'>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+									</div>
+								</div>
+							</div>						
+							<div class='xp-bar'>
+								<div class='title'>JavaScript, CSS & HTML</div>
+								<div class='bar'>
+									<div class='background'></div>
+									<div class='filled-amount' style='width:80%'></div>
+									<div class='segments'>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+									</div>
+								</div>
+							</div>	
+						</div>
+					</div>
+					<div class='adventure'>	
+						<div class='company-info'>
+							<div class='stat-group'>
+								<div class='stat'>Nazareth College</div>
+								<div class='definition'>Troupe</div>
+							</div>
+							<div class='stat-group'>
+								<div class='stat'>2012-Present</div>
+								<div class='definition'>Years of Service</div>
+							</div>
+							<div class='stat-group'>
+								<div class='stat'>Senior Web Developer</div>
+								<div class='definition'>Position</div>
+							</div>
+						</div>
+						
+						<div class='notebox'>
+							<h3>Notes</h3>
+							<ul>
+								<li>Learned all facets of web infrastructure after previous developers left with no overlap.</li>
+								<li>Built and managed over a dozen virtualized OpenSUSE Linux servers ranging from web servers hosting Django apps to highly available proxy servers to smtp relays.</li>
+								<li>Architected and began implementation of a multi-year plan for migrating to a new CMS after assessing the needs of the college.</li>								
+							</ul>
+						</div>
+						
+						<div class='notebox'>
+							<h3>Experience and Loot</h3>
+							<div class='xp-bar'>
+								<div class='title'>Linux Server Management</div>
+								<div class='bar'>
+									<div class='background'></div>
+									<div class='filled-amount' style='width:50%'></div>
+									<div class='segments'>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+									</div>
+								</div>
+							</div>
+							<div class='xp-bar'>
+								<div class='title'>Python, Django and Apache</div>
+								<div class='bar'>
+									<div class='background'></div>
+									<div class='filled-amount' style='width:85%'></div>
+									<div class='segments'>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+									</div>
+								</div>
+							</div>						
+							<div class='xp-bar'>
+								<div class='title'>Git</div>
+								<div class='bar'>
+									<div class='background'></div>
+									<div class='filled-amount' style='width:40%'></div>
+									<div class='segments'>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+									</div>
+								</div>
+							</div>	
+						</div>
+					</div>
+				</div>
+			</div>			    						
+		</div>	
+		<div class='rightcol-content'>
+			<div class='groupwrapper'>		
+				<div class='group'>					
+					<div class='groupheader'>
+						<h3>Posts</h3>
+					</div>							
+					{% for recent_post in recent_posts %}
+						<div class='recent-post'>
+							<div class='title'>
+								<a href='{% url 'blog_view' recent_post.slug recent_post.id %}'>{{ recent_post.title }}</a>
+							</div>
+							<div class='creation-date'>
+								{{ recent_post.created|date:"F d, Y" }}
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+			<div class='groupwrapper'>
+				<div class='group'>
+					<div class='groupheader'>
+						<h3>Featured Posts</h3>
+					</div>
+					{% for feature in features %}
+						<div class='recent-post'>
+							<div class='title'>
+								<a href='{% url 'blog_view' feature.post.slug feature.post.id %}'>{{ feature.post.title }}</a>
+							</div>
+							<div class='creation-date'>
+								{{ feature.post.created|date:"F d, Y" }}
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>				
+		<div class='clear:both;'></div>							
+	</div>	
+
+{% endblock %}
