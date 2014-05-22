@@ -16,7 +16,7 @@ import datetime
 @render_to('blog/view.html')
 def view(request, id):
     post = get_object_or_404(models.Post, id = id)    
-    recent_posts = models.Post.objects.all().filter(published = True).order_by('-created')[:5]
+    recent_posts = models.Post.objects.all().filter(published = True).exclude(id = post.id).order_by('-created')[:5]
         
     return {
         'post' : post,
@@ -101,3 +101,10 @@ def parse_markdown(request):
     }
 
     return HttpResponse(json.dumps(response), mimetype="application/json") 
+
+@render_to('resume.html')
+def resume(request):
+    recent_posts = models.Post.objects.all().filter(published = True).order_by('-created')[:5]
+    return {
+        'recent_posts': recent_posts
+    }

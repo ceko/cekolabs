@@ -22,6 +22,7 @@
   padding: 20px;
   font-size: 16px;
   /* desert scheme ported from vim to google prettify */
+
 }
 .Post .post p,
 .Post .teaser p {
@@ -67,6 +68,8 @@
 }
 .Post .post ul li,
 .Post .teaser ul li {
+  margin-left: 15px;
+  line-height: 20px;
   padding-left: 20px;
   margin-bottom: 15px;
 }
@@ -75,8 +78,9 @@
   content: '\f054';
   font-family: FontAwesome;
   margin-left: 0px;
-  margin-right: 15px;
+  width: 0px;
   position: relative;
+  left: -15px;
   top: -1px;
   display: inline-block;
   font-size: 10px;
@@ -105,18 +109,31 @@
   border-radius: 2px;
   box-shadow: 0px 1px 1px 1px #CCC;
   /* string  - pink */
+
   /* comment - skyblue */
+
   /* type    - lightgreen */
+
   /* literal - darkred */
+
   /* punctuation */
+
   /* plaintext */
+
   /* html/xml tag    - lightyellow */
+
   /* attribute name  - khaki */
+
   /* attribute value - pink */
+
   /* decimal         - lightgreen */
+
   /* Specify class=linenums on a pre to get line numbering */
+
   /* IE indents via margin-left */
+
   /* Alternate shading for lines */
+
 }
 .Post .post code.prettyprint *,
 .Post .teaser code.prettyprint * {
@@ -282,6 +299,7 @@
   padding: 20px;
   font-size: 16px;
   /* desert scheme ported from vim to google prettify */
+
 }
 #main-wrap #main-content #markdown_preview .post p,
 #main-wrap #main-content #markdown_preview .teaser p {
@@ -327,6 +345,8 @@
 }
 #main-wrap #main-content #markdown_preview .post ul li,
 #main-wrap #main-content #markdown_preview .teaser ul li {
+  margin-left: 15px;
+  line-height: 20px;
   padding-left: 20px;
   margin-bottom: 15px;
 }
@@ -335,8 +355,9 @@
   content: '\f054';
   font-family: FontAwesome;
   margin-left: 0px;
-  margin-right: 15px;
+  width: 0px;
   position: relative;
+  left: -15px;
   top: -1px;
   display: inline-block;
   font-size: 10px;
@@ -365,18 +386,31 @@
   border-radius: 2px;
   box-shadow: 0px 1px 1px 1px #CCC;
   /* string  - pink */
+
   /* comment - skyblue */
+
   /* type    - lightgreen */
+
   /* literal - darkred */
+
   /* punctuation */
+
   /* plaintext */
+
   /* html/xml tag    - lightyellow */
+
   /* attribute name  - khaki */
+
   /* attribute value - pink */
+
   /* decimal         - lightgreen */
+
   /* Specify class=linenums on a pre to get line numbering */
+
   /* IE indents via margin-left */
+
   /* Alternate shading for lines */
+
 }
 #main-wrap #main-content #markdown_preview .post code.prettyprint *,
 #main-wrap #main-content #markdown_preview .teaser code.prettyprint * {
@@ -614,6 +648,7 @@
   /*.post-teaser:first-child {
 			padding-top:0px;			
 		}*/
+
 }
 #main-wrap #main-content .post-teasers .post {
   padding: 1% 0% 1% 1%;
@@ -626,6 +661,7 @@
   padding: 20px;
   font-size: 16px;
   /* desert scheme ported from vim to google prettify */
+
 }
 #main-wrap #main-content .post-teasers .post p,
 #main-wrap #main-content .post-teasers .teaser p {
@@ -671,6 +707,8 @@
 }
 #main-wrap #main-content .post-teasers .post ul li,
 #main-wrap #main-content .post-teasers .teaser ul li {
+  margin-left: 15px;
+  line-height: 20px;
   padding-left: 20px;
   margin-bottom: 15px;
 }
@@ -679,8 +717,9 @@
   content: '\f054';
   font-family: FontAwesome;
   margin-left: 0px;
-  margin-right: 15px;
+  width: 0px;
   position: relative;
+  left: -15px;
   top: -1px;
   display: inline-block;
   font-size: 10px;
@@ -709,18 +748,31 @@
   border-radius: 2px;
   box-shadow: 0px 1px 1px 1px #CCC;
   /* string  - pink */
+
   /* comment - skyblue */
+
   /* type    - lightgreen */
+
   /* literal - darkred */
+
   /* punctuation */
+
   /* plaintext */
+
   /* html/xml tag    - lightyellow */
+
   /* attribute name  - khaki */
+
   /* attribute value - pink */
+
   /* decimal         - lightgreen */
+
   /* Specify class=linenums on a pre to get line numbering */
+
   /* IE indents via margin-left */
+
   /* Alternate shading for lines */
+
 }
 #main-wrap #main-content .post-teasers .post code.prettyprint *,
 #main-wrap #main-content .post-teasers .teaser code.prettyprint * {
@@ -949,6 +1001,236 @@
   display: inline-block;
   width: 77%;
 }
+#main-wrap #main-content .resume #general-info {
+  position: relative;
+}
+#main-wrap #main-content .resume .blog-top {
+  border-bottom: 1px solid #CCC;
+}
+#main-wrap #main-content .resume .stat-group {
+  margin-bottom: 15px;
+}
+#main-wrap #main-content .resume .stat-group .definition {
+  border-top: 1px dashed #CCC;
+  margin-top: 10px;
+  padding-top: 3px;
+  font-family: Palatino Linotype;
+  color: #999;
+  font-variant: small-caps;
+}
+#main-wrap #main-content .resume .stat-group.horizontal .stat {
+  float: right;
+  margin-right: 5px;
+}
+#main-wrap #main-content .resume .stat-group.horizontal .definition {
+  border-top: none;
+  margin-top: 5px !important;
+  padding-bottom: 3px;
+  border-bottom: 1px dashed #CCC;
+}
+@media (max-width: 985px) {
+  #main-wrap #main-content .resume .stat-group.name {
+    margin-left: 60px;
+  }
+}
+@media (max-width: 550px) {
+  #main-wrap #main-content .resume .stat-group.name {
+    margin-left: inherit;
+  }
+}
+#main-wrap #main-content .resume .stat-group.age {
+  width: 30%;
+  display: inline-block;
+  float: left;
+}
+#main-wrap #main-content .resume .stat-group.class {
+  width: 60%;
+  display: inline-block;
+  float: left;
+  margin-left: 10%;
+}
+#main-wrap #main-content .resume #character-stats {
+  width: 25%;
+  float: left;
+}
+@media (max-width: 985px) {
+  #main-wrap #main-content .resume #character-stats {
+    width: 40%;
+    margin-right: 5%;
+  }
+}
+@media (max-width: 550px) {
+  #main-wrap #main-content .resume #character-stats {
+    width: 100%;
+  }
+}
+#main-wrap #main-content .resume #picture {
+  width: 35%;
+  float: left;
+  height: 207px;
+  background: url('../images/character-pic.png') no-repeat center;
+}
+@media (max-width: 985px) {
+  #main-wrap #main-content .resume #picture {
+    width: 50px;
+    background-size: contain;
+    float: left;
+    left: 15px;
+    top: -5px;
+    position: absolute;
+  }
+}
+@media (max-width: 550px) {
+  #main-wrap #main-content .resume #picture {
+    position: inherit;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+}
+#main-wrap #main-content .resume #character-attributes {
+  width: 40%;
+  float: left;
+}
+@media (max-width: 985px) {
+  #main-wrap #main-content .resume #character-attributes {
+    width: 55%;
+  }
+}
+@media (max-width: 550px) {
+  #main-wrap #main-content .resume #character-attributes {
+    width: 100%;
+  }
+}
+#main-wrap #main-content .resume .attribute-group {
+  clear: both;
+}
+#main-wrap #main-content .resume .attribute-group .left {
+  float: left;
+  width: 35%;
+}
+#main-wrap #main-content .resume .attribute-group .left .title {
+  font-family: Palatino Linotype;
+  color: #FDFDFD;
+  font-variant: small-caps;
+  background: #333;
+  text-align: center;
+}
+#main-wrap #main-content .resume .attribute-group .left .title span {
+  display: inline-block;
+  margin: 5px;
+}
+#main-wrap #main-content .resume .attribute-group .right {
+  float: left;
+}
+#main-wrap #main-content .resume .attribute-group .right .attribute-value {
+  width: 50px;
+  height: 50px;
+  border: 2px solid #333;
+  font-size: 22px;
+  text-align: center;
+  float: left;
+}
+#main-wrap #main-content .resume .attribute-group .right .attribute-value span {
+  position: relative;
+  top: 14px;
+}
+#main-wrap #main-content .resume .attribute-group .right .save {
+  width: 100px;
+  height: 50px;
+  margin-left: 10px;
+  background: #333;
+  float: left;
+  border: 2px solid #333;
+}
+#main-wrap #main-content .resume .attribute-group .right .save .total {
+  border-radius: 50%;
+  background: #FDFDFD;
+  height: 50px;
+  width: 50px;
+  font-size: 22px;
+  text-align: center;
+  float: left;
+}
+#main-wrap #main-content .resume .attribute-group .right .save .total span {
+  position: relative;
+  top: 14px;
+}
+#main-wrap #main-content .resume .attribute-group .right .save .definition {
+  float: left;
+  color: #FDFDFD;
+  width: 50px;
+  font-family: Palatino Linotype;
+  font-variant: small-caps;
+  text-align: center;
+  margin-top: 7px;
+}
+#main-wrap #main-content .resume #adventure-log {
+  padding-top: 30px;
+  clear: both;
+}
+#main-wrap #main-content .resume #adventure-log .adventure {
+  margin-bottom: 30px;
+}
+#main-wrap #main-content .resume #adventure-log .company-info .stat-group {
+  width: 25%;
+  float: left;
+  margin-right: 5%;
+}
+#main-wrap #main-content .resume #adventure-log .notebox {
+  clear: both;
+  border: 2px solid #333;
+  margin-bottom: 15px;
+}
+#main-wrap #main-content .resume #adventure-log .notebox h3 {
+  margin: 0px;
+  padding: 5px 0px 10px 5px;
+  font-family: Palatino Linotype;
+  font-variant: small-caps;
+  background: #333;
+  color: #FDFDFD;
+}
+#main-wrap #main-content .resume #adventure-log .notebox ul {
+  margin: 20px 0px;
+  padding-left: 0px !important;
+}
+#main-wrap #main-content .resume #adventure-log .notebox .xp-bar {
+  width: 29%;
+  display: inline-block;
+  margin: 20px 0px 30px 3%;
+  text-align: center;
+}
+#main-wrap #main-content .resume #adventure-log .notebox .xp-bar .bar {
+  position: relative;
+  margin-top: 10px;
+}
+#main-wrap #main-content .resume #adventure-log .notebox .xp-bar .bar .background {
+  width: 100%;
+  height: 30px;
+  background-color: #284054;
+  box-shadow: inset 0px 0px 5px 1px #000;
+}
+#main-wrap #main-content .resume #adventure-log .notebox .xp-bar .bar .filled-amount {
+  height: 28px;
+  background-color: #5A8DB3;
+  position: absolute;
+  top: 1px;
+  left: 1px;
+}
+#main-wrap #main-content .resume #adventure-log .notebox .xp-bar .bar .segments {
+  width: 100%;
+  height: 30px;
+  position: absolute;
+  top: 0px;
+}
+#main-wrap #main-content .resume #adventure-log .notebox .xp-bar .bar .segments div {
+  width: 25%;
+  float: left;
+  height: 30px;
+  box-shadow: 1px 0px #000;
+}
+#main-wrap #main-content .resume #adventure-log .notebox .xp-bar .bar .segments div:last-child {
+  box-shadow: none;
+}
 #main-wrap #main-content #blogpost {
   position: relative;
 }
@@ -965,6 +1247,7 @@
 				border-top:1px solid #EEE;				
 			}
 			*/
+
 }
 @media (max-width: 825px) {
   #main-wrap #main-content #blogpost .leftcol-content {
@@ -991,6 +1274,7 @@
   padding: 20px;
   font-size: 16px;
   /* desert scheme ported from vim to google prettify */
+
 }
 #main-wrap #main-content #blogpost .leftcol-content .post p,
 #main-wrap #main-content #blogpost .leftcol-content .teaser p {
@@ -1036,6 +1320,8 @@
 }
 #main-wrap #main-content #blogpost .leftcol-content .post ul li,
 #main-wrap #main-content #blogpost .leftcol-content .teaser ul li {
+  margin-left: 15px;
+  line-height: 20px;
   padding-left: 20px;
   margin-bottom: 15px;
 }
@@ -1044,8 +1330,9 @@
   content: '\f054';
   font-family: FontAwesome;
   margin-left: 0px;
-  margin-right: 15px;
+  width: 0px;
   position: relative;
+  left: -15px;
   top: -1px;
   display: inline-block;
   font-size: 10px;
@@ -1074,18 +1361,31 @@
   border-radius: 2px;
   box-shadow: 0px 1px 1px 1px #CCC;
   /* string  - pink */
+
   /* comment - skyblue */
+
   /* type    - lightgreen */
+
   /* literal - darkred */
+
   /* punctuation */
+
   /* plaintext */
+
   /* html/xml tag    - lightyellow */
+
   /* attribute name  - khaki */
+
   /* attribute value - pink */
+
   /* decimal         - lightgreen */
+
   /* Specify class=linenums on a pre to get line numbering */
+
   /* IE indents via margin-left */
+
   /* Alternate shading for lines */
+
 }
 #main-wrap #main-content #blogpost .leftcol-content .post code.prettyprint *,
 #main-wrap #main-content #blogpost .leftcol-content .teaser code.prettyprint * {

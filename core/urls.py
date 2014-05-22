@@ -9,8 +9,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('cekolabs.core.views',
     url(r'^$', 'home', name='home'),
-    url(r'^django-form-architect$', 'django_form_architect', name='django_form_architect'),
-    url(r'^resume$', 'resume', name='resume'),
+    url(r'^django-form-architect$', 'django_form_architect', name='django_form_architect'),    
     url(r'^ksp-mods', 'ksp_mods', name='ksp_mods'),
     url(r'^card-game$', 'finch', name='finch'),
     url(r'^trainer$', 'magicka_trainer', name='magicka_trainer'),
