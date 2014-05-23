@@ -484,6 +484,10 @@
 			.left {
 				float:left;
 				width:35%;
+				@media(max-width: 550px) {
+					width:40%;
+				}
+				
 				
 				.title {
 					font-family: Palatino Linotype;
@@ -501,8 +505,15 @@
 			
 			.right {
 				float:left;
+				@media(max-width: 550px) {
+					width:60%;
+				}
+				
 				.attribute-value {
 					width:50px;
+					@media(max-width: 550px) {
+						width:30%;
+					}
 					height:50px;
 					border:2px solid #333;
 					font-size:22px;
@@ -517,6 +528,10 @@
 				
 				.save {										
 					width:100px;
+					@media(max-width: 550px) {
+						width:62%;
+						margin-left:2%;
+					}
 					height:50px;
 					margin-left:10px;
 					background:#333;
@@ -545,7 +560,7 @@
 						font-family: Palatino Linotype;					
 						font-variant: small-caps;
 						text-align:center;
-						margin-top:7px;
+						margin-top:8px;
 					}				
 				}
 			}
