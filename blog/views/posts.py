@@ -102,6 +102,12 @@ def parse_markdown(request):
 
     return HttpResponse(json.dumps(response), mimetype="application/json") 
 
+@render_to('unityplayer.html')
+def unity_challenge(request):
+    return {
+        'project': '/static/unity/forcedperspective.unity3d' 
+    }
+
 @render_to('resume.html')
 def resume(request):
     recent_posts = models.Post.objects.all().filter(published = True).order_by('-created')[:5]
