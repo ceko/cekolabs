@@ -14,10 +14,7 @@ class DefaultCompressor(CompressorBase):
         return cssmin.cssmin(css)
     
 class SmartJSONSerializer(json.Serializer):
-    
-    def first(self):
-        return None
-    
+            
     def serialize_model(self, model, additional_properties, **options):
         """
         Serialize a queryset.
@@ -63,6 +60,7 @@ class SmartJSONSerializer(json.Serializer):
         self.use_natural_keys = options.pop("use_natural_keys", False)
 
         self.start_serialization()
+        self.first = True
         for obj in queryset:
             self.start_object(obj)
             # Use the concrete parent class' _meta instead of the object's _meta
@@ -85,6 +83,7 @@ class SmartJSONSerializer(json.Serializer):
                 self._current[prop] = getattr(obj, prop)
                 
             self.end_object(obj)
+            self.first = False
         self.end_serialization()
         return self.getvalue()
 
