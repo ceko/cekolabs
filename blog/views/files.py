@@ -7,12 +7,16 @@ import cekolabs.core.utils
 from django.views.decorators.csrf import csrf_exempt
 import base64
 import json
+from django.contrib.auth.decorators import login_required
+from django.core import serializers
 
 
+@login_required
 @render_to('blog/files/manager.html')
 def manager(request):
     return {}
-    
+
+@login_required
 @csrf_exempt    
 def upload_ajax(request):    
     file_name = request.POST['name']
@@ -32,6 +36,7 @@ def upload_ajax(request):
 
     return HttpResponse(json.dumps(response), mimetype="application/json")
 
+@login_required
 @csrf_exempt
 def search(request, term):
     search_start = int(request.GET.get('start', 0))
@@ -39,5 +44,5 @@ def search(request, term):
     if term:
         files = files.filter(file__icontains=term) 
     files = files.order_by('-upload_date')[search_start:search_start + 20]
-    
-    return HttpResponse(cekolabs.core.utils.SmartJSONSerializer().serialize(files, ['formatted_size', 'formatted_date', 'id', 'url',]), mimetype="application/json")         
+        
+    return HttpResponse(cekolabs.core.utils.SmartJSONSerializer().serialize(files, ['formatted_size', 'formatted_date', 'id', 'url',]), mimetype="application/json")             

@@ -15,6 +15,9 @@ class DefaultCompressor(CompressorBase):
     
 class SmartJSONSerializer(json.Serializer):
     
+    def first(self):
+        return None
+    
     def serialize_model(self, model, additional_properties, **options):
         """
         Serialize a queryset.
