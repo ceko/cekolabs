@@ -19,4 +19,9 @@ $(window).load ->
 	window.exports.prettify_complete = ->
 		packery_callback()
 
-	  
+$(window).load ->
+	$('div.adventure-prelude').each ->
+		$(this).click ->
+			$(this).find('.adventure').slideDown();
+			$(this).find('.show-more').fadeOut();
+			$(this).find('.status-overlay').fadeIn();

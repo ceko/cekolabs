@@ -16,6 +16,33 @@
 	clear:both;
 }
 
+@keyframes bounce {
+    0%,10%,20%,50%,80% {
+        -webkit-transform: translateY(0);
+        -ms-transform: translateY(0);
+        transform: translateY(0)
+    }
+
+    40%,60% {
+        -webkit-transform: translateY(-15px);
+        -ms-transform: translateY(-15px);
+        transform: translateY(-15px)
+    }
+}
+
+@-webkit-keyframes bounce {
+    0%,10%,20%,50%,80% {
+        -webkit-transform: translateY(0);
+        transform: translateY(0)
+    }
+
+    40%,60% {
+        -webkit-transform: translateY(-15px);
+        transform: translateY(-15px)
+    }
+}
+
+
 .Post {
 	
 	.post {
@@ -566,15 +593,112 @@
 			}
 		}
 		
+		
+		
+		
+		body {
+		  background: black;
+		}
+		
+		.show-more {
+			display:block;
+			text-align:center;
+			font-size:1.5em;
+		}
+		
 		#adventure-log {
 			padding-top:30px;			
 			clear:both;
 			
-			.adventure {
+			.adventure-prelude {
+				box-shadow: 0px 0px 3px 2px rgba(0, 0, 0, 0.07);
+				border:1px solid #CCC;
+				padding:5px 0px;
+				transition: background-color 500ms linear;
 				margin-bottom:30px;
+			
+				&:hover {
+					background-color: rgba(255, 254, 204, 0.33);
+					transition: background-color 500ms linear;
+					cursor:pointer;
+					
+					.show-more {
+						animation:bounce 2s infinite;
+						-webkit-animation:bounce 2s infinite;
+					}
+				}
+				
+				&.gorbel .icon {
+					background-image:url('../images/manufacturing-icon.png');
+				}
+				
+				&.nazareth .icon {
+					background-image:url('../images/university-icon.png');
+				}
+				
+				&.unknown .icon {
+					background-image:url('../images/unknown-icon.png');
+				}
+				
+				.icon {
+					display:inline-block;
+					width:10%;
+					margin:10px 2.5%;
+					height:100px;	
+					
+					background-size:contain;	
+					background-repeat:no-repeat;																	
+				}
+				
+				.campaign-description {
+					position:relative;
+					vertical-align:top;
+					display:inline-block;
+					width:75%;
+					margin-top:10px;
+					
+					.status-overlay {
+						position: absolute;
+						top: 10px;
+						left: 20%;
+						font-size: 3em;
+						@media(max-width: 600px) {
+							font-size:1.5em;
+							top:80px;
+						}
+						transform: rotate(-10deg);
+						font-weight: bold;
+						color: rgba(208, 25, 25, 1);
+						text-decoration: underline;
+						border-bottom: 1px solid black;
+						text-shadow: 1px 1px 2px black;
+						display:none;
+						
+						&.green {
+							color: #19D06F;
+						}
+					}
+					
+					h3 {
+						font-size:1.5em;
+						margin-bottom:5px;
+					}
+				}
+				
+				.show-more {
+					margin-top:-10px;					
+				}
+				
 			}
 			
-			.company-info {				
+			.adventure {
+				border-top: 1px dashed #CCC;
+				padding-top: 15px;				
+				display:none;
+			}
+			
+			.company-info {		
+				margin:0% 3%;		
 				.stat-group {
 					width:25%;
 					float:left;
@@ -583,9 +707,8 @@
 			}
 			
 			.notebox {
-				clear:both;
-				border:2px solid #333;
-				margin-bottom:15px;
+				clear:both;				
+				padding-bottom:15px;
 				
 				h3 {
 					margin:0px;
@@ -678,6 +801,10 @@
 			
 			&.yellow .bar .filled-amount {
 				background-color:#D6E05B;
+			}
+			
+			&.grey .bar .filled-amount {
+				background-color:#CCC;
 			}
 		}
 		

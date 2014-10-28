@@ -27,4 +27,14 @@
     };
   });
 
+  $(window).load(function() {
+    return $('div.adventure-prelude').each(function() {
+      return $(this).click(function() {
+        $(this).find('.adventure').slideDown();
+        $(this).find('.show-more').fadeOut();
+        return $(this).find('.status-overlay').fadeIn();
+      });
+    });
+  });
+
 }).call(this);
